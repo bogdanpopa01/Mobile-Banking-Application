@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">MobileBankingApplication</string>
+
+    <!-- Login Activity -->
+    <string name="etUserNameLogin">Username</string>
+    <string name="etPasswordLogin">Password</string>
+    <string name="btnSignInLogin">Sign In</string>
+    <string name="error_username_or_password_incorrect">The username or password is invalid!</string>
 </resources>
