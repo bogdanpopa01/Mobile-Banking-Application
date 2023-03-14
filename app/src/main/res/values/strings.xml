@@ -6,4 +6,12 @@
     <string name="etPasswordLogin">Password</string>
     <string name="btnSignInLogin">Sign In</string>
     <string name="error_username_or_password_incorrect">The username or password is invalid!</string>
+
+    <!-- Home page Activity -->
+    <string name="baseline_home_24">Home</string>
+    <string name="baseline_reports_24">Reports</string>
+    <string name="baseline_transactions_24">Transactions</string>
+    <string name="baseline_transfers_24">Transfers</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
