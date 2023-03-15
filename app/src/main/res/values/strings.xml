@@ -22,9 +22,9 @@
     <string name="btnSendTranfersFragment">Send</string>
 
     <!-- Home Fragment -->
-    <string name="tvBalanceHomeFragment">Your Balance</string>
-    <string name="tvBalanceValueHomeFragment">45654</string>
-    <string name="tvBalanceCurrencyHomeFragment">RON</string>
+    <string name="tvAppName">ZoroPay</string>
+    <string name="tvFiller1"></string>
+    <string name="tvfiller2"></string>
     <string name="tvCardNumber">2485 8742 9748 4543</string>
     <string name="tvUserNameHomeFragment">Popa Adrian Bogdan</string>
     <string name="tvCardHomeFragment">Card number</string>
@@ -32,5 +32,8 @@
     <string name="tvValidThruHomeFragment">Valid Thru</string>
     <string name="tvValidThruDateHomeFragment">09/25</string>
     <string name="tvCopyHomeFragment">Copy</string>
+    <string name="tvBalanceHomeFragment">Your Balance:</string>
+    <string name="tvBalanceValueHomeFragment">45,754.3</string>
+    <string name="tvDepositsHomeFragment">Deposits</string>
 
 </resources>
