@@ -11,4 +11,7 @@
     <!-- The colors for my application -->
     <color name="tealMain">#0ca678</color>
     <color name="tealSecondary">#38d9a9</color>
+
+    <color name="navy">#00427A</color>
+    <color name="light_navy">#005FAF</color>
 </resources>

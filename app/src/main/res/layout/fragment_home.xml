@@ -1,15 +1,161 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragments.HomeFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Home fragment"
-        android:background="@color/teal_200"/>
 
-</FrameLayout>
+    <TextView
+        android:id="@+id/tvBalanceHomeFragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="25dp"
+        android:text="@string/tvBalanceHomeFragment"
+        android:textColor="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvBalanceValueHomeFragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="160dp"
+        android:layout_marginTop="15dp"
+        android:text="@string/tvBalanceValueHomeFragment"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvBalanceHomeFragment" />
+
+    <TextView
+        android:id="@+id/tvBalanceCurrencyHomeFragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
+        android:textColor="@color/black"
+        android:text="@string/tvBalanceCurrencyHomeFragment"
+        app:layout_constraintStart_toEndOf="@+id/tvBalanceValueHomeFragment"
+        app:layout_constraintTop_toBottomOf="@+id/tvBalanceHomeFragment" />
+
+    <View
+        android:id="@+id/viewCardHomeFragment"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="48dp"
+        android:layout_marginEnd="40dp"
+        android:background="@drawable/card_background"
+        app:layout_constraintDimensionRatio="4:2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvBalanceHomeFragment" />
+
+    <ImageView
+        android:id="@+id/imageViewMastercardHomeFragment"
+        android:layout_width="70dp"
+        android:layout_height="44dp"
+        android:layout_marginTop="130dp"
+        android:layout_marginEnd="44dp"
+        android:src="@drawable/ic_mastercard_logo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvBalanceCurrencyHomeFragment" />
+
+    <TextView
+        android:id="@+id/tvCardNumberHomeFragment"
+        android:layout_width="247dp"
+        android:layout_height="64dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/tvCardNumber"
+        android:textColor="@color/white"
+        android:textSize="25sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvCardHomeFragment" />
+
+    <TextView
+        android:id="@+id/tvUserNameHomeFragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="48dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/tvUserNameHomeFragment"
+        android:textColor="@color/white"
+        android:textSize="17sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvNameHomeFragment" />
+
+    <TextView
+        android:id="@+id/tvCardHomeFragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="48dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/tvCardHomeFragment"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvBalanceValueHomeFragment" />
+
+    <TextView
+        android:id="@+id/tvNameHomeFragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="48dp"
+        android:text="@string/tvNameHomeFragment"
+        android:textColor="@color/white"
+        android:textSize="11sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvCardNumberHomeFragment" />
+
+    <TextView
+        android:id="@+id/tvValidThruHomeFragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="140dp"
+        android:text="@string/tvValidThruHomeFragment"
+        android:textColor="@color/white"
+        android:textSize="11sp"
+        app:layout_constraintStart_toEndOf="@+id/tvNameHomeFragment"
+        app:layout_constraintTop_toBottomOf="@+id/tvCardNumberHomeFragment" />
+
+    <TextView
+        android:id="@+id/tvValidThruDateHomeFragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="18dp"
+        android:layout_marginTop="11dp"
+        android:text="@string/tvValidThruDateHomeFragment"
+        android:textColor="@color/white"
+        app:layout_constraintStart_toEndOf="@+id/tvUserNameHomeFragment"
+        app:layout_constraintTop_toBottomOf="@+id/tvValidThruHomeFragment" />
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="62dp"
+        android:src="@drawable/baseline_copy_24"
+        app:layout_constraintStart_toEndOf="@+id/tvCardNumberHomeFragment"
+        app:layout_constraintTop_toBottomOf="@+id/tvBalanceCurrencyHomeFragment" />
+
+    <TextView
+        android:id="@+id/tvCopyHomeFragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="64dp"
+        android:text="@string/tvCopyHomeFragment"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        app:layout_constraintStart_toEndOf="@+id/imageView3"
+        app:layout_constraintTop_toBottomOf="@+id/tvBalanceCurrencyHomeFragment" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
