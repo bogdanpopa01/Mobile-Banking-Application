@@ -233,4 +233,14 @@
         app:layout_constraintStart_toEndOf="@+id/fabAddDeposit"
         app:layout_constraintTop_toBottomOf="@+id/tvBalanceValueHomeFragment" />
 
+    <FrameLayout
+        android:id="@+id/depositsFragment"
+        android:layout_width="409dp"
+        android:layout_height="353dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fabSeeDeposits">
+
+    </FrameLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

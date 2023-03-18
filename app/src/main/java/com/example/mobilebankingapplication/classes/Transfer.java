@@ -6,26 +6,49 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 
 public class Transfer implements Parcelable {
-    private double amount;
-    private boolean isInvoice;
-    private String payee;
-    private String IBAN;
-    private String description;
 
-    public Transfer(double amount, boolean isInvoice, String payee, String IBAN, String description) {
-        this.amount = amount;
-        this.isInvoice = isInvoice;
-        this.payee = payee;
-        this.IBAN = IBAN;
-        this.description = description;
+    private long transferId;
+    private double transferAmount;
+    private boolean transferIsInvoice;
+    private String transferPayee;
+    private String transferIBAN;
+    private String transferDescription;
+    private long userId;
+
+    public Transfer(long transferId, double transferAmount, boolean transferIsInvoice, String transferPayee, String transferIBAN, String transferDescription, long userId) {
+        this.transferId = transferId;
+        this.transferAmount = transferAmount;
+        this.transferIsInvoice = transferIsInvoice;
+        this.transferPayee = transferPayee;
+        this.transferIBAN = transferIBAN;
+        this.transferDescription = transferDescription;
+        this.userId = userId;
     }
 
     protected Transfer(Parcel in) {
-        amount = in.readDouble();
-        isInvoice = in.readByte() != 0;
-        payee = in.readString();
-        IBAN = in.readString();
-        description = in.readString();
+        transferId = in.readLong();
+        transferAmount = in.readDouble();
+        transferIsInvoice = in.readByte() != 0;
+        transferPayee = in.readString();
+        transferIBAN = in.readString();
+        transferDescription = in.readString();
+        userId = in.readLong();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(transferId);
+        dest.writeDouble(transferAmount);
+        dest.writeByte((byte) (transferIsInvoice ? 1 : 0));
+        dest.writeString(transferPayee);
+        dest.writeString(transferIBAN);
+        dest.writeString(transferDescription);
+        dest.writeLong(userId);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public static final Creator<Transfer> CREATOR = new Creator<Transfer>() {
@@ -40,68 +63,72 @@ public class Transfer implements Parcelable {
         }
     };
 
-    public double getAmount() {
-        return amount;
+    public long getTransferId() {
+        return transferId;
     }
 
-    public void setAmount(double amount) {
-        this.amount = amount;
+    public void setTransferId(long transferId) {
+        this.transferId = transferId;
     }
 
-    public boolean isInvoice() {
-        return isInvoice;
+    public double getTransferAmount() {
+        return transferAmount;
     }
 
-    public void setInvoice(boolean invoice) {
-        isInvoice = invoice;
+    public void setTransferAmount(double transferAmount) {
+        this.transferAmount = transferAmount;
     }
 
-    public String getPayee() {
-        return payee;
+    public boolean isTransferIsInvoice() {
+        return transferIsInvoice;
     }
 
-    public void setPayee(String payee) {
-        this.payee = payee;
+    public void setTransferIsInvoice(boolean transferIsInvoice) {
+        this.transferIsInvoice = transferIsInvoice;
     }
 
-    public String getIBAN() {
-        return IBAN;
+    public String getTransferPayee() {
+        return transferPayee;
     }
 
-    public void setIBAN(String IBAN) {
-        this.IBAN = IBAN;
+    public void setTransferPayee(String transferPayee) {
+        this.transferPayee = transferPayee;
     }
 
-    public String getDescription() {
-        return description;
+    public String getTransferIBAN() {
+        return transferIBAN;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setTransferIBAN(String transferIBAN) {
+        this.transferIBAN = transferIBAN;
+    }
+
+    public String getTransferDescription() {
+        return transferDescription;
+    }
+
+    public void setTransferDescription(String transferDescription) {
+        this.transferDescription = transferDescription;
+    }
+
+    public long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
     }
 
     @Override
     public String toString() {
         return "Transfer{" +
-                "amount=" + amount +
-                ", isInvoice=" + isInvoice +
-                ", payee='" + payee + '\'' +
-                ", IBAN='" + IBAN + '\'' +
-                ", description='" + description + '\'' +
+                "transferId=" + transferId +
+                ", transferAmount=" + transferAmount +
+                ", transferIsInvoice=" + transferIsInvoice +
+                ", transferPayee='" + transferPayee + '\'' +
+                ", transferIBAN='" + transferIBAN + '\'' +
+                ", transferDescription='" + transferDescription + '\'' +
+                ", userId=" + userId +
                 '}';
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(@NonNull Parcel dest, int flags) {
-        dest.writeDouble(amount);
-        dest.writeByte((byte) (isInvoice ? 1 : 0));
-        dest.writeString(payee);
-        dest.writeString(IBAN);
-        dest.writeString(description);
     }
 }

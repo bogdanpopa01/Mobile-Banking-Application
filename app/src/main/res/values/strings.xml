@@ -35,5 +35,7 @@
     <string name="tvBalanceHomeFragment">Your Balance:</string>
     <string name="tvBalanceValueHomeFragment">45,754.3</string>
     <string name="tvDepositsHomeFragment">Deposits</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
