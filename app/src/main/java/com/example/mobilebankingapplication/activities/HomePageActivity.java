@@ -15,6 +15,10 @@ import com.example.mobilebankingapplication.fragments.TransactionsFragment;
 import com.example.mobilebankingapplication.fragments.TransfersFragment;
 
 public class HomePageActivity extends AppCompatActivity {
+    HomeFragment homeFragment = new HomeFragment();
+    ReportsFragment reportsFragment = new ReportsFragment();
+    TransactionsFragment transactionsFragment = new TransactionsFragment();
+    TransfersFragment transfersFragment = new TransfersFragment();
     ActivityHomePageBinding activityHomePageBinding;
 
     @Override
@@ -28,16 +32,16 @@ public class HomePageActivity extends AppCompatActivity {
 
             switch (item.getItemId()){
                 case R.id.bottom_navigation_home:
-                    replaceFragment(new HomeFragment());
+                    replaceFragment(homeFragment);
                     break;
                 case R.id.bottom_navigation_reports:
-                    replaceFragment(new ReportsFragment());
+                    replaceFragment(reportsFragment);
                     break;
                 case R.id.bottom_navigation_transactions:
-                    replaceFragment(new TransactionsFragment());
+                    replaceFragment(transactionsFragment);
                     break;
                 case R.id.bottom_navigation_transfers:
-                    replaceFragment(new TransfersFragment());
+                    replaceFragment(transfersFragment);
                     break;
             }
 

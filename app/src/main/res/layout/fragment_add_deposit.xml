@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.AddDepositFragment">
+
+
+    <TextView
+        android:id="@+id/tvOpenNewDepositAddDepositFragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="173dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="181dp"
+        android:text="@string/tvOpenNewDepositAddDepositFragment"
+        android:textColor="@color/light_navy"
+        android:textSize="25sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilDepositNameAddDepositFragment"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="25dp"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvOpenNewDepositAddDepositFragment">
+
+        <EditText
+            android:id="@+id/etDepositNameAddDepositFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:hint="@string/etDepositNameAddDepositFragment" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilDepositAmountAddDepositFragment"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="25dp"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tilDepositNameAddDepositFragment">
+
+        <EditText
+            android:id="@+id/etDepositAmountAddDepositFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:hint="@string/etDepositAmountAddDepositFragment" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Spinner
+        android:id="@+id/spinnerDepositPeriodAddDepositFragment"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="25dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tilDepositAmountAddDepositFragment" />
+
+    <TextView
+        android:id="@+id/tvInterestRateAddDepositFragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="25dp"
+        android:textSize="20sp"
+        android:text="@string/tvInterestRateAddDepositFragment"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinnerDepositPeriodAddDepositFragment" />
+
+    <TextView
+        android:id="@+id/tvInterestRateValueAddDepositFragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="25dp"
+        android:textSize="20sp"
+        android:text="@string/tvInterestRateValueAddDepositFragment"
+        app:layout_constraintStart_toEndOf="@+id/tvInterestRateAddDepositFragment"
+        app:layout_constraintTop_toBottomOf="@+id/spinnerDepositPeriodAddDepositFragment" />
+
+    <TextView
+        android:id="@+id/tvTimeLeftAddDepositFragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="25dp"
+        android:textSize="20sp"
+        android:text="@string/tvTimeLeftAddDepositFragment"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvInterestRateAddDepositFragment" />
+
+    <TextView
+        android:id="@+id/tvTimeLeftValueAddDepositFragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="25dp"
+        android:textSize="20sp"
+        android:text="@string/tvTimeLeftValueAddDepositFragment"
+        app:layout_constraintStart_toEndOf="@+id/tvTimeLeftAddDepositFragment"
+        app:layout_constraintTop_toBottomOf="@+id/tvInterestRateValueAddDepositFragment" />
+
+    <Button
+        android:id="@+id/btnCloseAddDepositFragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="25dp"
+        android:textSize="20sp"
+        android:text="@string/btnCloseAddDepositFragment"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvTimeLeftAddDepositFragment" />
+
+    <Button
+        android:id="@+id/btnOpenDepositAddDepositFragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="25dp"
+        android:textSize="20sp"
+        android:text="@string/btnOpenDepositAddDepositFragment"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvTimeLeftAddDepositFragment" />
+</androidx.constraintlayout.widget.ConstraintLayout>

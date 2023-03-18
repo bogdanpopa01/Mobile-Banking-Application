@@ -15,7 +15,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 
 public class HomeFragment extends Fragment {
-    FloatingActionButton fabSeeDeposits;
+    FloatingActionButton fabSeeDeposits, fabAddDeposit;
 
     public HomeFragment() {
         // Required empty public constructor
