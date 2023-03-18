@@ -35,18 +35,23 @@ public class HomeFragment extends Fragment {
         fabSeeDeposits.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                replaceFragment(new DepositsFragment());
+                FragmentManager fragmentManager = getChildFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.depositsFragment,new DepositsFragment());
+                fragmentTransaction.commit();
+            }
+        });
+        fabAddDeposit = view.findViewById(R.id.fabAddDeposit);
+        fabAddDeposit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fragmentManager = getChildFragmentManager();
+                AddDepositFragment addDepositFragment = new AddDepositFragment();
+                addDepositFragment.show(fragmentManager,"AddDepositFragment");
             }
         });
 
         return view;
-    }
-
-    private void replaceFragment(Fragment fragment){
-        FragmentManager fragmentManager = getChildFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.depositsFragment,fragment);
-        fragmentTransaction.commit();
     }
 
 }
