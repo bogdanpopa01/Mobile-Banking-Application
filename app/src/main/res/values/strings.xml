@@ -47,4 +47,8 @@
     <string name="btnCloseAddDepositFragment">Close</string>
     <string name="btnOpenDepositAddDepositFragment">Open deposit</string>
 
+    <!-- row_deposit_design -->
+    <string name="tvInterestRate">Interest rate:</string>
+    <string name="tvTimeLeft">Time left:</string>
+
 </resources>

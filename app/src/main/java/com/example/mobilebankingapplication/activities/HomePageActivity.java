@@ -1,11 +1,13 @@
 package com.example.mobilebankingapplication.activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 
 import com.example.mobilebankingapplication.R;
 import com.example.mobilebankingapplication.databinding.ActivityHomePageBinding;
@@ -13,12 +15,11 @@ import com.example.mobilebankingapplication.fragments.HomeFragment;
 import com.example.mobilebankingapplication.fragments.ReportsFragment;
 import com.example.mobilebankingapplication.fragments.TransactionsFragment;
 import com.example.mobilebankingapplication.fragments.TransfersFragment;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 
 public class HomePageActivity extends AppCompatActivity {
-    HomeFragment homeFragment = new HomeFragment();
-    ReportsFragment reportsFragment = new ReportsFragment();
-    TransactionsFragment transactionsFragment = new TransactionsFragment();
-    TransfersFragment transfersFragment = new TransfersFragment();
+
     ActivityHomePageBinding activityHomePageBinding;
 
     @Override
@@ -26,26 +27,30 @@ public class HomePageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         activityHomePageBinding = ActivityHomePageBinding.inflate(getLayoutInflater());
         setContentView(activityHomePageBinding.getRoot());
+
+
+        BottomNavigationView bottomNavigationHomePage = findViewById(R.id.bottomNavigationHomePage);
         replaceFragment(new HomeFragment());
 
-        activityHomePageBinding.bottomNavigationHomePage.setOnItemSelectedListener(item -> {
-
-            switch (item.getItemId()){
-                case R.id.bottom_navigation_home:
-                    replaceFragment(homeFragment);
-                    break;
-                case R.id.bottom_navigation_reports:
-                    replaceFragment(reportsFragment);
-                    break;
-                case R.id.bottom_navigation_transactions:
-                    replaceFragment(transactionsFragment);
-                    break;
-                case R.id.bottom_navigation_transfers:
-                    replaceFragment(transfersFragment);
-                    break;
+        bottomNavigationHomePage.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.bottom_navigation_home:
+                        replaceFragment(new HomeFragment());
+                        return true;
+                    case R.id.bottom_navigation_reports:
+                        replaceFragment(new ReportsFragment());
+                        return true;
+                    case R.id.bottom_navigation_transfers:
+                        replaceFragment(new TransfersFragment());
+                        return true;
+                    case R.id.bottom_navigation_transactions:
+                        replaceFragment(new TransactionsFragment());
+                        return true;
+                }
+                return false;
             }
-
-            return true;
         });
     }
 
