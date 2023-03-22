@@ -10,8 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mobilebankingapplication.R;
-import com.example.mobilebankingapplication.classes.Deposit;
 import com.example.mobilebankingapplication.classes.Transaction;
+import com.example.mobilebankingapplication.utils.DateConverter;
 
 import java.util.ArrayList;
 
@@ -33,7 +33,10 @@ public class RecyclerViewAdapterTransactions extends RecyclerView.Adapter<Recycl
 
     @Override
     public void onBindViewHolder(@NonNull TransactionViewHolder holder, int position) {
-        holder.tvTransactionName.setText(arrayListTransactions.get(position).getTransactionName());
+        holder.tvTransactionType.setText(arrayListTransactions.get(position).getTransactionType().toString());
+        holder.tvTransactionDate.setText(DateConverter.dateToString(arrayListTransactions.get(position).getTransactionDate()));
+        holder.tvTransactionCurrency.setText("RON");
+        holder.tvTransactionAmount.setText(String.valueOf(arrayListTransactions.get(position).getTransactionAmount()));
     }
 
     @Override
@@ -42,11 +45,14 @@ public class RecyclerViewAdapterTransactions extends RecyclerView.Adapter<Recycl
     }
 
     public class TransactionViewHolder extends RecyclerView.ViewHolder{
-        private TextView tvTransactionName;
+        private TextView tvTransactionType, tvTransactionDate, tvTransactionCurrency, tvTransactionAmount;
 
         public TransactionViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvTransactionName = itemView.findViewById(R.id.tvTransactionName);
+            tvTransactionType = itemView.findViewById(R.id.tvTransactionType);
+            tvTransactionDate = itemView.findViewById(R.id.tvTransactionDate);
+            tvTransactionCurrency = itemView.findViewById(R.id.tvTransactionCurrency);
+            tvTransactionAmount = itemView.findViewById(R.id.tvTransactionAmount);
         }
     }
 }

@@ -33,8 +33,10 @@ public class TransactionsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Transaction transaction = new Transaction(1000L,"Tran",12.3,new Date(), TransactionType.MARE,1000);
+        Transaction transaction = new Transaction(1000L,"Tran",2412.3,new Date(), TransactionType.GROCERIES,1000);
+        Transaction transaction2 = new Transaction(1000L,"Zuldazar",54312.3,new Date(), TransactionType.GAS,1000);
         arrayListTransactions.add(transaction);
+        arrayListTransactions.add(transaction2);
     }
 
     @Override

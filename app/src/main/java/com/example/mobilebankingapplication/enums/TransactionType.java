@@ -1,5 +1,6 @@
 package com.example.mobilebankingapplication.enums;
 
 public enum TransactionType {
-    MARE
+    GROCERIES,
+    GAS
 }
