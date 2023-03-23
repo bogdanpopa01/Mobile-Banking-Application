@@ -31,7 +31,9 @@ public class DepositsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Deposit exampleDeposit = new Deposit(1000L,"Vacation",1230.50d,6,0.1,new Date(),1000);
+        Deposit exampleDeposit2 = new Deposit(1000L,"Car",3230.50d,6,0.1,new Date(),1000);
         arrayListDeposits.add(exampleDeposit);
+        arrayListDeposits.add(exampleDeposit2);
     }
 
     @Override
