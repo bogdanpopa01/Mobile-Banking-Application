@@ -14,12 +14,13 @@
     <string name="baseline_transfers_24">Transfers</string>
 
     <!-- Transfers Fragment -->
+    <string name="tvMakeATransfer">Make a transfer</string>
     <string name="etAmountTransfersFragment">Amount</string>
     <string name="tvIsInvoice">Is it an invoice?</string>
     <string name="etPayeeTransfersFragment">Payee</string>
     <string name="etIBANTransfersFragment">IBAN</string>
     <string name="etDescriptionTransfersFragment">Description</string>
-    <string name="btnSendTranfersFragment">Send</string>
+    <string name="btnSendTransfersFragment">Send</string>
 
     <!-- Home Fragment -->
     <string name="tvAppName">ZoroPay</string>
@@ -46,9 +47,19 @@
     <string name="tvTimeLeftValueAddDepositFragment">value</string>
     <string name="btnCloseAddDepositFragment">Close</string>
     <string name="btnOpenDepositAddDepositFragment">Open deposit</string>
+    <string name="tvPeriodAddDepositFragment">Period</string>
 
     <!-- row_deposit_design -->
     <string name="tvInterestRate">Interest rate:</string>
     <string name="tvTimeLeft">Time left:</string>
+    
+    <string-array name="array_add_deposits_period">
+        <item>1 month</item>
+        <item>2 months</item>
+        <item>3 months</item>
+        <item>6 months</item>
+        <item>12 months</item>
+        <item>24 months</item>
+    </string-array>
 
 </resources>
