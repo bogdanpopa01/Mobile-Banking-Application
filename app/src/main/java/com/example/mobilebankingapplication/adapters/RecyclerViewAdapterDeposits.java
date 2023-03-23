@@ -28,18 +28,13 @@ public class RecyclerViewAdapterDeposits extends RecyclerView.Adapter<RecyclerVi
     @NonNull
     @Override
     public DepositViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_deposit_design, parent, false);
-        return new DepositViewHolder(view);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_deposit_design2, parent, false);
+        return new RecyclerViewAdapterDeposits.DepositViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull DepositViewHolder holder, int position) {
-        holder.tvDepositName.setText(arrayListDeposits.get(position).getDepositName());
-        holder.tvCurrency.setText("RON");
-        holder.tvDepositAmount.setText(String.valueOf(arrayListDeposits.get(position).getDepositAmount()));
-        holder.tvInterestRateValue.setText(String.valueOf(arrayListDeposits.get(position).getDepositInterestRate()));
-        holder.tvTimeLeftValue.setText("da");
-        holder.imageViewDeposit.setImageResource(R.drawable.baseline_deposit_24);
+        holder.tvDepositName2.setText(arrayListDeposits.get(position).getDepositName());
     }
 
     @Override
@@ -48,17 +43,11 @@ public class RecyclerViewAdapterDeposits extends RecyclerView.Adapter<RecyclerVi
     }
 
     public class DepositViewHolder extends RecyclerView.ViewHolder {
-        private TextView tvDepositName, tvDepositAmount, tvCurrency, tvInterestRateValue,tvTimeLeftValue;
-        private ImageView imageViewDeposit;
+        private TextView tvDepositName2;
 
         public DepositViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvDepositName = itemView.findViewById(R.id.tvDepositName);
-            tvDepositAmount = itemView.findViewById(R.id.tvDepositAmount);
-            tvCurrency = itemView.findViewById(R.id.tvCurrency);
-            tvInterestRateValue = itemView.findViewById(R.id.tvInterestRateValue);
-            tvTimeLeftValue = itemView.findViewById(R.id.tvTimeLeftValue);
-            imageViewDeposit = itemView.findViewById(R.id.imageViewDeposit);
+            tvDepositName2 = itemView.findViewById(R.id.tvDepositName2);
         }
     }
 }

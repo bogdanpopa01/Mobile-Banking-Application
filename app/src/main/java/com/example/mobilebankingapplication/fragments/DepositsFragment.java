@@ -30,6 +30,8 @@ public class DepositsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Deposit exampleDeposit = new Deposit(1000L,"Vacation",1230.50d,6,0.1,new Date(),1000);
+        arrayListDeposits.add(exampleDeposit);
     }
 
     @Override
@@ -38,14 +40,13 @@ public class DepositsFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_deposits, container, false);
 
-        Deposit exampleDeposit = new Deposit(1000L,"Vacation",1230.50d,6,0.1,new Date(),1000);
-        arrayListDeposits.add(exampleDeposit);
 
-//        recyclerViewDeposits = view.findViewById(R.id.recyclerViewDeposits);
-//        recyclerViewDeposits.setLayoutManager(new LinearLayoutManager(getContext()));
-//
-//        recyclerViewAdapterDeposits = new RecyclerViewAdapterDeposits(arrayListDeposits,getContext());
-//        recyclerViewDeposits.setAdapter(recyclerViewAdapterDeposits);
+
+        recyclerViewDeposits = view.findViewById(R.id.recyclerViewDeposits);
+        recyclerViewDeposits.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        recyclerViewAdapterDeposits = new RecyclerViewAdapterDeposits(arrayListDeposits,getContext());
+        recyclerViewDeposits.setAdapter(recyclerViewAdapterDeposits);
 
         return view;
     }
