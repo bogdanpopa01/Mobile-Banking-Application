@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.mobilebankingapplication.R;
 import com.example.mobilebankingapplication.adapters.RecyclerViewAdapterDeposits;
@@ -19,6 +20,7 @@ import java.util.Date;
 
 
 public class DepositsFragment extends Fragment {
+    public static final String KEY_SEND_DEPOSIT = "sendDepositBetweenFragments";
     private RecyclerView recyclerViewDeposits;
     private RecyclerViewAdapterDeposits recyclerViewAdapterDeposits;
     private ArrayList<Deposit> arrayListDeposits = new ArrayList<>();
@@ -40,9 +42,16 @@ public class DepositsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        Bundle bundle = getArguments();
+        if(bundle!=null){
+            Deposit deposit = bundle.getParcelable(KEY_SEND_DEPOSIT);
+            arrayListDeposits.add(deposit);
+        } else{
+            Toast.makeText(getContext(),"The bundle is empty!",Toast.LENGTH_SHORT).show();
+        }
+
+
         View view = inflater.inflate(R.layout.fragment_deposits, container, false);
-
-
 
         recyclerViewDeposits = view.findViewById(R.id.recyclerViewDeposits);
         recyclerViewDeposits.setLayoutManager(new LinearLayoutManager(getContext()));

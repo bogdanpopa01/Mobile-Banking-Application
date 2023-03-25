@@ -44,9 +44,7 @@ public class TransactionsFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_transactions, container, false);
-
-
-
+        
         recyclerViewTransactions = view.findViewById(R.id.recyclerViewTransactions);
         recyclerViewTransactions.setLayoutManager(new LinearLayoutManager(getContext()));
 

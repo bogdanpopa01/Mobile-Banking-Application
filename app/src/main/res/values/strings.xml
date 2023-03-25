@@ -49,6 +49,9 @@
     <string name="btnOpenDepositAddDepositFragment">Open deposit</string>
     <string name="tvPeriodAddDepositFragment">Period</string>
 
+    <string name="error_amount">This field cannot be empty!</string>
+    <string name="error_name">This field cannot be empty!</string>
+
     <!-- row_deposit_design -->
     <string name="tvInterestRate">Interest rate:</string>
     <string name="tvTimeLeft">Time left:</string>

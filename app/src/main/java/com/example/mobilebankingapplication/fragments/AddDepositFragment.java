@@ -17,7 +17,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.mobilebankingapplication.R;
+import com.example.mobilebankingapplication.classes.Deposit;
+import com.example.mobilebankingapplication.utils.RandomLongGenerator;
 
+import java.util.Date;
 import java.util.Objects;
 
 public class AddDepositFragment extends DialogFragment {
@@ -74,7 +77,6 @@ public class AddDepositFragment extends DialogFragment {
                         break;
                     default:
                         break;
-
                 }
             }
 
@@ -83,6 +85,7 @@ public class AddDepositFragment extends DialogFragment {
 
             }
         });
+
 
         btnClose.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,8 +97,20 @@ public class AddDepositFragment extends DialogFragment {
         btnOpenDeposit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if(validation()){
+                    Deposit deposit = createDeposit();
+                    Toast.makeText(getContext(),"The deposit was created!",Toast.LENGTH_SHORT).show();
+                    if(deposit!=null){
+                        Bundle bundle = new Bundle();
+                        bundle.putParcelable(DepositsFragment.KEY_SEND_DEPOSIT,deposit);
+                        DepositsFragment depositsFragment = new DepositsFragment();
+                        depositsFragment.setArguments(bundle);
+                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.depositsFragment, depositsFragment).commit();
+                    }
+                }
+                Objects.requireNonNull(getDialog()).dismiss();
             }
+
         });
         return view;
     }
@@ -113,6 +128,61 @@ public class AddDepositFragment extends DialogFragment {
 
         tvInterestRateValue = view.findViewById(R.id.tvInterestRateValueAddDepositFragment);
         tvTimeLeftValue = view.findViewById(R.id.tvTimeLeftValueAddDepositFragment);
+    }
+
+    private Deposit createDeposit(){
+        long depositId = RandomLongGenerator.generateLong();
+        String depositName = etDepositName.getText().toString();
+        double depositAmount = Double.parseDouble(etDepositAmount.getText().toString());
+        String depositPeriodString = tvTimeLeftValue.getText().toString();
+        int depositPeriod=0;
+        switch (depositPeriodString){
+            case "1 month":
+                depositPeriod = 1;
+                break;
+            case "2 months":
+                depositPeriod = 2;
+                break;
+            case "3 months":
+                depositPeriod = 3;
+                break;
+            case "6 months":
+                depositPeriod = 6;
+                break;
+            case "12 months":
+                depositPeriod = 12;
+                break;
+            case "24 months":
+                depositPeriod = 24;
+                break;
+
+        }
+        double depositInterestRate = Double.parseDouble(tvInterestRateValue.getText().toString());
+        Date depositDate = new Date();
+        long userId = RandomLongGenerator.generateLong();
+
+        Deposit deposit = new Deposit(depositId,depositName,depositAmount,depositPeriod,depositInterestRate,depositDate,userId);
+
+        if(deposit != null){
+            return deposit;
+        }
+        try {
+            throw new Exception("Deposit is null!");
+        } catch (Exception e) {
+            throw new RuntimeException("Deposit is null!");
+        }
+    }
+
+    private boolean validation(){
+        if(etDepositAmount.getText() == null || etDepositAmount.getText().toString().trim().isEmpty()){
+            Toast.makeText(getContext(),R.string.error_amount,Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if(etDepositName.getText() == null || etDepositName.getText().toString().trim().isEmpty()){
+            Toast.makeText(getContext(),R.string.error_name,Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
     }
 
 
