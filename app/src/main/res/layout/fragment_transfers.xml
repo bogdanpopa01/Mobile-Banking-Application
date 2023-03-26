@@ -36,6 +36,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
+            android:inputType="numberDecimal"
             android:hint="@string/etAmountTransfersFragment" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -105,6 +106,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
+            android:maxLength="29"
             android:hint="@string/etIBANTransfersFragment" />
     </com.google.android.material.textfield.TextInputLayout>
 

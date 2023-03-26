@@ -62,4 +62,14 @@
         <item>24 months</item>
     </string-array>
 
+    <string-array name="array_companies">
+        <item>Telekom</item>
+        <item>Orange</item>
+        <item>Vodafone</item>
+        <item>RCS&amp;RDS</item>
+        <item>Digi</item>
+        <item>Enel</item>
+        <item>Apa Nova</item>
+    </string-array>
+
 </resources>
