@@ -5,6 +5,9 @@ import android.os.Bundle;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +49,7 @@ public class AddDepositFragment extends DialogFragment {
 
         view = inflater.inflate(R.layout.fragment_add_deposit, container, false);
         initializeComponents();
+        depositAmountValidation();
 
         spinnerPeriodAddDepositFragment.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -107,8 +111,11 @@ public class AddDepositFragment extends DialogFragment {
                         depositsFragment.setArguments(bundle);
                         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.depositsFragment, depositsFragment).commit();
                     }
+                    if(deposit!=null){
+                        Objects.requireNonNull(getDialog()).dismiss();
+                    }
                 }
-                Objects.requireNonNull(getDialog()).dismiss();
+
             }
 
         });
@@ -118,6 +125,7 @@ public class AddDepositFragment extends DialogFragment {
     private void initializeComponents() {
         etDepositName = view.findViewById(R.id.etDepositNameAddDepositFragment);
         etDepositAmount = view.findViewById(R.id.etDepositAmountAddDepositFragment);
+
         btnClose = view.findViewById(R.id.btnCloseAddDepositFragment);
         btnOpenDeposit = view.findViewById(R.id.btnOpenDepositAddDepositFragment);
         spinnerPeriodAddDepositFragment = view.findViewById(R.id.spinnerDepositPeriodAddDepositFragment);
@@ -135,7 +143,7 @@ public class AddDepositFragment extends DialogFragment {
         String depositName = etDepositName.getText().toString();
         double depositAmount = Double.parseDouble(etDepositAmount.getText().toString());
         String depositPeriodString = tvTimeLeftValue.getText().toString();
-        int depositPeriod=0;
+        int depositPeriod=1;
         switch (depositPeriodString){
             case "1 month":
                 depositPeriod = 1;
@@ -174,16 +182,52 @@ public class AddDepositFragment extends DialogFragment {
     }
 
     private boolean validation(){
-        if(etDepositAmount.getText() == null || etDepositAmount.getText().toString().trim().isEmpty()){
-            Toast.makeText(getContext(),R.string.error_amount,Toast.LENGTH_SHORT).show();
-            return false;
-        }
+        boolean isValid = true;
+
         if(etDepositName.getText() == null || etDepositName.getText().toString().trim().isEmpty()){
-            Toast.makeText(getContext(),R.string.error_name,Toast.LENGTH_SHORT).show();
-            return false;
+            etDepositName.setError("The name field cannot be empty!");
+            isValid = false;
         }
-        return true;
+
+        if(etDepositAmount.getText() == null || etDepositAmount.getText().toString().trim().isEmpty()){
+            etDepositAmount.setError("The amount field cannot be empty!");
+            isValid = false;
+        }
+
+        return isValid;
     }
+
+    // to ensure that the user enters only numbers
+    private void depositAmountValidation(){
+
+        etDepositAmount.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(s.length() > 0 && !isValidDepositAmount(s.toString())){
+                    String string = validString(s.toString());
+                    etDepositAmount.setText(string);
+                    etDepositAmount.setSelection(string.length());
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+    }
+
+    private boolean isValidDepositAmount(String string) {
+        return string.matches("[0-9.]*");
+    }
+
+    private String validString(String string){
+        return string.replaceAll("[^0-9.]", "");
+    }
+
 
 
 
