@@ -21,6 +21,8 @@ import com.example.mobilebankingapplication.R;
 import com.example.mobilebankingapplication.classes.Transfer;
 import com.example.mobilebankingapplication.utils.RandomLongGenerator;
 
+import java.util.Objects;
+
 public class TransfersFragment extends Fragment {
     private EditText etAmountTranfersFragment, etPayeeTransfersFragment, etIBANTransfersFragment, etDescriptionTransfersActivity;
     private SwitchCompat switchIsInvoice;
@@ -53,8 +55,10 @@ public class TransfersFragment extends Fragment {
                 if(validation()){
                     Transfer transfer = createTransfer();
                     if(transfer!=null){
-                        // to do
+                        Bundle bundle = new Bundle();
+                        bundle.putParcelable(TransactionsFragment.KEY_SEND_TRANSACTION,transfer);
                     }
+
                 }
 
             }

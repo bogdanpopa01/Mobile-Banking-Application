@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class TransactionsFragment extends Fragment {
+    public static final String KEY_SEND_TRANSACTION = "sendTransaction";
     private RecyclerView recyclerViewTransactions;
     private RecyclerViewAdapterTransactions recyclerViewAdapterTransactions;
     private ArrayList<Transaction> arrayListTransactions = new ArrayList<>();

@@ -56,27 +56,27 @@ public class AddDepositFragment extends DialogFragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 switch (position){
                     case 0:
-                        tvInterestRateValue.setText("0.4");
+                        tvInterestRateValue.setText("0.04");
                         tvTimeLeftValue.setText("1 month");
                         break;
                     case 1:
-                        tvInterestRateValue.setText("0.45");
+                        tvInterestRateValue.setText("0.045");
                         tvTimeLeftValue.setText("2 months");
                         break;
                     case 2:
-                        tvInterestRateValue.setText("0.5");
+                        tvInterestRateValue.setText("0.05");
                         tvTimeLeftValue.setText("3 months");
                         break;
                     case 3:
-                        tvInterestRateValue.setText("0.55");
+                        tvInterestRateValue.setText("0.055");
                         tvTimeLeftValue.setText("6 months");
                         break;
                     case 4:
-                        tvInterestRateValue.setText("0.8");
+                        tvInterestRateValue.setText("0.08");
                         tvTimeLeftValue.setText("12 months");
                         break;
                     case 5:
-                        tvInterestRateValue.setText("0.9");
+                        tvInterestRateValue.setText("0.09");
                         tvTimeLeftValue.setText("24 months");
                         break;
                     default:
