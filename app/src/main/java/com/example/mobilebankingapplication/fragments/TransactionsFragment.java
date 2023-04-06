@@ -26,6 +26,7 @@ import com.example.mobilebankingapplication.classes.Transaction;
 import com.example.mobilebankingapplication.classes.Transfer;
 import com.example.mobilebankingapplication.database.Constants;
 import com.example.mobilebankingapplication.enums.TransactionType;
+import com.example.mobilebankingapplication.utils.DateConverter;
 import com.example.mobilebankingapplication.utils.RandomLongGenerator;
 import com.example.mobilebankingapplication.utils.SharedViewModel;
 
@@ -53,7 +54,7 @@ public class TransactionsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         Transaction transaction1 = new Transaction(1000L, "Tran", 2412.3, new Date(), TransactionType.GROCERIES, 1000);
         Transaction transaction2 = new Transaction(1000L, "Zuldazar", 54312.3, new Date(), TransactionType.GAS, 1000);
-        Transfer transfer1 = new Transfer(RandomLongGenerator.generateLong(), 3221.2, "Ionescu", "RO65RNCB1234123412341234", "Nice", RandomLongGenerator.generateLong());
+        Transfer transfer1 = new Transfer(RandomLongGenerator.generateLong(), 3221.2, "Ionescu", "RO65RNCB1234123412341234", "Nice", RandomLongGenerator.generateLong(), new Date());
         Transaction transaction3 = new Transaction(transfer1.getTransferId(), "Transfer", transfer1.getTransferAmount(), new Date(), TransactionType.TRANSFER, RandomLongGenerator.generateLong());
         arrayListTransactions.add(transaction1);
         arrayListTransactions.add(transaction2);
@@ -79,7 +80,8 @@ public class TransactionsFragment extends Fragment {
                                                 jsonObject.getString("transferPayee"),
                                                 jsonObject.getString("transferIBAN"),
                                                 jsonObject.getString("transferDescription"),
-                                                jsonObject.getLong("userId")
+                                                jsonObject.getLong("userId"),
+                                                DateConverter.stringToDate(jsonObject.getString("transferDate"))
                                         );
                                         Transaction transaction = new Transaction(transfer.getTransferId(), "Transfer", transfer.getTransferAmount(), new Date(), TransactionType.TRANSFER, transfer.getUserId());
                                         arrayListTransactions.add(transaction);

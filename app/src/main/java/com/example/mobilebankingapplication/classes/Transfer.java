@@ -5,6 +5,10 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
+import com.example.mobilebankingapplication.utils.DateConverter;
+
+import java.util.Date;
+
 public class Transfer implements Parcelable {
 
     private long transferId;
@@ -13,14 +17,16 @@ public class Transfer implements Parcelable {
     private String transferIBAN;
     private String transferDescription;
     private long userId;
+    private Date transferDate;
 
-    public Transfer(long transferId, double transferAmount, String transferPayee, String transferIBAN, String transferDescription, long userId) {
+    public Transfer(long transferId, double transferAmount, String transferPayee, String transferIBAN, String transferDescription, long userId, Date transferDate) {
         this.transferId = transferId;
         this.transferAmount = transferAmount;
         this.transferPayee = transferPayee;
         this.transferIBAN = transferIBAN;
         this.transferDescription = transferDescription;
         this.userId = userId;
+        this.transferDate = transferDate;
     }
 
     protected Transfer(Parcel in) {
@@ -30,6 +36,7 @@ public class Transfer implements Parcelable {
         transferIBAN = in.readString();
         transferDescription = in.readString();
         userId = in.readLong();
+        transferDate = DateConverter.stringToDate(in.readString());
     }
 
     @Override
@@ -40,6 +47,7 @@ public class Transfer implements Parcelable {
         dest.writeString(transferIBAN);
         dest.writeString(transferDescription);
         dest.writeLong(userId);
+        dest.writeString(DateConverter.dateToString(transferDate));
     }
 
     @Override
@@ -107,6 +115,14 @@ public class Transfer implements Parcelable {
         this.userId = userId;
     }
 
+    public Date getTransferDate() {
+        return transferDate;
+    }
+
+    public void setTransferDate(Date transferDate) {
+        this.transferDate = transferDate;
+    }
+
     @Override
     public String toString() {
         return "Transfer{" +
@@ -116,6 +132,7 @@ public class Transfer implements Parcelable {
                 ", transferIBAN='" + transferIBAN + '\'' +
                 ", transferDescription='" + transferDescription + '\'' +
                 ", userId=" + userId +
+                ", transferDate=" + transferDate +
                 '}';
     }
 }

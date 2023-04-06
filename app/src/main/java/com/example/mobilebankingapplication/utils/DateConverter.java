@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.Locale;
 
 public class DateConverter {
-    private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
+    private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
 
     public static Date stringToDate(String value) {
         try {
