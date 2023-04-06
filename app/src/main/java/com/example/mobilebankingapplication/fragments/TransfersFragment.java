@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.text.Editable;
 import android.text.TextUtils;
@@ -29,7 +30,9 @@ import com.android.volley.toolbox.Volley;
 import com.example.mobilebankingapplication.R;
 import com.example.mobilebankingapplication.classes.Transfer;
 import com.example.mobilebankingapplication.database.Constants;
+import com.example.mobilebankingapplication.database.RequestHandler;
 import com.example.mobilebankingapplication.utils.RandomLongGenerator;
+import com.example.mobilebankingapplication.utils.SharedViewModel;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,11 +42,14 @@ import java.util.Map;
 import java.util.Objects;
 
 public class TransfersFragment extends Fragment {
+    public static final String KEY_SEND_TRANSFER_ID = "sendTransferId";
     private EditText etAmountTranfersFragment, etPayeeTransfersFragment, etIBANTransfersFragment, etDescriptionTransfersActivity;
     private SwitchCompat switchIsInvoice;
     private Spinner spinnerCompanies;
     private Button btnSend;
     private View view;
+
+    private SharedViewModel sharedViewModel;
 
     public TransfersFragment() {
         // Required empty public constructor
@@ -52,7 +58,6 @@ public class TransfersFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
@@ -69,6 +74,8 @@ public class TransfersFragment extends Fragment {
             public void onClick(View v) {
                 if (validation()) {
                     Transfer transfer = createTransfer();
+                    sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+                    sharedViewModel.setLongValue(transfer.getTransferId());
                     if (transfer != null) {
                         StringRequest stringRequest = new StringRequest(Request.Method.POST,
                                 Constants.URL_REGISTER_TRANSFER,
@@ -103,8 +110,7 @@ public class TransfersFragment extends Fragment {
                             }
                         };
 
-                        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
-                        requestQueue.add(stringRequest);
+                        RequestHandler.getInstance(getContext()).addToRequestQueue(stringRequest);
 
                     }
 
