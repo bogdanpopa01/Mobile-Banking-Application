@@ -42,17 +42,12 @@ import java.util.Map;
 import java.util.Objects;
 
 public class TransfersFragment extends Fragment {
-    public static final String KEY_SEND_TRANSFER_ID = "sendTransferId";
     private EditText etAmountTranfersFragment, etPayeeTransfersFragment, etIBANTransfersFragment, etDescriptionTransfersActivity;
-    private SwitchCompat switchIsInvoice;
-    private Spinner spinnerCompanies;
     private Button btnSend;
     private View view;
-
     private SharedViewModel sharedViewModel;
 
     public TransfersFragment() {
-        // Required empty public constructor
     }
 
     @Override
@@ -101,7 +96,6 @@ public class TransfersFragment extends Fragment {
                                 Map<String, String> params = new HashMap<>();
                                 params.put("transferId", String.valueOf(transfer.getTransferId()));
                                 params.put("transferAmount", String.valueOf(transfer.getTransferAmount()));
-                                params.put("transferIsInvoice", String.valueOf(transfer.isTransferIsInvoice()));
                                 params.put("transferPayee", transfer.getTransferPayee());
                                 params.put("transferIBAN", transfer.getTransferIBAN());
                                 params.put("transferDescription", transfer.getTransferDescription());
@@ -127,23 +121,18 @@ public class TransfersFragment extends Fragment {
         etIBANTransfersFragment = view.findViewById(R.id.etIBANTransfersFragment);
         etPayeeTransfersFragment = view.findViewById(R.id.etPayeeTransfersFragment);
         etDescriptionTransfersActivity = view.findViewById(R.id.etDescriptionTransfersFragment);
-        switchIsInvoice = view.findViewById(R.id.switchIsInvoice);
-        spinnerCompanies = view.findViewById(R.id.spinnerCompanies);
-        ArrayAdapter<CharSequence> arrayAdapterSpinner = ArrayAdapter.createFromResource(getContext(), R.array.array_companies, android.R.layout.simple_spinner_dropdown_item);
-        spinnerCompanies.setAdapter(arrayAdapterSpinner);
         btnSend = view.findViewById(R.id.btnSendTransfersFragment);
     }
 
     private Transfer createTransfer() {
         long transferId = RandomLongGenerator.generateLong();
         double transferAmount = Double.parseDouble(etAmountTranfersFragment.getText().toString());
-        boolean isInvoice = switchIsInvoice.isChecked();
         String transferPayee = etPayeeTransfersFragment.getText().toString();
         String transferIBAN = etIBANTransfersFragment.getText().toString().replace(" ", "");
         String transferDescription = etDescriptionTransfersActivity.getText().toString();
         long userId = RandomLongGenerator.generateLong();
 
-        Transfer transfer = new Transfer(transferId, transferAmount, isInvoice, transferPayee, transferIBAN, transferDescription, userId);
+        Transfer transfer = new Transfer(transferId, transferAmount, transferPayee, transferIBAN, transferDescription, userId);
 
         if (transfer != null) {
             return transfer;

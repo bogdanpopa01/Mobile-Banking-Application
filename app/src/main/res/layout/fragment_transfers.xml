@@ -40,37 +40,6 @@
             android:hint="@string/etAmountTransfersFragment" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <TextView
-        android:id="@+id/tvIsInvoice"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="25dp"
-        android:layout_marginTop="25dp"
-        android:text="@string/tvIsInvoice"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tilAmountTransfersFragment" />
-
-    <androidx.appcompat.widget.SwitchCompat
-        android:id="@+id/switchIsInvoice"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="25dp"
-        android:layout_marginTop="10dp"
-        android:text=""
-        app:layout_constraintStart_toEndOf="@+id/tvIsInvoice"
-        app:layout_constraintTop_toBottomOf="@+id/tilAmountTransfersFragment" />
-
-    <Spinner
-        android:id="@+id/spinnerCompanies"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="25dp"
-        android:layout_marginTop="25dp"
-        android:layout_marginEnd="25dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/switchIsInvoice" />
-
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilPayeeTransfersFragment"
         android:layout_width="0dp"
@@ -80,7 +49,7 @@
         android:layout_marginEnd="25dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinnerCompanies">
+        app:layout_constraintTop_toBottomOf="@+id/tilAmountTransfersFragment">
 
         <EditText
             android:id="@+id/etPayeeTransfersFragment"
@@ -130,7 +99,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="25dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="25dp"
         android:layout_marginEnd="25dp"
         android:text="@string/btnSendTransfersFragment"
         app:layout_constraintEnd_toEndOf="parent"

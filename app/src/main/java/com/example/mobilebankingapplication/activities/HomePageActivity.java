@@ -22,7 +22,6 @@ import com.google.android.material.navigation.NavigationBarView;
 
 public class HomePageActivity extends AppCompatActivity {
     private SharedViewModel sharedViewModel;
-
     ActivityHomePageBinding activityHomePageBinding;
 
     @Override
@@ -32,7 +31,6 @@ public class HomePageActivity extends AppCompatActivity {
         setContentView(activityHomePageBinding.getRoot());
 
         sharedViewModel = new ViewModelProvider(this).get(SharedViewModel.class);
-
 
         BottomNavigationView bottomNavigationHomePage = findViewById(R.id.bottomNavigationHomePage);
         replaceFragment(new HomeFragment());
@@ -66,7 +64,4 @@ public class HomePageActivity extends AppCompatActivity {
         fragmentTransaction.commit();
     }
 
-    public SharedViewModel getSharedViewModel(){
-        return sharedViewModel;
-    }
 }

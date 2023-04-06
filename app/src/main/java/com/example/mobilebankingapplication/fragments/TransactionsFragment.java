@@ -53,7 +53,7 @@ public class TransactionsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         Transaction transaction1 = new Transaction(1000L, "Tran", 2412.3, new Date(), TransactionType.GROCERIES, 1000);
         Transaction transaction2 = new Transaction(1000L, "Zuldazar", 54312.3, new Date(), TransactionType.GAS, 1000);
-        Transfer transfer1 = new Transfer(RandomLongGenerator.generateLong(), 3221.2, true, "Ionescu", "RO65RNCB1234123412341234", "Nice", RandomLongGenerator.generateLong());
+        Transfer transfer1 = new Transfer(RandomLongGenerator.generateLong(), 3221.2, "Ionescu", "RO65RNCB1234123412341234", "Nice", RandomLongGenerator.generateLong());
         Transaction transaction3 = new Transaction(transfer1.getTransferId(), "Transfer", transfer1.getTransferAmount(), new Date(), TransactionType.TRANSFER, RandomLongGenerator.generateLong());
         arrayListTransactions.add(transaction1);
         arrayListTransactions.add(transaction2);
@@ -76,8 +76,6 @@ public class TransactionsFragment extends Fragment {
                                         Transfer transfer = new Transfer(
                                                 jsonObject.getLong("transferId"),
                                                 jsonObject.getDouble("transferAmount"),
-                                                // I HERE CAN USE A SWITCH
-                                                true,
                                                 jsonObject.getString("transferPayee"),
                                                 jsonObject.getString("transferIBAN"),
                                                 jsonObject.getString("transferDescription"),

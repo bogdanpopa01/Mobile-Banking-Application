@@ -9,16 +9,14 @@ public class Transfer implements Parcelable {
 
     private long transferId;
     private double transferAmount;
-    private boolean transferIsInvoice;
     private String transferPayee;
     private String transferIBAN;
     private String transferDescription;
     private long userId;
 
-    public Transfer(long transferId, double transferAmount, boolean transferIsInvoice, String transferPayee, String transferIBAN, String transferDescription, long userId) {
+    public Transfer(long transferId, double transferAmount, String transferPayee, String transferIBAN, String transferDescription, long userId) {
         this.transferId = transferId;
         this.transferAmount = transferAmount;
-        this.transferIsInvoice = transferIsInvoice;
         this.transferPayee = transferPayee;
         this.transferIBAN = transferIBAN;
         this.transferDescription = transferDescription;
@@ -28,7 +26,6 @@ public class Transfer implements Parcelable {
     protected Transfer(Parcel in) {
         transferId = in.readLong();
         transferAmount = in.readDouble();
-        transferIsInvoice = in.readByte() != 0;
         transferPayee = in.readString();
         transferIBAN = in.readString();
         transferDescription = in.readString();
@@ -39,7 +36,6 @@ public class Transfer implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(transferId);
         dest.writeDouble(transferAmount);
-        dest.writeByte((byte) (transferIsInvoice ? 1 : 0));
         dest.writeString(transferPayee);
         dest.writeString(transferIBAN);
         dest.writeString(transferDescription);
@@ -79,14 +75,6 @@ public class Transfer implements Parcelable {
         this.transferAmount = transferAmount;
     }
 
-    public boolean isTransferIsInvoice() {
-        return transferIsInvoice;
-    }
-
-    public void setTransferIsInvoice(boolean transferIsInvoice) {
-        this.transferIsInvoice = transferIsInvoice;
-    }
-
     public String getTransferPayee() {
         return transferPayee;
     }
@@ -124,7 +112,6 @@ public class Transfer implements Parcelable {
         return "Transfer{" +
                 "transferId=" + transferId +
                 ", transferAmount=" + transferAmount +
-                ", transferIsInvoice=" + transferIsInvoice +
                 ", transferPayee='" + transferPayee + '\'' +
                 ", transferIBAN='" + transferIBAN + '\'' +
                 ", transferDescription='" + transferDescription + '\'' +
