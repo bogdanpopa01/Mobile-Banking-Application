@@ -60,48 +60,78 @@ public class TransactionsFragment extends Fragment {
         arrayListTransactions.add(transaction2);
         arrayListTransactions.add(transaction3);
 
-        sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
-        Long transferId = sharedViewModel.getData();
-        if (transferId != null) {
-            RequestQueue requestQueue = Volley.newRequestQueue(getContext());
-            String url = Constants.URL_GET_TRANSFER + "?transferId=" + transferId;
+        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+        String url = Constants.URL_GET_ALL_TRANSFERS;
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONArray jsonArray = new JSONArray(response);
+                            for(int i = 0; i < jsonArray.length(); i++) {
+                                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                                int transferId = jsonObject.getInt("transferId");
+                                double transferAmount = jsonObject.getDouble("transferAmount");
+                                int userId = jsonObject.getInt("userId");
+                                Date transferDate = DateConverter.stringToDate(jsonObject.getString("transferDate"));
 
-            StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                    new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
-                            if (transferId != null) {
-                                try {
-                                    JSONObject jsonObject = new JSONObject(response);
-                                    if (jsonObject.has("transferId")) {
-                                        Transfer transfer = new Transfer(
-                                                jsonObject.getLong("transferId"),
-                                                jsonObject.getDouble("transferAmount"),
-                                                jsonObject.getString("transferPayee"),
-                                                jsonObject.getString("transferIBAN"),
-                                                jsonObject.getString("transferDescription"),
-                                                jsonObject.getLong("userId"),
-                                                DateConverter.stringToDate(jsonObject.getString("transferDate"))
-                                        );
-                                        Transaction transaction = new Transaction(transfer.getTransferId(), "Transfer", transfer.getTransferAmount(), new Date(), TransactionType.TRANSFER, transfer.getUserId());
-                                        arrayListTransactions.add(transaction);
-                                        recyclerViewAdapterTransactions.notifyDataSetChanged();
-                                    }
-                                } catch (JSONException e) {
-                                    throw new RuntimeException(e);
-                                }
+                                Transaction transaction = new Transaction(transferId,"Transfer",transferAmount,transferDate,TransactionType.TRANSFER,userId);
+                                arrayListTransactions.add(transaction);
+                                recyclerViewAdapterTransactions.notifyDataSetChanged();
                             }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            // Handle error
-                        }
-                    });
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
 
-            requestQueue.add(stringRequest);
-        }
+            }
+        });
+
+//        sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+//        Long transferId = sharedViewModel.getData();
+//        if (transferId != null) {
+//            RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+//            String url = Constants.URL_GET_TRANSFER + "?transferId=" + transferId;
+//
+//            StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+//                    new Response.Listener<String>() {
+//                        @Override
+//                        public void onResponse(String response) {
+//                            if (transferId != null) {
+//                                try {
+//                                    JSONObject jsonObject = new JSONObject(response);
+//                                    if (jsonObject.has("transferId")) {
+//                                        Transfer transfer = new Transfer(
+//                                                jsonObject.getLong("transferId"),
+//                                                jsonObject.getDouble("transferAmount"),
+//                                                jsonObject.getString("transferPayee"),
+//                                                jsonObject.getString("transferIBAN"),
+//                                                jsonObject.getString("transferDescription"),
+//                                                jsonObject.getLong("userId"),
+//                                                DateConverter.stringToDate(jsonObject.getString("transferDate"))
+//                                        );
+//                                        Transaction transaction = new Transaction(transfer.getTransferId(), "Transfer", transfer.getTransferAmount(), new Date(), TransactionType.TRANSFER, transfer.getUserId());
+//                                        arrayListTransactions.add(transaction);
+//                                        recyclerViewAdapterTransactions.notifyDataSetChanged();
+//                                    }
+//                                } catch (JSONException e) {
+//                                    throw new RuntimeException(e);
+//                                }
+//                            }
+//                        }
+//                    },
+//                    new Response.ErrorListener() {
+//                        @Override
+//                        public void onErrorResponse(VolleyError error) {
+//                            // Handle error
+//                        }
+//                    });
+//
+//            requestQueue.add(stringRequest);
+//        }
     }
 
     @Override
@@ -115,6 +145,8 @@ public class TransactionsFragment extends Fragment {
 
         recyclerViewAdapterTransactions = new RecyclerViewAdapterTransactions(arrayListTransactions, getContext());
         recyclerViewTransactions.setAdapter(recyclerViewAdapterTransactions);
+
+        recyclerViewAdapterTransactions.notifyDataSetChanged();
 
         return view;
     }

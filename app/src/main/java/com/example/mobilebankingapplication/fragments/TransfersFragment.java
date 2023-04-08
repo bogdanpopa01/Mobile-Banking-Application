@@ -106,16 +106,12 @@ public class TransfersFragment extends Fragment {
                                 return params;
                             }
                         };
-
                         RequestHandler.getInstance(getContext()).addToRequestQueue(stringRequest);
-
                     }
-
                 }
 
             }
         });
-
         return view;
     }
 
