@@ -89,6 +89,7 @@ public class TransactionsFragment extends Fragment {
 
             }
         });
+        requestQueue.add(stringRequest);
 
 //        sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
 //        Long transferId = sharedViewModel.getData();
