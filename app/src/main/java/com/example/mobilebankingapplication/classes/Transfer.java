@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 
 import com.example.mobilebankingapplication.utils.DateConverter;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 public class Transfer implements Parcelable {
@@ -17,9 +18,9 @@ public class Transfer implements Parcelable {
     private String transferIBAN;
     private String transferDescription;
     private long userId;
-    private Date transferDate;
+    private Timestamp transferDate;
 
-    public Transfer(long transferId, double transferAmount, String transferPayee, String transferIBAN, String transferDescription, long userId, Date transferDate) {
+    public Transfer(long transferId, double transferAmount, String transferPayee, String transferIBAN, String transferDescription, long userId, Timestamp transferDate) {
         this.transferId = transferId;
         this.transferAmount = transferAmount;
         this.transferPayee = transferPayee;
@@ -36,7 +37,7 @@ public class Transfer implements Parcelable {
         transferIBAN = in.readString();
         transferDescription = in.readString();
         userId = in.readLong();
-        transferDate = DateConverter.stringToDate(in.readString());
+        transferDate = DateConverter.stringToTimestamp(in.readString());
     }
 
     @Override
@@ -47,7 +48,7 @@ public class Transfer implements Parcelable {
         dest.writeString(transferIBAN);
         dest.writeString(transferDescription);
         dest.writeLong(userId);
-        dest.writeString(DateConverter.dateToString(transferDate));
+        dest.writeString(DateConverter.timestampToString(transferDate));
     }
 
     @Override
@@ -115,11 +116,11 @@ public class Transfer implements Parcelable {
         this.userId = userId;
     }
 
-    public Date getTransferDate() {
+    public Timestamp getTransferDate() {
         return transferDate;
     }
 
-    public void setTransferDate(Date transferDate) {
+    public void setTransferDate(Timestamp transferDate) {
         this.transferDate = transferDate;
     }
 

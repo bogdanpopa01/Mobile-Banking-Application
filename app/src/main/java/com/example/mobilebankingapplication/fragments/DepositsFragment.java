@@ -69,17 +69,21 @@ public class DepositsFragment extends Fragment {
 
                                 Deposit deposit = new Deposit(depositId, depositName, depositAmount, depositPeriod, depositInterestRateValue, depositTimeLeftValue, userId);
                                 arrayListDeposits.add(deposit);
-                                Deposit[] deposits = arrayListDeposits.toArray(new Deposit[arrayListDeposits.size()]);
-                                Arrays.sort(deposits, new Comparator<Deposit>() {
-                                    @Override
-                                    public int compare(Deposit deposit1, Deposit deposit2) {
-                                        return deposit2.getDepositTimeLeft().compareTo(deposit1.getDepositTimeLeft());
-                                    }
-                                });
-                                arrayListDeposits.clear();
-                                arrayListDeposits.addAll(Arrays.asList(deposits));
-                                recyclerViewAdapterDeposits.notifyDataSetChanged();
                             }
+
+                            // sort the deposits array by time left in descending order
+                            Deposit[] deposits = arrayListDeposits.toArray(new Deposit[arrayListDeposits.size()]);
+                            Arrays.sort(deposits, new Comparator<Deposit>() {
+                                @Override
+                                public int compare(Deposit deposit1, Deposit deposit2) {
+                                    return deposit2.getDepositTimeLeft().compareTo(deposit1.getDepositTimeLeft());
+                                }
+                            });
+
+                            // clear the arrayListDeposits and add the sorted deposits back to it
+                            arrayListDeposits.clear();
+                            arrayListDeposits.addAll(Arrays.asList(deposits));
+                            recyclerViewAdapterDeposits.notifyDataSetChanged();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

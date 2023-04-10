@@ -34,7 +34,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -52,13 +55,11 @@ public class TransactionsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Transaction transaction1 = new Transaction(1000L, "Tran", 2412.3, new Date(), TransactionType.GROCERIES, 1000);
-        Transaction transaction2 = new Transaction(1000L, "Zuldazar", 54312.3, new Date(), TransactionType.GAS, 1000);
-        Transfer transfer1 = new Transfer(RandomLongGenerator.generateLong(), 3221.2, "Ionescu", "RO65RNCB1234123412341234", "Nice", RandomLongGenerator.generateLong(), new Date());
-        Transaction transaction3 = new Transaction(transfer1.getTransferId(), "Transfer", transfer1.getTransferAmount(), new Date(), TransactionType.TRANSFER, RandomLongGenerator.generateLong());
+        Transaction transaction1 = new Transaction(1000L, "Tran", 2412.3, new Timestamp(System.currentTimeMillis()), TransactionType.GROCERIES, 1000);
+        Transaction transaction2 = new Transaction(1000L, "Zuldazar", 54312.3, new Timestamp(System.currentTimeMillis()), TransactionType.GAS, 1000);
         arrayListTransactions.add(transaction1);
         arrayListTransactions.add(transaction2);
-        arrayListTransactions.add(transaction3);
+        // LE TIN MOMENTAN PENTRU CA NU AM BAZA DE DATE PENTRU TRANZACTII
 
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
         String url = Constants.URL_GET_ALL_TRANSFERS;
@@ -73,16 +74,30 @@ public class TransactionsFragment extends Fragment {
                                 int transferId = jsonObject.getInt("transferId");
                                 double transferAmount = jsonObject.getDouble("transferAmount");
                                 int userId = jsonObject.getInt("userId");
-                                Date transferDate = DateConverter.stringToDate(jsonObject.getString("transferDate"));
+                                Timestamp transferDate = DateConverter.stringToTimestamp(jsonObject.getString("transferDate"));
 
                                 Transaction transaction = new Transaction(transferId,"Transfer",transferAmount,transferDate,TransactionType.TRANSFER,userId);
                                 arrayListTransactions.add(transaction);
-                                recyclerViewAdapterTransactions.notifyDataSetChanged();
                             }
+
+                            // sort the transactions array by date in descending order
+                            Transaction[] transactions = arrayListTransactions.toArray(new Transaction[arrayListTransactions.size()]);
+                            Arrays.sort(transactions, new Comparator<Transaction>() {
+                                @Override
+                                public int compare(Transaction transaction1, Transaction transaction2) {
+                                    return transaction2.getTransactionDate().compareTo(transaction1.getTransactionDate());
+                                }
+                            });
+
+                            // clear the arrayListTransactions and add the sorted transactions back to it
+                            arrayListTransactions.clear();
+                            arrayListTransactions.addAll(Arrays.asList(transactions));
+                            recyclerViewAdapterTransactions.notifyDataSetChanged();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                     }
+
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {

@@ -38,6 +38,7 @@ import com.example.mobilebankingapplication.utils.SharedViewModel;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -102,7 +103,7 @@ public class TransfersFragment extends Fragment {
                                 params.put("transferIBAN", transfer.getTransferIBAN());
                                 params.put("transferDescription", transfer.getTransferDescription());
                                 params.put("userId", String.valueOf(transfer.getUserId()));
-                                params.put("transferDate", DateConverter.dateToString(transfer.getTransferDate()));
+                                params.put("transferDate", DateConverter.timestampToString(transfer.getTransferDate()));
                                 return params;
                             }
                         };
@@ -130,7 +131,7 @@ public class TransfersFragment extends Fragment {
         String transferIBAN = etIBANTransfersFragment.getText().toString().replace(" ", "");
         String transferDescription = etDescriptionTransfersActivity.getText().toString();
         long userId = RandomLongGenerator.generateLong();
-        Date transferDate = new Date();
+        Timestamp transferDate = new Timestamp(System.currentTimeMillis());
 
         Transfer transfer = new Transfer(transferId, transferAmount, transferPayee, transferIBAN, transferDescription, userId,transferDate);
 

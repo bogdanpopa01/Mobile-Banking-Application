@@ -6,17 +6,18 @@ import android.os.Parcelable;
 import com.example.mobilebankingapplication.enums.TransactionType;
 import com.example.mobilebankingapplication.utils.DateConverter;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 public class Transaction implements Parcelable {
     private long transactionId;
     private String transactionName;
     private double transactionAmount;
-    private Date transactionDate;
+    private Timestamp transactionDate;
     private TransactionType transactionType;
     private long userId;
 
-    public Transaction(long transactionId, String transactionName, double transactionAmount, Date transactionDate, TransactionType transactionType, long userId) {
+    public Transaction(long transactionId, String transactionName, double transactionAmount, Timestamp transactionDate, TransactionType transactionType, long userId) {
         this.transactionId = transactionId;
         this.transactionName = transactionName;
         this.transactionAmount = transactionAmount;
@@ -29,7 +30,7 @@ public class Transaction implements Parcelable {
         transactionId = in.readLong();
         transactionName = in.readString();
         transactionAmount = in.readDouble();
-        transactionDate = DateConverter.stringToDate(in.readString());
+        transactionDate = DateConverter.stringToTimestamp(in.readString());
         transactionType = TransactionType.valueOf(in.readString());
         userId = in.readLong();
     }
@@ -39,7 +40,7 @@ public class Transaction implements Parcelable {
         dest.writeLong(transactionId);
         dest.writeString(transactionName);
         dest.writeDouble(transactionAmount);
-        dest.writeString(DateConverter.dateToString(transactionDate));
+        dest.writeString(DateConverter.timestampToString(transactionDate));
         dest.writeString(transactionType.toString());
         dest.writeLong(userId);
     }
@@ -85,11 +86,11 @@ public class Transaction implements Parcelable {
         this.transactionAmount = transactionAmount;
     }
 
-    public Date getTransactionDate() {
+    public Timestamp getTransactionDate() {
         return transactionDate;
     }
 
-    public void setTransactionDate(Date transactionDate) {
+    public void setTransactionDate(Timestamp transactionDate) {
         this.transactionDate = transactionDate;
     }
 
