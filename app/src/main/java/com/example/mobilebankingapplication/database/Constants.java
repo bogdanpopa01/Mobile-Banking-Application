@@ -5,4 +5,5 @@ public class Constants {
     public static final String URL_REGISTER_TRANSFER = ROOT_URL + "registerTransfer.php";
     public static final String URL_GET_TRANSFER = ROOT_URL + "getTransfer.php";
     public static final String URL_GET_ALL_TRANSFERS = ROOT_URL + "getAllTransfers.php";
+    public static final String URL_REGISTER_DEPOSIT = ROOT_URL + "registerDeposit.php";
 }

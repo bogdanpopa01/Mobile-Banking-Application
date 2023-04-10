@@ -2,6 +2,7 @@ package com.example.mobilebankingapplication.fragments;
 
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
@@ -19,11 +20,24 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.example.mobilebankingapplication.R;
 import com.example.mobilebankingapplication.classes.Deposit;
+import com.example.mobilebankingapplication.database.Constants;
+import com.example.mobilebankingapplication.database.RequestHandler;
+import com.example.mobilebankingapplication.utils.DateConverter;
 import com.example.mobilebankingapplication.utils.RandomLongGenerator;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class AddDepositFragment extends DialogFragment {
@@ -103,16 +117,40 @@ public class AddDepositFragment extends DialogFragment {
             public void onClick(View v) {
                 if(validation()){
                     Deposit deposit = createDeposit();
-                    Toast.makeText(getContext(),"The deposit was created!",Toast.LENGTH_SHORT).show();
-                    if(deposit!=null){
-                        Bundle bundle = new Bundle();
-                        bundle.putParcelable(DepositsFragment.KEY_SEND_DEPOSIT,deposit);
-                        DepositsFragment depositsFragment = new DepositsFragment();
-                        depositsFragment.setArguments(bundle);
-                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.depositsFragment, depositsFragment).commit();
-                    }
-                    if(deposit!=null){
-                        Objects.requireNonNull(getDialog()).dismiss();
+                    if(deposit != null){
+                        StringRequest stringRequest = new StringRequest(Request.Method.POST,
+                                Constants.URL_REGISTER_DEPOSIT,
+                                new Response.Listener<String>() {
+                                    @Override
+                                    public void onResponse(String response) {
+                                        try {
+                                            JSONObject jsonObject = new JSONObject(response);
+                                            Toast.makeText(getContext(), jsonObject.getString("message"), Toast.LENGTH_LONG).show();
+                                        } catch (JSONException e) {
+                                            throw new RuntimeException(e);
+                                        }
+                                    }
+                                }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_LONG).show();
+                            }
+                        }) {
+                            @Nullable
+                            @Override
+                            protected Map<String, String> getParams() throws AuthFailureError {
+                                Map<String, String> params = new HashMap<>();
+                                params.put("depositId", String.valueOf(deposit.getDepositId()));
+                                params.put("depositName", deposit.getDepositName());
+                                params.put("depositAmount", String.valueOf(deposit.getDepositAmount()) );
+                                params.put("depositPeriod",String.valueOf(deposit.getDepositPeriod()));
+                                params.put("depositInterestRate", String.valueOf(deposit.getDepositInterestRate()));
+                                params.put("depositTimeLeft", DateConverter.dateToString(deposit.getDepositTimeLeft()));
+                                params.put("userId", String.valueOf(deposit.getUserId()));
+                                return params;
+                            }
+                        };
+                        RequestHandler.getInstance(getContext()).addToRequestQueue(stringRequest);
                     }
                 }
 
