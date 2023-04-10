@@ -35,6 +35,7 @@ import com.example.mobilebankingapplication.utils.RandomLongGenerator;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -145,7 +146,7 @@ public class AddDepositFragment extends DialogFragment {
                                 params.put("depositAmount", String.valueOf(deposit.getDepositAmount()) );
                                 params.put("depositPeriod",String.valueOf(deposit.getDepositPeriod()));
                                 params.put("depositInterestRate", String.valueOf(deposit.getDepositInterestRate()));
-                                params.put("depositTimeLeft", DateConverter.dateToString(deposit.getDepositTimeLeft()));
+                                params.put("depositTimeLeft", DateConverter.timestampToString(deposit.getDepositTimeLeft()));
                                 params.put("userId", String.valueOf(deposit.getUserId()));
                                 return params;
                             }
@@ -204,7 +205,7 @@ public class AddDepositFragment extends DialogFragment {
 
         }
         double depositInterestRate = Double.parseDouble(tvInterestRateValue.getText().toString());
-        Date depositDate = new Date();
+        Timestamp depositDate = new Timestamp(System.currentTimeMillis());
         long userId = RandomLongGenerator.generateLong();
 
         Deposit deposit = new Deposit(depositId,depositName,depositAmount,depositPeriod,depositInterestRate,depositDate,userId);

@@ -29,12 +29,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 
 
 public class DepositsFragment extends Fragment {
-    public static final String KEY_SEND_DEPOSIT = "sendDepositBetweenFragments";
     private RecyclerView recyclerViewDeposits;
     private RecyclerViewAdapterDeposits recyclerViewAdapterDeposits;
     private ArrayList<Deposit> arrayListDeposits = new ArrayList<>();
@@ -62,7 +62,7 @@ public class DepositsFragment extends Fragment {
                                 double depositAmount = jsonObject.getDouble("depositAmount");
                                 int depositPeriod = jsonObject.getInt("depositPeriod");
                                 double depositInterestRateValue = jsonObject.getDouble("depositInterestRate");
-                                Date depositTimeLeftValue = DateConverter.stringToDate(jsonObject.getString("depositTimeLeft"));
+                                Timestamp depositTimeLeftValue = DateConverter.stringToTimestamp(jsonObject.getString("depositTimeLeft"));
                                 long userId = jsonObject.getInt("userId");
 
                                 Deposit deposit = new Deposit(depositId, depositName, depositAmount, depositPeriod, depositInterestRateValue, depositTimeLeftValue, userId);

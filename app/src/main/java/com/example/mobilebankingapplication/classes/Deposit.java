@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 
 import com.example.mobilebankingapplication.utils.DateConverter;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 public class Deposit implements Parcelable {
@@ -15,10 +16,10 @@ public class Deposit implements Parcelable {
     private double depositAmount;
     private int depositPeriod;
     private double depositInterestRate;
-    private Date depositTimeLeft;
+    private Timestamp depositTimeLeft;
     private long userId;
 
-    public Deposit(long depositId, String depositName, double depositAmount, int depositPeriod, double depositInterestRate, Date depositTimeLeft, long userId) {
+    public Deposit(long depositId, String depositName, double depositAmount, int depositPeriod, double depositInterestRate, Timestamp depositTimeLeft, long userId) {
         this.depositId = depositId;
         this.depositName = depositName;
         this.depositAmount = depositAmount;
@@ -34,7 +35,7 @@ public class Deposit implements Parcelable {
         depositAmount = in.readDouble();
         depositPeriod = in.readInt();
         depositInterestRate = in.readDouble();
-        depositTimeLeft = DateConverter.stringToDate(in.readString());
+        depositTimeLeft = DateConverter.stringToTimestamp(in.readString());
         userId = in.readLong();
     }
 
@@ -90,11 +91,11 @@ public class Deposit implements Parcelable {
         this.depositInterestRate = depositInterestRate;
     }
 
-    public Date getDepositTimeLeft() {
+    public Timestamp getDepositTimeLeft() {
         return depositTimeLeft;
     }
 
-    public void setDepositTimeLeft(Date depositTimeLeft) {
+    public void setDepositTimeLeft(Timestamp depositTimeLeft) {
         this.depositTimeLeft = depositTimeLeft;
     }
 
@@ -131,7 +132,7 @@ public class Deposit implements Parcelable {
         dest.writeDouble(depositAmount);
         dest.writeInt(depositPeriod);
         dest.writeDouble(depositInterestRate);
-        dest.writeString(DateConverter.dateToString(depositTimeLeft));
+        dest.writeString(DateConverter.timestampToString(depositTimeLeft));
         dest.writeLong(userId);
     }
 }
