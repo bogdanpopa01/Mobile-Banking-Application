@@ -38,8 +38,13 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 FragmentManager fragmentManager = getChildFragmentManager();
+                Fragment fragment = fragmentManager.findFragmentById(R.id.depositsFragment);
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.depositsFragment,new DepositsFragment());
+                if (fragment != null && fragment.isVisible()) {
+                    fragmentTransaction.remove(fragment);
+                } else {
+                    fragmentTransaction.add(R.id.depositsFragment, new DepositsFragment());
+                }
                 fragmentTransaction.commit();
             }
         });

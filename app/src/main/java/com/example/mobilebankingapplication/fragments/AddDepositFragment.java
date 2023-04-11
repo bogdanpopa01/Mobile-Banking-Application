@@ -5,6 +5,8 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.text.Editable;
 import android.text.TextUtils;
@@ -116,9 +118,9 @@ public class AddDepositFragment extends DialogFragment {
         btnOpenDeposit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(validation()){
+                if (validation()) {
                     Deposit deposit = createDeposit();
-                    if(deposit != null){
+                    if (deposit != null) {
                         StringRequest stringRequest = new StringRequest(Request.Method.POST,
                                 Constants.URL_REGISTER_DEPOSIT,
                                 new Response.Listener<String>() {
@@ -127,6 +129,7 @@ public class AddDepositFragment extends DialogFragment {
                                         try {
                                             JSONObject jsonObject = new JSONObject(response);
                                             Toast.makeText(getContext(), jsonObject.getString("message"), Toast.LENGTH_LONG).show();
+                                            closeAddDepositFragment();
                                         } catch (JSONException e) {
                                             throw new RuntimeException(e);
                                         }
@@ -154,10 +157,9 @@ public class AddDepositFragment extends DialogFragment {
                         RequestHandler.getInstance(getContext()).addToRequestQueue(stringRequest);
                     }
                 }
-
             }
-
         });
+
         return view;
     }
 
@@ -265,6 +267,13 @@ public class AddDepositFragment extends DialogFragment {
 
     private String validString(String string){
         return string.replaceAll("[^0-9.]", "");
+    }
+
+    private void closeAddDepositFragment(){
+        FragmentManager fragmentManager = getParentFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.remove(AddDepositFragment.this);
+        fragmentTransaction.commit();
     }
 
 
