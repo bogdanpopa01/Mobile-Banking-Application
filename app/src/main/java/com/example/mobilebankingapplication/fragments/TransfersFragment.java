@@ -72,8 +72,8 @@ public class TransfersFragment extends Fragment {
             public void onClick(View v) {
                 if (validation()) {
                     Transfer transfer = createTransfer();
-                    sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
-                    sharedViewModel.setLongValue(transfer.getTransferId());
+//                    sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+//                    sharedViewModel.setLongValue(transfer.getTransferId());
                     if (transfer != null) {
                         StringRequest stringRequest = new StringRequest(Request.Method.POST,
                                 Constants.URL_REGISTER_TRANSFER,

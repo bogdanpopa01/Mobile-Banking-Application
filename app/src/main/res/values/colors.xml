@@ -14,4 +14,6 @@
 
     <color name="navy">#00427A</color>
     <color name="light_navy">#005FAF</color>
+
+    <color name="red">#FF0000</color>
 </resources>

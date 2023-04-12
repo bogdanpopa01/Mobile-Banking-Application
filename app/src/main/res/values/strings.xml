@@ -52,7 +52,7 @@
     <!-- row_deposit_design -->
     <string name="tvInterestRate">Interest rate:</string>
     <string name="tvTimeLeft">Time left:</string>
-    
+
     <string-array name="array_add_deposits_period">
         <item>1 month</item>
         <item>2 months</item>
@@ -71,5 +71,11 @@
         <item>Enel</item>
         <item>Apa Nova</item>
     </string-array>
+
+    <!-- EditDepositFragment -->
+    <string name="tvEditDepositEditDepositFragment">Edit your deposit</string>
+    <string name="btnCancelEditDepositFragment">Cancel</string>
+    <string name="btnEditEditDepositFragment">Edit deposit</string>
+    <string name="btnDeleteDepositEditDepositFragment">Delete deposit</string>
 
 </resources>

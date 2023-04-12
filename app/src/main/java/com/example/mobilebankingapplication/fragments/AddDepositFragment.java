@@ -4,12 +4,10 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,7 +36,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.sql.Timestamp;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -57,7 +54,6 @@ public class AddDepositFragment extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
@@ -164,19 +160,19 @@ public class AddDepositFragment extends DialogFragment {
     }
 
     private void initializeComponents() {
-        etDepositName = view.findViewById(R.id.etDepositNameAddDepositFragment);
-        etDepositAmount = view.findViewById(R.id.etDepositAmountAddDepositFragment);
+        etDepositName = view.findViewById(R.id.etDepositNameEditDepositFragment);
+        etDepositAmount = view.findViewById(R.id.etDepositAmountEditDepositFragment);
 
-        btnClose = view.findViewById(R.id.btnCloseAddDepositFragment);
-        btnOpenDeposit = view.findViewById(R.id.btnOpenDepositAddDepositFragment);
-        spinnerPeriodAddDepositFragment = view.findViewById(R.id.spinnerDepositPeriodAddDepositFragment);
+        btnClose = view.findViewById(R.id.btnCancelEditDepositFragment);
+        btnOpenDeposit = view.findViewById(R.id.btnEditDepositEditDepositFragment);
+        spinnerPeriodAddDepositFragment = view.findViewById(R.id.spinnerDepositPeriodEditDepositFragment);
 
         ArrayAdapter<CharSequence> arrayAdapterSpinnerPeriod = ArrayAdapter.createFromResource(getContext(), R.array.array_add_deposits_period, android.R.layout.simple_spinner_item);
         arrayAdapterSpinnerPeriod.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerPeriodAddDepositFragment.setAdapter(arrayAdapterSpinnerPeriod);
 
-        tvInterestRateValue = view.findViewById(R.id.tvInterestRateValueAddDepositFragment);
-        tvTimeLeftValue = view.findViewById(R.id.tvTimeLeftValueAddDepositFragment);
+        tvInterestRateValue = view.findViewById(R.id.tvInterestRateValueEditDepositFragment);
+        tvTimeLeftValue = view.findViewById(R.id.tvTimeLeftValueEditDepositFragment);
     }
 
     private Deposit createDeposit(){
