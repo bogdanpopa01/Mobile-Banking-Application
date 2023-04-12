@@ -55,15 +55,56 @@ public class TransactionsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Transaction transaction1 = new Transaction(1000L, "Tran", 2412.3, new Timestamp(System.currentTimeMillis()), TransactionType.GROCERIES, 1000);
-        Transaction transaction2 = new Transaction(1000L, "Zuldazar", 54312.3, new Timestamp(System.currentTimeMillis()), TransactionType.GAS, 1000);
-        arrayListTransactions.add(transaction1);
-        arrayListTransactions.add(transaction2);
-        // LE TIN MOMENTAN PENTRU CA NU AM BAZA DE DATE PENTRU TRANZACTII
 
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
-        String url = Constants.URL_GET_ALL_TRANSFERS;
+
+        String url = Constants.URL_GET_ALL_TRANSACTIONS;
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONArray jsonArray = new JSONArray(response);
+                            for(int i = 0; i < jsonArray.length(); i++) {
+                                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                                long transactionId = jsonObject.getLong("transactionId");
+                                String transactionName = jsonObject.getString("transactionName");
+                                double transactionAmount = jsonObject.getDouble("transactionAmount");
+                                Timestamp transactionDate = DateConverter.stringToTimestamp(jsonObject.getString("transactionDate"));
+                                TransactionType transactionType = TransactionType.valueOf(jsonObject.getString("transactionType"));
+                                long userId = jsonObject.getLong("userId");
+
+                                Transaction transaction = new Transaction(transactionId,transactionName,transactionAmount,transactionDate,transactionType,userId);
+                                arrayListTransactions.add(transaction);
+                            }
+
+                            // sort the transactions array by date in descending order
+                            Transaction[] transactions = arrayListTransactions.toArray(new Transaction[arrayListTransactions.size()]);
+                            Arrays.sort(transactions, new Comparator<Transaction>() {
+                                @Override
+                                public int compare(Transaction transaction1, Transaction transaction2) {
+                                    return transaction2.getTransactionDate().compareTo(transaction1.getTransactionDate());
+                                }
+                            });
+
+                            // clear the arrayListTransactions and add the sorted transactions back to it
+                            arrayListTransactions.clear();
+                            arrayListTransactions.addAll(Arrays.asList(transactions));
+                            recyclerViewAdapterTransactions.notifyDataSetChanged();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+
+        String url2 = Constants.URL_GET_ALL_TRANSFERS;
+        StringRequest stringRequest2 = new StringRequest(Request.Method.GET, url2,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -105,6 +146,7 @@ public class TransactionsFragment extends Fragment {
             }
         });
         requestQueue.add(stringRequest);
+        requestQueue.add(stringRequest2);
 
 //        sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
 //        Long transferId = sharedViewModel.getData();
