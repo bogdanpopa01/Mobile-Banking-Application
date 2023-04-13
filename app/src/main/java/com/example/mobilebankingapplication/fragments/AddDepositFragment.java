@@ -272,7 +272,4 @@ public class AddDepositFragment extends DialogFragment {
         fragmentTransaction.commit();
     }
 
-
-
-
 }

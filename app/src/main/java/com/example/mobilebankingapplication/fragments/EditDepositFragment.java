@@ -1,9 +1,12 @@
 package com.example.mobilebankingapplication.fragments;
 
+import android.app.DownloadManager;
 import android.os.Bundle;
 
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -18,9 +21,19 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.mobilebankingapplication.R;
 import com.example.mobilebankingapplication.classes.Deposit;
+import com.example.mobilebankingapplication.database.Constants;
 import com.example.mobilebankingapplication.utils.DateConverter;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Objects;
 
@@ -54,7 +67,7 @@ public class EditDepositFragment extends DialogFragment {
         spinnerPeriodEditDepositFragment.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                switch (position){
+                switch (position) {
                     case 0:
                         tvInterestRateValue.setText("0.04");
                         tvTimeLeftValue.setText("1 month");
@@ -100,6 +113,14 @@ public class EditDepositFragment extends DialogFragment {
         Bundle bundle = getArguments();
         populateFields(bundle);
 
+        btnDeleteDeposit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                deleteDeposit(bundle);
+
+            }
+        });
+
         return view;
     }
 
@@ -121,7 +142,7 @@ public class EditDepositFragment extends DialogFragment {
     }
 
     // to ensure that the user enters only numbers
-    private void depositAmountValidation(){
+    private void depositAmountValidation() {
 
         etDepositAmount.addTextChangedListener(new TextWatcher() {
             @Override
@@ -130,7 +151,7 @@ public class EditDepositFragment extends DialogFragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(s.length() > 0 && !isValidDepositAmount(s.toString())){
+                if (s.length() > 0 && !isValidDepositAmount(s.toString())) {
                     String string = validString(s.toString());
                     etDepositAmount.setText(string);
                     etDepositAmount.setSelection(string.length());
@@ -147,14 +168,14 @@ public class EditDepositFragment extends DialogFragment {
         return string.matches("[0-9.]*");
     }
 
-    private String validString(String string){
+    private String validString(String string) {
         return string.replaceAll("[^0-9.]", "");
     }
 
-    private void populateFields(Bundle bundle){
+    private void populateFields(Bundle bundle) {
         if (bundle != null) {
             Deposit selectedDeposit = bundle.getParcelable(KEY_SEND_DEPOSIT_TO_EDIT);
-            if(selectedDeposit!=null){
+            if (selectedDeposit != null) {
                 etDepositAmount.setText(String.valueOf(selectedDeposit.getDepositAmount()));
                 etDepositName.setText(selectedDeposit.getDepositName());
                 double interestRateValue = selectedDeposit.getDepositInterestRate();
@@ -162,21 +183,62 @@ public class EditDepositFragment extends DialogFragment {
                 tvTimeLeftValue.setText(DateConverter.dateToString(selectedDeposit.getDepositTimeLeft()));
                 int priorSpinnerSelectedValue = 0;
                 double epsilone = 0.0001;
-                if(Math.abs(interestRateValue - 0.045) < epsilone){
+                if (Math.abs(interestRateValue - 0.045) < epsilone) {
                     priorSpinnerSelectedValue = 1;
-                } else if(Math.abs(interestRateValue - 0.05) < epsilone){
+                } else if (Math.abs(interestRateValue - 0.05) < epsilone) {
                     priorSpinnerSelectedValue = 2;
-                } else if(Math.abs(interestRateValue - 0.055) < epsilone){
+                } else if (Math.abs(interestRateValue - 0.055) < epsilone) {
                     priorSpinnerSelectedValue = 3;
-                } else if(Math.abs(interestRateValue - 0.08) < epsilone){
+                } else if (Math.abs(interestRateValue - 0.08) < epsilone) {
                     priorSpinnerSelectedValue = 4;
-                } else if(Math.abs(interestRateValue - 0.09) < epsilone){
+                } else if (Math.abs(interestRateValue - 0.09) < epsilone) {
                     priorSpinnerSelectedValue = 5;
                 }
                 spinnerPeriodEditDepositFragment.setSelection(priorSpinnerSelectedValue);
             } else {
-                Toast.makeText(getContext(),"The deposit wasn't sent!",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "The deposit wasn't sent!", Toast.LENGTH_SHORT).show();
             }
         }
     }
+
+    private void deleteDeposit(Bundle bundle) {
+        if (bundle != null) {
+            Deposit selectedDeposit = bundle.getParcelable(KEY_SEND_DEPOSIT_TO_EDIT);
+            if(selectedDeposit!=null){
+                RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+
+                long depositId = selectedDeposit.getDepositId();
+                String url = Constants.URL_DELETE_DEPOSIT + "?depositId=" + depositId;
+                StringRequest stringRequest = new StringRequest(Request.Method.DELETE, url, new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            String message = jsonObject.getString("message");
+                            Toast.makeText(getContext(),message,Toast.LENGTH_LONG).show();
+                            closeEditDepositFragment();
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                    }
+                });
+                requestQueue.add(stringRequest);
+            }
+        } else {
+            Toast.makeText(getContext(),"The bundle is null!",Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void closeEditDepositFragment(){
+        FragmentManager fragmentManager = getParentFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.remove(EditDepositFragment.this);
+        fragmentTransaction.commit();
+    }
+
 }
