@@ -78,4 +78,11 @@
     <string name="btnEditEditDepositFragment">Edit deposit</string>
     <string name="btnDeleteDepositEditDepositFragment">Delete deposit</string>
 
+    <!-- PopUpDeletionFragment -->
+    <string name="tvPopUpDeletionFragment1">Are you sure you want</string>
+    <string name="tvPopUpDeletionFragment2">to delete the deposit </string>
+    <string name="tvPopUpDeletionFragment3">with the name: </string>
+    <string name="btnYes">Yes</string>
+    <string name="btnNo">No</string>
+
 </resources>

@@ -3,6 +3,7 @@ package com.example.mobilebankingapplication.fragments;
 import android.app.DownloadManager;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -21,6 +22,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -31,10 +33,14 @@ import com.example.mobilebankingapplication.R;
 import com.example.mobilebankingapplication.classes.Deposit;
 import com.example.mobilebankingapplication.database.Constants;
 import com.example.mobilebankingapplication.utils.DateConverter;
+import com.example.mobilebankingapplication.utils.RandomLongGenerator;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.sql.Timestamp;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 
@@ -116,8 +122,17 @@ public class EditDepositFragment extends DialogFragment {
         btnDeleteDeposit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+//                FragmentManager fragmentManager = getChildFragmentManager();
+//                PopUpFragmentDeletion popUpFragmentDeletion = new PopUpFragmentDeletion();
+//                popUpFragmentDeletion.show(fragmentManager,"PopUpFragmentDeletion");
                 deleteDeposit(bundle);
+            }
+        });
 
+        btnEditDeposit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                updateDeposit(bundle);
             }
         });
 
@@ -239,6 +254,69 @@ public class EditDepositFragment extends DialogFragment {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.remove(EditDepositFragment.this);
         fragmentTransaction.commit();
+    }
+    private void updateDeposit(Bundle bundle){
+        if(bundle!=null) {
+            Deposit selectedDeposit = bundle.getParcelable(KEY_SEND_DEPOSIT_TO_EDIT);
+            if(selectedDeposit!=null) {
+                long depositId = selectedDeposit.getDepositId();
+                String depositName = etDepositName.getText().toString();
+                double depositAmount = Double.parseDouble(etDepositAmount.getText().toString());
+                int depositPeriod = selectedDeposit.getDepositPeriod();
+                double depositInterestRate = selectedDeposit.getDepositInterestRate();
+                Timestamp depositTimeLeft = selectedDeposit.getDepositTimeLeft();
+                long userId = selectedDeposit.getUserId();
+
+                if(!depositName.equals(selectedDeposit.getDepositName()) || depositAmount != selectedDeposit.getDepositAmount()) {
+
+                    Deposit deposit = new Deposit(depositId, depositName, depositAmount, depositPeriod, depositInterestRate, depositTimeLeft, userId);
+
+                    RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+                    String url = Constants.URL_UPDATE_DEPOSIT + "?depositId=" + depositId;
+
+                    StringRequest stringRequest = new StringRequest(Request.Method.PUT, url,
+                            new Response.Listener<String>() {
+                                @Override
+                                public void onResponse(String response) {
+                                    try {
+                                        JSONObject jsonObject = new JSONObject(response);
+                                        Toast.makeText(getContext(), jsonObject.getString("message"), Toast.LENGTH_LONG).show();
+                                        closeEditDepositFragment();
+                                    } catch (JSONException e) {
+                                        throw new RuntimeException(e);
+                                    }
+
+                                }
+                            }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    }) {
+                        @Nullable
+                        @Override
+                        protected Map<String, String> getParams() throws AuthFailureError {
+                            Map<String, String> params = new HashMap<>();
+                            params.put("depositId", String.valueOf(deposit.getDepositId()));
+                            params.put("depositName", deposit.getDepositName());
+                            params.put("depositAmount", String.valueOf(deposit.getDepositAmount()) );
+                            params.put("depositPeriod",String.valueOf(deposit.getDepositPeriod()));
+                            params.put("depositInterestRate", String.valueOf(deposit.getDepositInterestRate()));
+                            params.put("depositTimeLeft", DateConverter.timestampToString(deposit.getDepositTimeLeft()));
+                            params.put("userId", String.valueOf(deposit.getUserId()));
+                            return params;
+                        }
+                    };
+                    requestQueue.add(stringRequest);
+                } else {
+                    Toast.makeText(getContext(),"The values are the same!",Toast.LENGTH_LONG).show();
+                }
+            } else {
+                Toast.makeText(getContext(),"The selectedDeposit is null!",Toast.LENGTH_LONG).show();
+            }
+        } else {
+            Toast.makeText(getContext(),"The bundle is null!",Toast.LENGTH_LONG).show();
+        }
     }
 
 }
