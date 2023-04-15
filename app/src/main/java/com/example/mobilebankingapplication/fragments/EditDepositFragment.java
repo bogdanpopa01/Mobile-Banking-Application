@@ -32,6 +32,7 @@ import com.android.volley.toolbox.Volley;
 import com.example.mobilebankingapplication.R;
 import com.example.mobilebankingapplication.classes.Deposit;
 import com.example.mobilebankingapplication.database.Constants;
+import com.example.mobilebankingapplication.utils.ConverterUUID;
 import com.example.mobilebankingapplication.utils.DateConverter;
 import com.example.mobilebankingapplication.utils.RandomLongGenerator;
 
@@ -42,6 +43,7 @@ import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 
 
 public class EditDepositFragment extends DialogFragment {
@@ -197,16 +199,16 @@ public class EditDepositFragment extends DialogFragment {
                 tvInterestRateValue.setText(String.valueOf(interestRateValue));
                 tvTimeLeftValue.setText(DateConverter.dateToString(selectedDeposit.getDepositTimeLeft()));
                 int priorSpinnerSelectedValue = 0;
-                double epsilone = 0.0001;
-                if (Math.abs(interestRateValue - 0.045) < epsilone) {
+                double epsilon = 0.0001;
+                if (Math.abs(interestRateValue - 0.045) < epsilon) {
                     priorSpinnerSelectedValue = 1;
-                } else if (Math.abs(interestRateValue - 0.05) < epsilone) {
+                } else if (Math.abs(interestRateValue - 0.05) < epsilon) {
                     priorSpinnerSelectedValue = 2;
-                } else if (Math.abs(interestRateValue - 0.055) < epsilone) {
+                } else if (Math.abs(interestRateValue - 0.055) < epsilon) {
                     priorSpinnerSelectedValue = 3;
-                } else if (Math.abs(interestRateValue - 0.08) < epsilone) {
+                } else if (Math.abs(interestRateValue - 0.08) < epsilon) {
                     priorSpinnerSelectedValue = 4;
-                } else if (Math.abs(interestRateValue - 0.09) < epsilone) {
+                } else if (Math.abs(interestRateValue - 0.09) < epsilon) {
                     priorSpinnerSelectedValue = 5;
                 }
                 spinnerPeriodEditDepositFragment.setSelection(priorSpinnerSelectedValue);
@@ -222,7 +224,7 @@ public class EditDepositFragment extends DialogFragment {
             if(selectedDeposit!=null){
                 RequestQueue requestQueue = Volley.newRequestQueue(getContext());
 
-                long depositId = selectedDeposit.getDepositId();
+                UUID depositId = selectedDeposit.getDepositId();
                 String url = Constants.URL_DELETE_DEPOSIT + "?depositId=" + depositId;
                 StringRequest stringRequest = new StringRequest(Request.Method.DELETE, url, new Response.Listener<String>() {
                     @Override
@@ -259,13 +261,13 @@ public class EditDepositFragment extends DialogFragment {
         if(bundle!=null) {
             Deposit selectedDeposit = bundle.getParcelable(KEY_SEND_DEPOSIT_TO_EDIT);
             if(selectedDeposit!=null) {
-                long depositId = selectedDeposit.getDepositId();
+                UUID depositId = selectedDeposit.getDepositId();
                 String depositName = etDepositName.getText().toString();
                 double depositAmount = Double.parseDouble(etDepositAmount.getText().toString());
                 int depositPeriod = selectedDeposit.getDepositPeriod();
                 double depositInterestRate = selectedDeposit.getDepositInterestRate();
                 Timestamp depositTimeLeft = selectedDeposit.getDepositTimeLeft();
-                long userId = selectedDeposit.getUserId();
+                UUID userId = selectedDeposit.getUserId();
 
                 if(!depositName.equals(selectedDeposit.getDepositName()) || depositAmount != selectedDeposit.getDepositAmount()) {
 
@@ -297,13 +299,13 @@ public class EditDepositFragment extends DialogFragment {
                         @Override
                         protected Map<String, String> getParams() throws AuthFailureError {
                             Map<String, String> params = new HashMap<>();
-                            params.put("depositId", String.valueOf(deposit.getDepositId()));
+                            params.put("depositId", ConverterUUID.UUIDtoString(deposit.getDepositId()));
                             params.put("depositName", deposit.getDepositName());
                             params.put("depositAmount", String.valueOf(deposit.getDepositAmount()) );
                             params.put("depositPeriod",String.valueOf(deposit.getDepositPeriod()));
                             params.put("depositInterestRate", String.valueOf(deposit.getDepositInterestRate()));
                             params.put("depositTimeLeft", DateConverter.timestampToString(deposit.getDepositTimeLeft()));
-                            params.put("userId", String.valueOf(deposit.getUserId()));
+                            params.put("userId", ConverterUUID.UUIDtoString(deposit.getUserId()));
                             return params;
                         }
                     };

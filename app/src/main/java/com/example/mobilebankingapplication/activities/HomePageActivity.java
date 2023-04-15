@@ -63,5 +63,4 @@ public class HomePageActivity extends AppCompatActivity {
         fragmentTransaction.replace(R.id.fragmentContainerHomePage,fragment);
         fragmentTransaction.commit();
     }
-
 }

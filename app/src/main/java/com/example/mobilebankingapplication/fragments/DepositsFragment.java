@@ -23,6 +23,7 @@ import com.example.mobilebankingapplication.classes.Deposit;
 import com.example.mobilebankingapplication.classes.Transaction;
 import com.example.mobilebankingapplication.database.Constants;
 import com.example.mobilebankingapplication.enums.TransactionType;
+import com.example.mobilebankingapplication.utils.ConverterUUID;
 import com.example.mobilebankingapplication.utils.DateConverter;
 
 import org.json.JSONArray;
@@ -34,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.UUID;
 
 
 public class DepositsFragment extends Fragment {
@@ -59,13 +61,13 @@ public class DepositsFragment extends Fragment {
                             JSONArray jsonArray = new JSONArray(response);
                             for(int i = 0; i < jsonArray.length(); i++) {
                                 JSONObject jsonObject = jsonArray.getJSONObject(i);
-                                long depositId = jsonObject.getLong("depositId");
+                                UUID depositId = ConverterUUID.stringToUUID(jsonObject.getString("depositId"));
                                 String depositName = jsonObject.getString("depositName");
                                 double depositAmount = jsonObject.getDouble("depositAmount");
                                 int depositPeriod = jsonObject.getInt("depositPeriod");
                                 double depositInterestRateValue = jsonObject.getDouble("depositInterestRate");
                                 Timestamp depositTimeLeftValue = DateConverter.stringToTimestamp(jsonObject.getString("depositTimeLeft"));
-                                long userId = jsonObject.getInt("userId");
+                                UUID userId = ConverterUUID.stringToUUID(jsonObject.getString("userId"));
 
                                 Deposit deposit = new Deposit(depositId, depositName, depositAmount, depositPeriod, depositInterestRateValue, depositTimeLeftValue, userId);
                                 arrayListDeposits.add(deposit);

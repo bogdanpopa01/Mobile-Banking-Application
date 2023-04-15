@@ -5,22 +5,24 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
+import com.example.mobilebankingapplication.utils.ConverterUUID;
 import com.example.mobilebankingapplication.utils.DateConverter;
 
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.UUID;
 
 public class Transfer implements Parcelable {
 
-    private long transferId;
+    private UUID transferId;
     private double transferAmount;
     private String transferPayee;
     private String transferIBAN;
     private String transferDescription;
-    private long userId;
+    private UUID userId;
     private Timestamp transferDate;
 
-    public Transfer(long transferId, double transferAmount, String transferPayee, String transferIBAN, String transferDescription, long userId, Timestamp transferDate) {
+    public Transfer(UUID transferId, double transferAmount, String transferPayee, String transferIBAN, String transferDescription, UUID userId, Timestamp transferDate) {
         this.transferId = transferId;
         this.transferAmount = transferAmount;
         this.transferPayee = transferPayee;
@@ -31,23 +33,23 @@ public class Transfer implements Parcelable {
     }
 
     protected Transfer(Parcel in) {
-        transferId = in.readLong();
+        transferId = ConverterUUID.stringToUUID(in.readString());
         transferAmount = in.readDouble();
         transferPayee = in.readString();
         transferIBAN = in.readString();
         transferDescription = in.readString();
-        userId = in.readLong();
+        userId = ConverterUUID.stringToUUID(in.readString());
         transferDate = DateConverter.stringToTimestamp(in.readString());
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeLong(transferId);
+        dest.writeString(ConverterUUID.UUIDtoString(transferId));
         dest.writeDouble(transferAmount);
         dest.writeString(transferPayee);
         dest.writeString(transferIBAN);
         dest.writeString(transferDescription);
-        dest.writeLong(userId);
+        dest.writeString(ConverterUUID.UUIDtoString(userId));
         dest.writeString(DateConverter.timestampToString(transferDate));
     }
 
@@ -68,11 +70,11 @@ public class Transfer implements Parcelable {
         }
     };
 
-    public long getTransferId() {
+    public UUID getTransferId() {
         return transferId;
     }
 
-    public void setTransferId(long transferId) {
+    public void setTransferId(UUID transferId) {
         this.transferId = transferId;
     }
 
@@ -108,11 +110,11 @@ public class Transfer implements Parcelable {
         this.transferDescription = transferDescription;
     }
 
-    public long getUserId() {
+    public UUID getUserId() {
         return userId;
     }
 
-    public void setUserId(long userId) {
+    public void setUserId(UUID userId) {
         this.userId = userId;
     }
 

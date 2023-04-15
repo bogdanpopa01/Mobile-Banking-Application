@@ -29,8 +29,10 @@ import com.example.mobilebankingapplication.R;
 import com.example.mobilebankingapplication.classes.Deposit;
 import com.example.mobilebankingapplication.database.Constants;
 import com.example.mobilebankingapplication.database.RequestHandler;
+import com.example.mobilebankingapplication.utils.ConverterUUID;
 import com.example.mobilebankingapplication.utils.DateConverter;
 import com.example.mobilebankingapplication.utils.RandomLongGenerator;
+import com.example.mobilebankingapplication.utils.RandomUuidGenerator;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,6 +41,7 @@ import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 
 public class AddDepositFragment extends DialogFragment {
     private EditText etDepositName, etDepositAmount;
@@ -140,13 +143,13 @@ public class AddDepositFragment extends DialogFragment {
                             @Override
                             protected Map<String, String> getParams() throws AuthFailureError {
                                 Map<String, String> params = new HashMap<>();
-                                params.put("depositId", String.valueOf(deposit.getDepositId()));
+                                params.put("depositId", ConverterUUID.UUIDtoString(deposit.getDepositId()));
                                 params.put("depositName", deposit.getDepositName());
                                 params.put("depositAmount", String.valueOf(deposit.getDepositAmount()) );
                                 params.put("depositPeriod",String.valueOf(deposit.getDepositPeriod()));
                                 params.put("depositInterestRate", String.valueOf(deposit.getDepositInterestRate()));
                                 params.put("depositTimeLeft", DateConverter.timestampToString(deposit.getDepositTimeLeft()));
-                                params.put("userId", String.valueOf(deposit.getUserId()));
+                                params.put("userId",  ConverterUUID.UUIDtoString(deposit.getUserId()));
                                 return params;
                             }
                         };
@@ -176,15 +179,12 @@ public class AddDepositFragment extends DialogFragment {
     }
 
     private Deposit createDeposit(){
-        long depositId = RandomLongGenerator.generateLong();
+        UUID depositId = RandomUuidGenerator.generateRandomUuid();
         String depositName = etDepositName.getText().toString();
         double depositAmount = Double.parseDouble(etDepositAmount.getText().toString());
         String depositPeriodString = tvTimeLeftValue.getText().toString();
         int depositPeriod=1;
         switch (depositPeriodString){
-            case "1 month":
-                depositPeriod = 1;
-                break;
             case "2 months":
                 depositPeriod = 2;
                 break;
@@ -204,7 +204,7 @@ public class AddDepositFragment extends DialogFragment {
         }
         double depositInterestRate = Double.parseDouble(tvInterestRateValue.getText().toString());
         Timestamp depositDate = new Timestamp(System.currentTimeMillis());
-        long userId = RandomLongGenerator.generateLong();
+        UUID userId = RandomUuidGenerator.generateRandomUuid();
 
         Deposit deposit = new Deposit(depositId,depositName,depositAmount,depositPeriod,depositInterestRate,depositDate,userId);
 

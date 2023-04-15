@@ -31,8 +31,10 @@ import com.example.mobilebankingapplication.R;
 import com.example.mobilebankingapplication.classes.Transfer;
 import com.example.mobilebankingapplication.database.Constants;
 import com.example.mobilebankingapplication.database.RequestHandler;
+import com.example.mobilebankingapplication.utils.ConverterUUID;
 import com.example.mobilebankingapplication.utils.DateConverter;
 import com.example.mobilebankingapplication.utils.RandomLongGenerator;
+import com.example.mobilebankingapplication.utils.RandomUuidGenerator;
 import com.example.mobilebankingapplication.utils.SharedViewModel;
 
 import org.json.JSONException;
@@ -43,6 +45,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 
 public class TransfersFragment extends Fragment {
     private EditText etAmountTranfersFragment, etPayeeTransfersFragment, etIBANTransfersFragment, etDescriptionTransfersActivity;
@@ -97,12 +100,12 @@ public class TransfersFragment extends Fragment {
                             @Override
                             protected Map<String, String> getParams() throws AuthFailureError {
                                 Map<String, String> params = new HashMap<>();
-                                params.put("transferId", String.valueOf(transfer.getTransferId()));
+                                params.put("transferId", ConverterUUID.UUIDtoString(transfer.getTransferId()));
                                 params.put("transferAmount", String.valueOf(transfer.getTransferAmount()));
                                 params.put("transferPayee", transfer.getTransferPayee());
                                 params.put("transferIBAN", transfer.getTransferIBAN());
                                 params.put("transferDescription", transfer.getTransferDescription());
-                                params.put("userId", String.valueOf(transfer.getUserId()));
+                                params.put("userId", ConverterUUID.UUIDtoString(transfer.getUserId()));
                                 params.put("transferDate", DateConverter.timestampToString(transfer.getTransferDate()));
                                 return params;
                             }
@@ -125,12 +128,12 @@ public class TransfersFragment extends Fragment {
     }
 
     private Transfer createTransfer() {
-        long transferId = RandomLongGenerator.generateLong();
+        UUID transferId = RandomUuidGenerator.generateRandomUuid();
         double transferAmount = Double.parseDouble(etAmountTranfersFragment.getText().toString());
         String transferPayee = etPayeeTransfersFragment.getText().toString();
         String transferIBAN = etIBANTransfersFragment.getText().toString().replace(" ", "");
         String transferDescription = etDescriptionTransfersActivity.getText().toString();
-        long userId = RandomLongGenerator.generateLong();
+        UUID userId = RandomUuidGenerator.generateRandomUuid();
         Timestamp transferDate = new Timestamp(System.currentTimeMillis());
 
         Transfer transfer = new Transfer(transferId, transferAmount, transferPayee, transferIBAN, transferDescription, userId,transferDate);

@@ -4,20 +4,22 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.example.mobilebankingapplication.enums.TransactionType;
+import com.example.mobilebankingapplication.utils.ConverterUUID;
 import com.example.mobilebankingapplication.utils.DateConverter;
 
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.UUID;
 
 public class Transaction implements Parcelable {
-    private long transactionId;
+    private UUID transactionId;
     private String transactionName;
     private double transactionAmount;
     private Timestamp transactionDate;
     private TransactionType transactionType;
-    private long userId;
+    private UUID userId;
 
-    public Transaction(long transactionId, String transactionName, double transactionAmount, Timestamp transactionDate, TransactionType transactionType, long userId) {
+    public Transaction(UUID transactionId, String transactionName, double transactionAmount, Timestamp transactionDate, TransactionType transactionType, UUID userId) {
         this.transactionId = transactionId;
         this.transactionName = transactionName;
         this.transactionAmount = transactionAmount;
@@ -27,22 +29,22 @@ public class Transaction implements Parcelable {
     }
 
     protected Transaction(Parcel in) {
-        transactionId = in.readLong();
+        transactionId = ConverterUUID.stringToUUID(in.readString());
         transactionName = in.readString();
         transactionAmount = in.readDouble();
         transactionDate = DateConverter.stringToTimestamp(in.readString());
         transactionType = TransactionType.valueOf(in.readString());
-        userId = in.readLong();
+        userId = ConverterUUID.stringToUUID(in.readString());
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeLong(transactionId);
+        dest.writeString(ConverterUUID.UUIDtoString(transactionId));
         dest.writeString(transactionName);
         dest.writeDouble(transactionAmount);
         dest.writeString(DateConverter.timestampToString(transactionDate));
         dest.writeString(transactionType.toString());
-        dest.writeLong(userId);
+        dest.writeString(ConverterUUID.UUIDtoString(userId));
     }
 
     @Override
@@ -62,11 +64,11 @@ public class Transaction implements Parcelable {
         }
     };
 
-    public long getTransactionId() {
+    public UUID getTransactionId() {
         return transactionId;
     }
 
-    public void setTransactionId(long transactionId) {
+    public void setTransactionId(UUID transactionId) {
         this.transactionId = transactionId;
     }
 
@@ -102,11 +104,11 @@ public class Transaction implements Parcelable {
         this.transactionType = transactionType;
     }
 
-    public long getUserId() {
+    public UUID getUserId() {
         return userId;
     }
 
-    public void setUserId(long userId) {
+    public void setUserId(UUID userId) {
         this.userId = userId;
     }
 

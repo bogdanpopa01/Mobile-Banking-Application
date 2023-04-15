@@ -26,6 +26,7 @@ import com.example.mobilebankingapplication.classes.Transaction;
 import com.example.mobilebankingapplication.classes.Transfer;
 import com.example.mobilebankingapplication.database.Constants;
 import com.example.mobilebankingapplication.enums.TransactionType;
+import com.example.mobilebankingapplication.utils.ConverterUUID;
 import com.example.mobilebankingapplication.utils.DateConverter;
 import com.example.mobilebankingapplication.utils.RandomLongGenerator;
 import com.example.mobilebankingapplication.utils.SharedViewModel;
@@ -40,6 +41,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 public class TransactionsFragment extends Fragment {
     public static final String KEY_SEND_TRANSACTION = "sendTransaction";
@@ -67,12 +69,12 @@ public class TransactionsFragment extends Fragment {
                             JSONArray jsonArray = new JSONArray(response);
                             for(int i = 0; i < jsonArray.length(); i++) {
                                 JSONObject jsonObject = jsonArray.getJSONObject(i);
-                                long transactionId = jsonObject.getLong("transactionId");
+                                UUID transactionId = ConverterUUID.stringToUUID(jsonObject.getString("transactionId").trim());
                                 String transactionName = jsonObject.getString("transactionName");
                                 double transactionAmount = jsonObject.getDouble("transactionAmount");
                                 Timestamp transactionDate = DateConverter.stringToTimestamp(jsonObject.getString("transactionDate"));
                                 TransactionType transactionType = TransactionType.valueOf(jsonObject.getString("transactionType"));
-                                long userId = jsonObject.getLong("userId");
+                                UUID userId = ConverterUUID.stringToUUID(jsonObject.getString("userId").trim());
 
                                 Transaction transaction = new Transaction(transactionId,transactionName,transactionAmount,transactionDate,transactionType,userId);
                                 arrayListTransactions.add(transaction);
@@ -112,9 +114,9 @@ public class TransactionsFragment extends Fragment {
                             JSONArray jsonArray = new JSONArray(response);
                             for(int i = 0; i < jsonArray.length(); i++) {
                                 JSONObject jsonObject = jsonArray.getJSONObject(i);
-                                int transferId = jsonObject.getInt("transferId");
+                                UUID transferId = ConverterUUID.stringToUUID(jsonObject.getString("transferId"));
                                 double transferAmount = jsonObject.getDouble("transferAmount");
-                                int userId = jsonObject.getInt("userId");
+                                UUID userId = ConverterUUID.stringToUUID(jsonObject.getString("userId"));
                                 Timestamp transferDate = DateConverter.stringToTimestamp(jsonObject.getString("transferDate"));
 
                                 Transaction transaction = new Transaction(transferId,"Transfer",transferAmount,transferDate,TransactionType.TRANSFER,userId);

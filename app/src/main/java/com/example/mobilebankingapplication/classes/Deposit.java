@@ -5,21 +5,23 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
+import com.example.mobilebankingapplication.utils.ConverterUUID;
 import com.example.mobilebankingapplication.utils.DateConverter;
 
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.UUID;
 
 public class Deposit implements Parcelable {
-    private long depositId;
+    private UUID depositId;
     private String depositName;
     private double depositAmount;
     private int depositPeriod;
     private double depositInterestRate;
     private Timestamp depositTimeLeft;
-    private long userId;
+    private UUID userId;
 
-    public Deposit(long depositId, String depositName, double depositAmount, int depositPeriod, double depositInterestRate, Timestamp depositTimeLeft, long userId) {
+    public Deposit(UUID depositId, String depositName, double depositAmount, int depositPeriod, double depositInterestRate, Timestamp depositTimeLeft, UUID userId) {
         this.depositId = depositId;
         this.depositName = depositName;
         this.depositAmount = depositAmount;
@@ -30,13 +32,13 @@ public class Deposit implements Parcelable {
     }
 
     protected Deposit(Parcel in) {
-        depositId = in.readLong();
+        depositId = ConverterUUID.stringToUUID(in.readString());
         depositName = in.readString();
         depositAmount = in.readDouble();
         depositPeriod = in.readInt();
         depositInterestRate = in.readDouble();
         depositTimeLeft = DateConverter.stringToTimestamp(in.readString());
-        userId = in.readLong();
+        userId = ConverterUUID.stringToUUID(in.readString());
     }
 
     public static final Creator<Deposit> CREATOR = new Creator<Deposit>() {
@@ -51,11 +53,11 @@ public class Deposit implements Parcelable {
         }
     };
 
-    public long getDepositId() {
+    public UUID getDepositId() {
         return depositId;
     }
 
-    public void setDepositId(long depositId) {
+    public void setDepositId(UUID depositId) {
         this.depositId = depositId;
     }
 
@@ -99,11 +101,11 @@ public class Deposit implements Parcelable {
         this.depositTimeLeft = depositTimeLeft;
     }
 
-    public long getUserId() {
+    public UUID getUserId() {
         return userId;
     }
 
-    public void setUserId(long userId) {
+    public void setUserId(UUID userId) {
         this.userId = userId;
     }
 
@@ -127,12 +129,12 @@ public class Deposit implements Parcelable {
 
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
-        dest.writeLong(depositId);
+        dest.writeString(ConverterUUID.UUIDtoString(depositId));
         dest.writeString(depositName);
         dest.writeDouble(depositAmount);
         dest.writeInt(depositPeriod);
         dest.writeDouble(depositInterestRate);
         dest.writeString(DateConverter.timestampToString(depositTimeLeft));
-        dest.writeLong(userId);
+        dest.writeString(ConverterUUID.UUIDtoString(userId));
     }
 }

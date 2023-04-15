@@ -3,12 +3,14 @@ package com.example.mobilebankingapplication.classes;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.example.mobilebankingapplication.utils.ConverterUUID;
 import com.example.mobilebankingapplication.utils.DateConverter;
 
 import java.util.Date;
+import java.util.UUID;
 
 public class User implements Parcelable {
-    private long userId;
+    private UUID userId;
     private String userName;
     private String email;
     private String password;
@@ -20,7 +22,7 @@ public class User implements Parcelable {
     private Date cardExpirationDate;
     private double balance;
 
-    public User(long userId, String userName, String email, String password, String telephone, String firstName, String lastName, String cardNumber, int cardCvv, Date cardExpirationDate, double balance) {
+    public User(UUID userId, String userName, String email, String password, String telephone, String firstName, String lastName, String cardNumber, int cardCvv, Date cardExpirationDate, double balance) {
         this.userId = userId;
         this.userName = userName;
         this.email = email;
@@ -35,7 +37,7 @@ public class User implements Parcelable {
     }
 
     protected User(Parcel in) {
-        userId = in.readLong();
+        userId = ConverterUUID.stringToUUID(in.readString());
         userName = in.readString();
         email = in.readString();
         password = in.readString();
@@ -50,7 +52,7 @@ public class User implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeLong(userId);
+        dest.writeString(ConverterUUID.UUIDtoString(userId));
         dest.writeString(userName);
         dest.writeString(email);
         dest.writeString(password);
@@ -80,11 +82,11 @@ public class User implements Parcelable {
         }
     };
 
-    public long getUserId() {
+    public UUID getUserId() {
         return userId;
     }
 
-    public void setUserId(long userId) {
+    public void setUserId(UUID userId) {
         this.userId = userId;
     }
 
