@@ -6,6 +6,7 @@
     <string name="etPasswordLogin">Password</string>
     <string name="btnSignInLogin">Sign In</string>
     <string name="error_username_or_password_incorrect">The username or password is invalid!</string>
+    <string name="error_username_or_password_empty">The username or password is empty!</string>
 
     <!-- Home page Activity -->
     <string name="baseline_home_24">Home</string>

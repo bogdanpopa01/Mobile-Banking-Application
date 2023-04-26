@@ -18,11 +18,11 @@ public class User implements Parcelable {
     private String firstName;
     private String lastName;
     private String cardNumber;
-    private int cardCvv;
+    private String cardCvv;
     private Date cardExpirationDate;
     private double balance;
 
-    public User(UUID userId, String userName, String email, String password, String telephone, String firstName, String lastName, String cardNumber, int cardCvv, Date cardExpirationDate, double balance) {
+    public User(UUID userId, String userName, String email, String password, String telephone, String firstName, String lastName, String cardNumber, String cardCvv, Date cardExpirationDate, double balance) {
         this.userId = userId;
         this.userName = userName;
         this.email = email;
@@ -45,7 +45,7 @@ public class User implements Parcelable {
         firstName = in.readString();
         lastName = in.readString();
         cardNumber = in.readString();
-        cardCvv = in.readInt();
+        cardCvv = in.readString();
         cardExpirationDate = DateConverter.stringToDate(in.readString());
         balance = in.readDouble();
     }
@@ -60,7 +60,7 @@ public class User implements Parcelable {
         dest.writeString(firstName);
         dest.writeString(lastName);
         dest.writeString(cardNumber);
-        dest.writeInt(cardCvv);
+        dest.writeString(cardCvv);
         dest.writeString(DateConverter.dateToString(cardExpirationDate));
         dest.writeDouble(balance);
     }
@@ -146,11 +146,11 @@ public class User implements Parcelable {
         this.cardNumber = cardNumber;
     }
 
-    public int getCardCvv() {
+    public String getCardCvv() {
         return cardCvv;
     }
 
-    public void setCardCvv(int cardCvv) {
+    public void setCardCvv(String cardCvv) {
         this.cardCvv = cardCvv;
     }
 

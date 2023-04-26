@@ -1,10 +1,12 @@
 package com.example.mobilebankingapplication.database;
 
 public class Constants {
-    private static final String ROOT_URL = "http://192.168.1.8/MobileBankingApplication/v1/";
+    private static final String IP = "192.168.171.11";
+    private static final String ROOT_URL = "http://" + IP + "/MobileBankingApplication/v1/";
     public static final String URL_REGISTER_TRANSFER = ROOT_URL + "registerTransfer.php";
     public static final String URL_GET_ALL_TRANSFERS = ROOT_URL + "getAllTransfers.php";
     public static final String URL_GET_TRANSFER = ROOT_URL + "getTransfer.php";
+    public static final String URL_GET_USER = ROOT_URL + "getUserByCredentials.php";
 
     public static final String URL_REGISTER_TRANSACTION = ROOT_URL + "registerTransaction.php";
     public static final String URL_GET_ALL_TRANSACTIONS = ROOT_URL + "getAllTransactions.php";
