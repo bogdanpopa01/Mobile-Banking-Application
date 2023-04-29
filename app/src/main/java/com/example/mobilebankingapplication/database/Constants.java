@@ -10,7 +10,6 @@ public class Constants {
 
     public static final String URL_REGISTER_TRANSACTION = ROOT_URL + "registerTransaction.php";
     public static final String URL_GET_ALL_TRANSACTIONS = ROOT_URL + "getAllTransactions.php";
-
     public static final String URL_REGISTER_DEPOSIT = ROOT_URL + "registerDeposit.php";
     public static final String URL_GET_ALL_DEPOSITS = ROOT_URL + "getAllDeposits.php";
     public static final String URL_DELETE_DEPOSIT = ROOT_URL + "deleteDeposit.php";

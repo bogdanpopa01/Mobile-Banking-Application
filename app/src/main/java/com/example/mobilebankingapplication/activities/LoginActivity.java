@@ -29,6 +29,7 @@ import java.sql.Timestamp;
 import java.util.UUID;
 
 public class LoginActivity extends AppCompatActivity {
+    public static final String USER_ACCOUNT_KEY = "USER_ACCOUNT_KEY";
     private EditText etUserNameLogin, etPasswordLogin;
     private Button btnSignInLogin;
 
@@ -77,6 +78,7 @@ public class LoginActivity extends AppCompatActivity {
                                     double balance = jsonObject.getDouble("balance");
 
                                     User user = new User(userId, userName, email, password, telephone, firstName, lastName, cardNumber, cardCvv, cardExpirationDate, balance);
+                                    intent.putExtra(USER_ACCOUNT_KEY,user);
 
                                     startActivity(intent);
                                 } else {
