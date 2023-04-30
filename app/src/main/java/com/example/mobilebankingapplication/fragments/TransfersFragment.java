@@ -243,7 +243,7 @@ public class TransfersFragment extends Fragment {
         user = sharedViewModel.getUser().getValue();
         if (user == null) {
             try {
-                throw new Exception("The user in null in TranFragment!");
+                throw new Exception("The user in null in TransfersFragment!");
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }

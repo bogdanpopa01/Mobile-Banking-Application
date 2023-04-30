@@ -24,6 +24,7 @@ import com.example.mobilebankingapplication.adapters.RecyclerViewAdapterTransact
 import com.example.mobilebankingapplication.classes.Deposit;
 import com.example.mobilebankingapplication.classes.Transaction;
 import com.example.mobilebankingapplication.classes.Transfer;
+import com.example.mobilebankingapplication.classes.User;
 import com.example.mobilebankingapplication.database.Constants;
 import com.example.mobilebankingapplication.enums.TransactionType;
 import com.example.mobilebankingapplication.utils.ConverterUUID;
@@ -48,8 +49,6 @@ public class TransactionsFragment extends Fragment {
     private RecyclerView recyclerViewTransactions;
     private RecyclerViewAdapterTransactions recyclerViewAdapterTransactions;
     private ArrayList<Transaction> arrayListTransactions = new ArrayList<>();
-    private SharedViewModel sharedViewModel;
-
     public TransactionsFragment() {
 
     }

@@ -8,6 +8,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -31,10 +32,12 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.mobilebankingapplication.R;
 import com.example.mobilebankingapplication.classes.Deposit;
+import com.example.mobilebankingapplication.classes.User;
 import com.example.mobilebankingapplication.database.Constants;
 import com.example.mobilebankingapplication.utils.ConverterUUID;
 import com.example.mobilebankingapplication.utils.DateConverter;
 import com.example.mobilebankingapplication.utils.RandomLongGenerator;
+import com.example.mobilebankingapplication.utils.SharedViewModel;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -53,7 +56,6 @@ public class EditDepositFragment extends DialogFragment {
     private Spinner spinnerPeriodEditDepositFragment;
     private TextView tvInterestRateValue, tvTimeLeftValue;
     private View view;
-
 
     public EditDepositFragment() {
         // Required empty public constructor
