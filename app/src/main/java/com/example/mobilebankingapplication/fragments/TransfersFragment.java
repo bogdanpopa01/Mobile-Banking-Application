@@ -29,6 +29,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.mobilebankingapplication.R;
 import com.example.mobilebankingapplication.classes.Transfer;
+import com.example.mobilebankingapplication.classes.User;
 import com.example.mobilebankingapplication.database.Constants;
 import com.example.mobilebankingapplication.database.RequestHandler;
 import com.example.mobilebankingapplication.utils.ConverterUUID;
@@ -52,6 +53,7 @@ public class TransfersFragment extends Fragment {
     private Button btnSend;
     private View view;
     private SharedViewModel sharedViewModel;
+    private User user;
 
     public TransfersFragment() {
     }
@@ -67,6 +69,7 @@ public class TransfersFragment extends Fragment {
 
         view = inflater.inflate(R.layout.fragment_transfers, container, false);
         initializeComponents();
+        getUser();
         transferAmountValidation();
         transferIBANValidation();
 
@@ -75,8 +78,6 @@ public class TransfersFragment extends Fragment {
             public void onClick(View v) {
                 if (validation()) {
                     Transfer transfer = createTransfer();
-//                    sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
-//                    sharedViewModel.setLongValue(transfer.getTransferId());
                     if (transfer != null) {
                         StringRequest stringRequest = new StringRequest(Request.Method.POST,
                                 Constants.URL_REGISTER_TRANSFER,
@@ -133,7 +134,7 @@ public class TransfersFragment extends Fragment {
         String transferPayee = etPayeeTransfersFragment.getText().toString();
         String transferIBAN = etIBANTransfersFragment.getText().toString().replace(" ", "");
         String transferDescription = etDescriptionTransfersActivity.getText().toString();
-        UUID userId = RandomUuidGenerator.generateRandomUuid();
+        UUID userId = user.getUserId();
         Timestamp transferDate = new Timestamp(System.currentTimeMillis());
 
         Transfer transfer = new Transfer(transferId, transferAmount, transferPayee, transferIBAN, transferDescription, userId,transferDate);
@@ -235,6 +236,18 @@ public class TransfersFragment extends Fragment {
                 }
             }
         });
+    }
+
+    private void getUser() {
+        sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+        user = sharedViewModel.getUser().getValue();
+        if (user == null) {
+            try {
+                throw new Exception("The user in null in TranFragment!");
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 }
 
