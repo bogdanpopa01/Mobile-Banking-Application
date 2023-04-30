@@ -6,6 +6,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -27,12 +28,14 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.example.mobilebankingapplication.R;
 import com.example.mobilebankingapplication.classes.Deposit;
+import com.example.mobilebankingapplication.classes.User;
 import com.example.mobilebankingapplication.database.Constants;
 import com.example.mobilebankingapplication.database.RequestHandler;
 import com.example.mobilebankingapplication.utils.ConverterUUID;
 import com.example.mobilebankingapplication.utils.DateConverter;
 import com.example.mobilebankingapplication.utils.RandomLongGenerator;
 import com.example.mobilebankingapplication.utils.RandomUuidGenerator;
+import com.example.mobilebankingapplication.utils.SharedViewModel;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -49,6 +52,8 @@ public class AddDepositFragment extends DialogFragment {
     private Spinner spinnerPeriodAddDepositFragment;
     private TextView tvInterestRateValue, tvTimeLeftValue;
     private View view;
+    private SharedViewModel sharedViewModel;
+    private User user;
 
     public AddDepositFragment() {
         // Required empty public constructor
@@ -65,6 +70,7 @@ public class AddDepositFragment extends DialogFragment {
 
         view = inflater.inflate(R.layout.fragment_add_deposit, container, false);
         initializeComponents();
+        getUser();
         depositAmountValidation();
 
         spinnerPeriodAddDepositFragment.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -204,7 +210,7 @@ public class AddDepositFragment extends DialogFragment {
         }
         double depositInterestRate = Double.parseDouble(tvInterestRateValue.getText().toString());
         Timestamp depositDate = new Timestamp(System.currentTimeMillis());
-        UUID userId = RandomUuidGenerator.generateRandomUuid();
+        UUID userId = user.getUserId();
 
         Deposit deposit = new Deposit(depositId,depositName,depositAmount,depositPeriod,depositInterestRate,depositDate,userId);
 
@@ -270,6 +276,18 @@ public class AddDepositFragment extends DialogFragment {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.remove(AddDepositFragment.this);
         fragmentTransaction.commit();
+    }
+
+    private void getUser() {
+        sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+        user = sharedViewModel.getUser().getValue();
+        if (user == null) {
+            try {
+                throw new Exception("The user in null in AddDepositFragment!");
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
 }

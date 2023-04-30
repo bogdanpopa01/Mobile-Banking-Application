@@ -138,6 +138,4 @@ public class HomeFragment extends Fragment {
         String balanceString = decimalFormat.format(balance);
         tvBalanceHomeFragment.setText(balanceString);
     }
-
-
 }

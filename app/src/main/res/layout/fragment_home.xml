@@ -129,11 +129,11 @@
         android:id="@+id/tvValidThruDateHomeFragment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="18dp"
         android:layout_marginTop="11dp"
+        android:layout_marginEnd="32dp"
         android:text="@string/tvValidThruDateHomeFragment"
         android:textColor="@color/white"
-        app:layout_constraintStart_toEndOf="@+id/tvUserNameHomeFragment"
+        app:layout_constraintEnd_toStartOf="@+id/imageViewMastercardHomeFragment"
         app:layout_constraintTop_toBottomOf="@+id/tvValidThruHomeFragment" />
 
     <ImageView
