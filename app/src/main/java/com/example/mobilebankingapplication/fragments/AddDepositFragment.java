@@ -29,11 +29,10 @@ import com.android.volley.toolbox.StringRequest;
 import com.example.mobilebankingapplication.R;
 import com.example.mobilebankingapplication.classes.Deposit;
 import com.example.mobilebankingapplication.classes.User;
-import com.example.mobilebankingapplication.database.Constants;
+import com.example.mobilebankingapplication.database.DatabaseConstants;
 import com.example.mobilebankingapplication.database.RequestHandler;
 import com.example.mobilebankingapplication.utils.ConverterUUID;
 import com.example.mobilebankingapplication.utils.DateConverter;
-import com.example.mobilebankingapplication.utils.RandomLongGenerator;
 import com.example.mobilebankingapplication.utils.RandomUuidGenerator;
 import com.example.mobilebankingapplication.utils.SharedViewModel;
 
@@ -127,7 +126,7 @@ public class AddDepositFragment extends DialogFragment {
                     Deposit deposit = createDeposit();
                     if (deposit != null) {
                         StringRequest stringRequest = new StringRequest(Request.Method.POST,
-                                Constants.URL_REGISTER_DEPOSIT,
+                                DatabaseConstants.URL_REGISTER_DEPOSIT,
                                 new Response.Listener<String>() {
                                     @Override
                                     public void onResponse(String response) {

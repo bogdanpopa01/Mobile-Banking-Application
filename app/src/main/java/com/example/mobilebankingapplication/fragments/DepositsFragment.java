@@ -17,15 +17,12 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.mobilebankingapplication.R;
 import com.example.mobilebankingapplication.adapters.RecyclerViewAdapterDeposits;
 import com.example.mobilebankingapplication.classes.Deposit;
-import com.example.mobilebankingapplication.classes.Transaction;
 import com.example.mobilebankingapplication.classes.User;
-import com.example.mobilebankingapplication.database.Constants;
-import com.example.mobilebankingapplication.enums.TransactionType;
+import com.example.mobilebankingapplication.database.DatabaseConstants;
 import com.example.mobilebankingapplication.utils.ConverterUUID;
 import com.example.mobilebankingapplication.utils.DateConverter;
 import com.example.mobilebankingapplication.utils.SharedViewModel;
@@ -38,7 +35,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.UUID;
 
 
@@ -59,7 +55,7 @@ public class DepositsFragment extends Fragment {
         getUser();
 
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
-        String url = Constants.URL_GET_DEPOSITS_BY_USER + "?userId=" + user.getUserId();
+        String url = DatabaseConstants.URL_GET_DEPOSITS_BY_USER + "?userId=" + user.getUserId();
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
                     @Override

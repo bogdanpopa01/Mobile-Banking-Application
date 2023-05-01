@@ -10,26 +10,22 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.mobilebankingapplication.R;
-import com.example.mobilebankingapplication.adapters.RecyclerViewAdapterDeposits;
 import com.example.mobilebankingapplication.adapters.RecyclerViewAdapterTransactions;
-import com.example.mobilebankingapplication.classes.Deposit;
 import com.example.mobilebankingapplication.classes.Transaction;
-import com.example.mobilebankingapplication.classes.Transfer;
 import com.example.mobilebankingapplication.classes.User;
-import com.example.mobilebankingapplication.database.Constants;
+import com.example.mobilebankingapplication.database.DatabaseConstants;
 import com.example.mobilebankingapplication.enums.TransactionType;
 import com.example.mobilebankingapplication.utils.ConverterUUID;
 import com.example.mobilebankingapplication.utils.DateConverter;
-import com.example.mobilebankingapplication.utils.RandomLongGenerator;
 import com.example.mobilebankingapplication.utils.SharedViewModel;
 
 import org.json.JSONArray;
@@ -40,8 +36,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
 public class TransactionsFragment extends Fragment {
@@ -49,6 +43,8 @@ public class TransactionsFragment extends Fragment {
     private RecyclerView recyclerViewTransactions;
     private RecyclerViewAdapterTransactions recyclerViewAdapterTransactions;
     private ArrayList<Transaction> arrayListTransactions = new ArrayList<>();
+    private SharedViewModel sharedViewModel;
+    private User user;
     public TransactionsFragment() {
 
     }
@@ -56,23 +52,23 @@ public class TransactionsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        getUser();
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
 
-        String url = Constants.URL_GET_ALL_TRANSACTIONS;
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
+        String url = DatabaseConstants.URL_GET_TRANSACTIONS_BY_USER + "?userId=" + user.getUserId();
+        JsonObjectRequest jsonObjectRequest1 = new JsonObjectRequest(Request.Method.GET, url,null,
+                new Response.Listener<JSONObject>() {
                     @Override
-                    public void onResponse(String response) {
+                    public void onResponse(JSONObject response) {
                         try {
-                            JSONArray jsonArray = new JSONArray(response);
+                            JSONArray jsonArray = response.getJSONArray("transactions");
                             for(int i = 0; i < jsonArray.length(); i++) {
                                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                                 UUID transactionId = ConverterUUID.stringToUUID(jsonObject.getString("transactionId").trim());
                                 String transactionName = jsonObject.getString("transactionName");
                                 double transactionAmount = jsonObject.getDouble("transactionAmount");
                                 Timestamp transactionDate = DateConverter.stringToTimestamp(jsonObject.getString("transactionDate"));
-                                TransactionType transactionType = TransactionType.valueOf(jsonObject.getString("transactionType"));
+                                TransactionType transactionType = TransactionType.valueOf(jsonObject.getString("transactionType").trim());
                                 UUID userId = ConverterUUID.stringToUUID(jsonObject.getString("userId").trim());
 
                                 Transaction transaction = new Transaction(transactionId,transactionName,transactionAmount,transactionDate,transactionType,userId);
@@ -104,13 +100,13 @@ public class TransactionsFragment extends Fragment {
             }
         });
 
-        String url2 = Constants.URL_GET_ALL_TRANSFERS;
-        StringRequest stringRequest2 = new StringRequest(Request.Method.GET, url2,
-                new Response.Listener<String>() {
+        String url2 = DatabaseConstants.URL_GET_TRANSFER_BY_USER + "?userId=" + user.getUserId();
+        JsonObjectRequest jsonObjectRequest2 = new JsonObjectRequest(Request.Method.GET, url2, null,
+                new Response.Listener<JSONObject>(){
                     @Override
-                    public void onResponse(String response) {
+                    public void onResponse(JSONObject response) {
                         try {
-                            JSONArray jsonArray = new JSONArray(response);
+                            JSONArray jsonArray = response.getJSONArray("transfers");
                             for(int i = 0; i < jsonArray.length(); i++) {
                                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                                 UUID transferId = ConverterUUID.stringToUUID(jsonObject.getString("transferId"));
@@ -146,8 +142,8 @@ public class TransactionsFragment extends Fragment {
 
             }
         });
-        requestQueue.add(stringRequest);
-        requestQueue.add(stringRequest2);
+        requestQueue.add(jsonObjectRequest1);
+        requestQueue.add(jsonObjectRequest2);
 
 //        sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
 //        Long transferId = sharedViewModel.getData();
@@ -208,5 +204,17 @@ public class TransactionsFragment extends Fragment {
         recyclerViewAdapterTransactions.notifyDataSetChanged();
 
         return view;
+    }
+
+    private void getUser() {
+        sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+        user = sharedViewModel.getUser().getValue();
+        if (user == null) {
+            try {
+                throw new Exception("The user in null in TransactionsFragment!");
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 }

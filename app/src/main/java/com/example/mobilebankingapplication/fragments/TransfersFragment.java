@@ -3,7 +3,6 @@ package com.example.mobilebankingapplication.fragments;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -13,28 +12,22 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Spinner;
-import android.widget.Switch;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.example.mobilebankingapplication.R;
 import com.example.mobilebankingapplication.classes.Transfer;
 import com.example.mobilebankingapplication.classes.User;
-import com.example.mobilebankingapplication.database.Constants;
+import com.example.mobilebankingapplication.database.DatabaseConstants;
 import com.example.mobilebankingapplication.database.RequestHandler;
 import com.example.mobilebankingapplication.utils.ConverterUUID;
 import com.example.mobilebankingapplication.utils.DateConverter;
-import com.example.mobilebankingapplication.utils.RandomLongGenerator;
 import com.example.mobilebankingapplication.utils.RandomUuidGenerator;
 import com.example.mobilebankingapplication.utils.SharedViewModel;
 
@@ -42,10 +35,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.sql.Timestamp;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.UUID;
 
 public class TransfersFragment extends Fragment {
@@ -80,7 +71,7 @@ public class TransfersFragment extends Fragment {
                     Transfer transfer = createTransfer();
                     if (transfer != null) {
                         StringRequest stringRequest = new StringRequest(Request.Method.POST,
-                                Constants.URL_REGISTER_TRANSFER,
+                                DatabaseConstants.URL_REGISTER_TRANSFER,
                                 new Response.Listener<String>() {
                                     @Override
                                     public void onResponse(String response) {

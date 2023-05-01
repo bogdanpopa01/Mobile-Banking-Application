@@ -17,7 +17,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.mobilebankingapplication.R;
 import com.example.mobilebankingapplication.classes.User;
-import com.example.mobilebankingapplication.database.Constants;
+import com.example.mobilebankingapplication.database.DatabaseConstants;
 import com.example.mobilebankingapplication.database.RequestHandler;
 import com.example.mobilebankingapplication.utils.ConverterUUID;
 import com.example.mobilebankingapplication.utils.DateConverter;
@@ -53,7 +53,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
                 RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
-                String url = Constants.URL_GET_USER + "?userName=" + userName + "&password=" + password;
+                String url = DatabaseConstants.URL_GET_USER + "?userName=" + userName + "&password=" + password;
                 StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {

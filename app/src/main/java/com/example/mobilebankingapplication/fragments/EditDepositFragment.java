@@ -1,14 +1,11 @@
 package com.example.mobilebankingapplication.fragments;
 
-import android.app.DownloadManager;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.ViewModelProvider;
 
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -32,12 +29,9 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.mobilebankingapplication.R;
 import com.example.mobilebankingapplication.classes.Deposit;
-import com.example.mobilebankingapplication.classes.User;
-import com.example.mobilebankingapplication.database.Constants;
+import com.example.mobilebankingapplication.database.DatabaseConstants;
 import com.example.mobilebankingapplication.utils.ConverterUUID;
 import com.example.mobilebankingapplication.utils.DateConverter;
-import com.example.mobilebankingapplication.utils.RandomLongGenerator;
-import com.example.mobilebankingapplication.utils.SharedViewModel;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -227,7 +221,7 @@ public class EditDepositFragment extends DialogFragment {
                 RequestQueue requestQueue = Volley.newRequestQueue(getContext());
 
                 UUID depositId = selectedDeposit.getDepositId();
-                String url = Constants.URL_DELETE_DEPOSIT + "?depositId=" + depositId;
+                String url = DatabaseConstants.URL_DELETE_DEPOSIT + "?depositId=" + depositId;
                 StringRequest stringRequest = new StringRequest(Request.Method.DELETE, url, new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -276,7 +270,7 @@ public class EditDepositFragment extends DialogFragment {
                     Deposit deposit = new Deposit(depositId, depositName, depositAmount, depositPeriod, depositInterestRate, depositTimeLeft, userId);
 
                     RequestQueue requestQueue = Volley.newRequestQueue(getContext());
-                    String url = Constants.URL_UPDATE_DEPOSIT + "?depositId=" + depositId;
+                    String url = DatabaseConstants.URL_UPDATE_DEPOSIT + "?depositId=" + depositId;
 
                     StringRequest stringRequest = new StringRequest(Request.Method.PUT, url,
                             new Response.Listener<String>() {
