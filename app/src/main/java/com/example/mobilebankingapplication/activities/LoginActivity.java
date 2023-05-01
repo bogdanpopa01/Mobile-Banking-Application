@@ -51,8 +51,6 @@ public class LoginActivity extends AppCompatActivity {
                 String userName = etUserNameLogin.getText().toString();
                 String password = etPasswordLogin.getText().toString();
 
-
-                RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
                 String url = DatabaseConstants.URL_GET_USER + "?userName=" + userName + "&password=" + password;
                 StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
                     @Override

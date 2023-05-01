@@ -23,6 +23,7 @@ import com.example.mobilebankingapplication.adapters.RecyclerViewAdapterDeposits
 import com.example.mobilebankingapplication.classes.Deposit;
 import com.example.mobilebankingapplication.classes.User;
 import com.example.mobilebankingapplication.database.DatabaseConstants;
+import com.example.mobilebankingapplication.database.RequestHandler;
 import com.example.mobilebankingapplication.utils.ConverterUUID;
 import com.example.mobilebankingapplication.utils.DateConverter;
 import com.example.mobilebankingapplication.utils.SharedViewModel;
@@ -54,7 +55,6 @@ public class DepositsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         getUser();
 
-        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
         String url = DatabaseConstants.URL_GET_DEPOSITS_BY_USER + "?userId=" + user.getUserId();
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
@@ -99,8 +99,7 @@ public class DepositsFragment extends Fragment {
                 Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
-        requestQueue.add(jsonObjectRequest);
-
+        RequestHandler.getInstance(getContext()).addToRequestQueue(jsonObjectRequest);
     }
 
     @Override

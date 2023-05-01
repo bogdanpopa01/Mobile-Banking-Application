@@ -26,7 +26,7 @@ public class SharedViewModel extends ViewModel {
         return userLiveData;
     }
 
-    public long getData() {
+    public long getLongData() {
         if (longValue.getValue() != null) {
             return longValue.getValue();
         } else {

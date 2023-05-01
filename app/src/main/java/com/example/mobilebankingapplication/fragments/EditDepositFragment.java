@@ -30,6 +30,7 @@ import com.android.volley.toolbox.Volley;
 import com.example.mobilebankingapplication.R;
 import com.example.mobilebankingapplication.classes.Deposit;
 import com.example.mobilebankingapplication.database.DatabaseConstants;
+import com.example.mobilebankingapplication.database.RequestHandler;
 import com.example.mobilebankingapplication.utils.ConverterUUID;
 import com.example.mobilebankingapplication.utils.DateConverter;
 
@@ -237,10 +238,10 @@ public class EditDepositFragment extends DialogFragment {
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-
+                        Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
-                requestQueue.add(stringRequest);
+                RequestHandler.getInstance(getContext()).addToRequestQueue(stringRequest);
             }
         } else {
             Toast.makeText(getContext(),"The bundle is null!",Toast.LENGTH_LONG).show();
@@ -269,9 +270,7 @@ public class EditDepositFragment extends DialogFragment {
 
                     Deposit deposit = new Deposit(depositId, depositName, depositAmount, depositPeriod, depositInterestRate, depositTimeLeft, userId);
 
-                    RequestQueue requestQueue = Volley.newRequestQueue(getContext());
                     String url = DatabaseConstants.URL_UPDATE_DEPOSIT + "?depositId=" + depositId;
-
                     StringRequest stringRequest = new StringRequest(Request.Method.PUT, url,
                             new Response.Listener<String>() {
                                 @Override
@@ -305,7 +304,7 @@ public class EditDepositFragment extends DialogFragment {
                             return params;
                         }
                     };
-                    requestQueue.add(stringRequest);
+                    RequestHandler.getInstance(getContext()).addToRequestQueue(stringRequest);
                 } else {
                     Toast.makeText(getContext(),"The values are the same!",Toast.LENGTH_LONG).show();
                 }

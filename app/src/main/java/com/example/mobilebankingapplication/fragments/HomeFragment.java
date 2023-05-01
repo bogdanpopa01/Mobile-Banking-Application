@@ -28,9 +28,7 @@ public class HomeFragment extends Fragment {
     private SharedViewModel sharedViewModel;
     private User user;
     private View view;
-
     private TextView tvCardNumberHomeFragment, tvUserFirstAndLastName, tvValidThruDateHomeFragment, tvBalanceHomeFragment;
-
 
     public HomeFragment() {
         // Required empty public constructor

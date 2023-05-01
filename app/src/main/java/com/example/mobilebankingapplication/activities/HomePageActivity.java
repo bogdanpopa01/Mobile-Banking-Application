@@ -23,7 +23,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
 public class HomePageActivity extends AppCompatActivity {
-    User user = null;
+    private User user;
     private SharedViewModel sharedViewModel;
     ActivityHomePageBinding activityHomePageBinding;
 
@@ -38,13 +38,11 @@ public class HomePageActivity extends AppCompatActivity {
         if(user!=null) {
             sharedViewModel.setUser(user);
         } else {
-            Toast.makeText(this, "User-ul e null!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "The user is null in HomePageActivity!", Toast.LENGTH_SHORT).show();
         }
 
         BottomNavigationView bottomNavigationHomePage = findViewById(R.id.bottomNavigationHomePage);
         replaceFragment(new HomeFragment());
-
-
 
         bottomNavigationHomePage.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
@@ -79,9 +77,9 @@ public class HomePageActivity extends AppCompatActivity {
         if(getIntent()!=null){
             user  = getIntent().getParcelableExtra(LoginActivity.USER_ACCOUNT_KEY);
             if(user!=null){
-                Toast.makeText(this, "S-a primit userul cu usernameul: " + user.getUserName(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, "S-a primit userul cu usernameul: " + user.getUserName(), Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(this, "Userul e gol!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "The user is null in HomePageActivity!", Toast.LENGTH_SHORT).show();
             }
         }
     }

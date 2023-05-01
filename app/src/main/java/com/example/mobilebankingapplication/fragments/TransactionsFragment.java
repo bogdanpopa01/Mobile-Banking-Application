@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -23,6 +24,7 @@ import com.example.mobilebankingapplication.adapters.RecyclerViewAdapterTransact
 import com.example.mobilebankingapplication.classes.Transaction;
 import com.example.mobilebankingapplication.classes.User;
 import com.example.mobilebankingapplication.database.DatabaseConstants;
+import com.example.mobilebankingapplication.database.RequestHandler;
 import com.example.mobilebankingapplication.enums.TransactionType;
 import com.example.mobilebankingapplication.utils.ConverterUUID;
 import com.example.mobilebankingapplication.utils.DateConverter;
@@ -39,7 +41,6 @@ import java.util.Comparator;
 import java.util.UUID;
 
 public class TransactionsFragment extends Fragment {
-    public static final String KEY_SEND_TRANSACTION = "sendTransaction";
     private RecyclerView recyclerViewTransactions;
     private RecyclerViewAdapterTransactions recyclerViewAdapterTransactions;
     private ArrayList<Transaction> arrayListTransactions = new ArrayList<>();
@@ -53,7 +54,6 @@ public class TransactionsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getUser();
-        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
 
         String url = DatabaseConstants.URL_GET_TRANSACTIONS_BY_USER + "?userId=" + user.getUserId();
         JsonObjectRequest jsonObjectRequest1 = new JsonObjectRequest(Request.Method.GET, url,null,
@@ -96,7 +96,7 @@ public class TransactionsFragment extends Fragment {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -139,11 +139,11 @@ public class TransactionsFragment extends Fragment {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-        requestQueue.add(jsonObjectRequest1);
-        requestQueue.add(jsonObjectRequest2);
+        RequestHandler.getInstance(getContext()).addToRequestQueue(jsonObjectRequest1);
+        RequestHandler.getInstance(getContext()).addToRequestQueue(jsonObjectRequest2);
 
 //        sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
 //        Long transferId = sharedViewModel.getData();
