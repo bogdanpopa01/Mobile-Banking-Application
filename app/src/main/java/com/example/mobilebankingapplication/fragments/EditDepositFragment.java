@@ -1,11 +1,14 @@
 package com.example.mobilebankingapplication.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -29,10 +32,12 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.mobilebankingapplication.R;
 import com.example.mobilebankingapplication.classes.Deposit;
+import com.example.mobilebankingapplication.classes.User;
 import com.example.mobilebankingapplication.database.DatabaseConstants;
 import com.example.mobilebankingapplication.database.RequestHandler;
 import com.example.mobilebankingapplication.utils.ConverterUUID;
 import com.example.mobilebankingapplication.utils.DateConverter;
+import com.example.mobilebankingapplication.utils.SharedViewModel;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -50,10 +55,19 @@ public class EditDepositFragment extends DialogFragment {
     private Button btnCancel, btnEditDeposit, btnDeleteDeposit;
     private Spinner spinnerPeriodEditDepositFragment;
     private TextView tvInterestRateValue, tvTimeLeftValue;
+    private SharedViewModel sharedViewModel;
+    private User user;
     private View view;
+    private Context contex;
 
     public EditDepositFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        this.contex = context;
     }
 
     @Override
@@ -67,6 +81,7 @@ public class EditDepositFragment extends DialogFragment {
 
         view = inflater.inflate(R.layout.fragment_edit_deposit, container, false);
         initializeComponents();
+        getUser();
         depositAmountValidation();
 
         spinnerPeriodEditDepositFragment.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -124,7 +139,40 @@ public class EditDepositFragment extends DialogFragment {
 //                FragmentManager fragmentManager = getChildFragmentManager();
 //                PopUpFragmentDeletion popUpFragmentDeletion = new PopUpFragmentDeletion();
 //                popUpFragmentDeletion.show(fragmentManager,"PopUpFragmentDeletion");
+
+                Deposit deposit = bundle.getParcelable(KEY_SEND_DEPOSIT_TO_EDIT);
                 deleteDeposit(bundle);
+
+                double newBalance = user.getBalance() + deposit.getDepositAmount();
+                String urlUpdateUser = DatabaseConstants.URL_UPDATE_USER + "?userId=" + user.getUserId() + "&balance=" + newBalance;
+                StringRequest stringRequestDeleteDeposit = new StringRequest(Request.Method.PUT, urlUpdateUser, new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            Toast.makeText(contex,jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(contex, error.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }){
+                    @Nullable
+                    @Override
+                    protected Map<String, String> getParams() throws AuthFailureError {
+                        Map<String, String> params = new HashMap<>();
+                        params.put("userId", ConverterUUID.UUIDtoString(user.getUserId()));
+                        params.put("balance",String.valueOf(newBalance));
+                        return params;
+                    }
+                };
+                RequestHandler.getInstance(contex).addToRequestQueue(stringRequestDeleteDeposit);
+                user.setBalance(newBalance);
+                sharedViewModel.setUser(user);
             }
         });
 
@@ -219,7 +267,6 @@ public class EditDepositFragment extends DialogFragment {
         if (bundle != null) {
             Deposit selectedDeposit = bundle.getParcelable(KEY_SEND_DEPOSIT_TO_EDIT);
             if(selectedDeposit!=null){
-                RequestQueue requestQueue = Volley.newRequestQueue(getContext());
 
                 UUID depositId = selectedDeposit.getDepositId();
                 String url = DatabaseConstants.URL_DELETE_DEPOSIT + "?depositId=" + depositId;
@@ -313,6 +360,18 @@ public class EditDepositFragment extends DialogFragment {
             }
         } else {
             Toast.makeText(getContext(),"The bundle is null!",Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void getUser() {
+        sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+        user = sharedViewModel.getUser().getValue();
+        if (user == null) {
+            try {
+                throw new Exception("The user in null in HomeFragment!");
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
