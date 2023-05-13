@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
@@ -69,6 +70,17 @@ public class HomeFragment extends Fragment {
                 FragmentManager fragmentManager = getChildFragmentManager();
                 AddDepositFragment addDepositFragment = new AddDepositFragment();
                 addDepositFragment.show(fragmentManager, "AddDepositFragment");
+            }
+        });
+
+        // to change the UI after a savings deposit has been opened
+        sharedViewModel.getUser().observe(getViewLifecycleOwner(), new Observer<User>() {
+            @Override
+            public void onChanged(User updatedUser) {
+                if(updatedUser!=null){
+                    user = updatedUser;
+                    populateBalance();
+                }
             }
         });
 

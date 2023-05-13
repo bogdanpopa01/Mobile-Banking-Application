@@ -1,7 +1,9 @@
 package com.example.mobilebankingapplication.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
@@ -53,9 +55,16 @@ public class AddDepositFragment extends DialogFragment {
     private View view;
     private SharedViewModel sharedViewModel;
     private User user;
+    private Context contex;
 
     public AddDepositFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        this.contex = context;
     }
 
     @Override
@@ -75,7 +84,7 @@ public class AddDepositFragment extends DialogFragment {
         spinnerPeriodAddDepositFragment.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                switch (position){
+                switch (position) {
                     case 0:
                         tvInterestRateValue.setText("0.04");
                         tvTimeLeftValue.setText("1 month");
@@ -133,6 +142,39 @@ public class AddDepositFragment extends DialogFragment {
                                         try {
                                             JSONObject jsonObject = new JSONObject(response);
                                             Toast.makeText(getContext(), jsonObject.getString("message"), Toast.LENGTH_LONG).show();
+
+                                            // to update the user
+                                            double newBalance = user.getBalance() - deposit.getDepositAmount();
+                                            String urlUpdateUser = DatabaseConstants.URL_UPDATE_USER + "?userId=" + user.getUserId() + "&balance=" + newBalance;
+
+                                            StringRequest stringRequestUserBalanceAddDeposit = new StringRequest(Request.Method.PUT, urlUpdateUser, new Response.Listener<String>() {
+                                                @Override
+                                                public void onResponse(String response) {
+                                                    try {
+                                                        JSONObject  jsonObject = new JSONObject(response);
+                                                        Toast.makeText(contex, jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
+                                                    } catch (JSONException e) {
+                                                        throw new RuntimeException(e);
+                                                    }
+                                                }
+                                            }, new Response.ErrorListener() {
+                                                @Override
+                                                public void onErrorResponse(VolleyError error) {
+                                                    Toast.makeText(contex, error.getMessage(), Toast.LENGTH_SHORT).show();
+                                                }
+                                            }) {
+                                                @Nullable
+                                                @Override
+                                                protected Map<String, String> getParams() throws AuthFailureError {
+                                                    Map<String, String> params = new HashMap<>();
+                                                    params.put("userId", ConverterUUID.UUIDtoString(user.getUserId()));
+                                                    params.put("balance",String.valueOf(newBalance));
+                                                    return params;
+                                                }
+                                            };
+                                            RequestHandler.getInstance(contex).addToRequestQueue(stringRequestUserBalanceAddDeposit);
+                                            user.setBalance(newBalance);
+                                            sharedViewModel.setUser(user);
                                             closeAddDepositFragment();
                                         } catch (JSONException e) {
                                             throw new RuntimeException(e);
@@ -150,11 +192,11 @@ public class AddDepositFragment extends DialogFragment {
                                 Map<String, String> params = new HashMap<>();
                                 params.put("depositId", ConverterUUID.UUIDtoString(deposit.getDepositId()));
                                 params.put("depositName", deposit.getDepositName());
-                                params.put("depositAmount", String.valueOf(deposit.getDepositAmount()) );
-                                params.put("depositPeriod",String.valueOf(deposit.getDepositPeriod()));
+                                params.put("depositAmount", String.valueOf(deposit.getDepositAmount()));
+                                params.put("depositPeriod", String.valueOf(deposit.getDepositPeriod()));
                                 params.put("depositInterestRate", String.valueOf(deposit.getDepositInterestRate()));
                                 params.put("depositTimeLeft", DateConverter.timestampToString(deposit.getDepositTimeLeft()));
-                                params.put("userId",  ConverterUUID.UUIDtoString(deposit.getUserId()));
+                                params.put("userId", ConverterUUID.UUIDtoString(deposit.getUserId()));
                                 return params;
                             }
                         };
@@ -183,13 +225,13 @@ public class AddDepositFragment extends DialogFragment {
         tvTimeLeftValue = view.findViewById(R.id.tvTimeLeftValueEditDepositFragment);
     }
 
-    private Deposit createDeposit(){
+    private Deposit createDeposit() {
         UUID depositId = RandomUuidGenerator.generateRandomUuid();
         String depositName = etDepositName.getText().toString();
         double depositAmount = Double.parseDouble(etDepositAmount.getText().toString());
         String depositPeriodString = tvTimeLeftValue.getText().toString();
-        int depositPeriod=1;
-        switch (depositPeriodString){
+        int depositPeriod = 1;
+        switch (depositPeriodString) {
             case "2 months":
                 depositPeriod = 2;
                 break;
@@ -211,9 +253,9 @@ public class AddDepositFragment extends DialogFragment {
         Timestamp depositDate = new Timestamp(System.currentTimeMillis());
         UUID userId = user.getUserId();
 
-        Deposit deposit = new Deposit(depositId,depositName,depositAmount,depositPeriod,depositInterestRate,depositDate,userId);
+        Deposit deposit = new Deposit(depositId, depositName, depositAmount, depositPeriod, depositInterestRate, depositDate, userId);
 
-        if(deposit != null){
+        if (deposit != null) {
             return deposit;
         }
         try {
@@ -223,15 +265,15 @@ public class AddDepositFragment extends DialogFragment {
         }
     }
 
-    private boolean validation(){
+    private boolean validation() {
         boolean isValid = true;
 
-        if(etDepositName.getText() == null || etDepositName.getText().toString().trim().isEmpty()){
+        if (etDepositName.getText() == null || etDepositName.getText().toString().trim().isEmpty()) {
             etDepositName.setError("The name field cannot be empty!");
             isValid = false;
         }
 
-        if(etDepositAmount.getText() == null || etDepositAmount.getText().toString().trim().isEmpty()){
+        if (etDepositAmount.getText() == null || etDepositAmount.getText().toString().trim().isEmpty()) {
             etDepositAmount.setError("The amount field cannot be empty!");
             isValid = false;
         }
@@ -240,7 +282,7 @@ public class AddDepositFragment extends DialogFragment {
     }
 
     // to ensure that the user enters only numbers
-    private void depositAmountValidation(){
+    private void depositAmountValidation() {
 
         etDepositAmount.addTextChangedListener(new TextWatcher() {
             @Override
@@ -249,7 +291,7 @@ public class AddDepositFragment extends DialogFragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(s.length() > 0 && !isValidDepositAmount(s.toString())){
+                if (s.length() > 0 && !isValidDepositAmount(s.toString())) {
                     String string = validString(s.toString());
                     etDepositAmount.setText(string);
                     etDepositAmount.setSelection(string.length());
@@ -266,11 +308,11 @@ public class AddDepositFragment extends DialogFragment {
         return string.matches("[0-9.]*");
     }
 
-    private String validString(String string){
+    private String validString(String string) {
         return string.replaceAll("[^0-9.]", "");
     }
 
-    private void closeAddDepositFragment(){
+    private void closeAddDepositFragment() {
         FragmentManager fragmentManager = getParentFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.remove(AddDepositFragment.this);
