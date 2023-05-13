@@ -1,7 +1,7 @@
 package com.example.mobilebankingapplication.database;
 
 public class DatabaseConstants {
-    private static final String IP = "192.168.171.11";
+    private static final String IP = "192.168.31.71";
     private static final String ROOT_URL = "http://" + IP + "/MobileBankingApplication/v1/";
 
     public static final String URL_REGISTER_TRANSFER = ROOT_URL + "registerTransfer.php";
@@ -21,5 +21,6 @@ public class DatabaseConstants {
     public static final String URL_DELETE_DEPOSIT = ROOT_URL + "deleteDeposit.php";
 
     public static final String URL_GET_USER = ROOT_URL + "getUserByCredentials.php";
+    public static final String URL_UPDATE_USER = ROOT_URL + "updateUser.php";
 
 }

@@ -78,6 +78,37 @@ public class TransfersFragment extends Fragment {
                                         try {
                                             JSONObject jsonObject = new JSONObject(response);
                                             Toast.makeText(getContext(), jsonObject.getString("message"), Toast.LENGTH_LONG).show();
+                                            // the update method for the user
+                                            double newBalance = user.getBalance() - transfer.getTransferAmount();
+                                            String urlUpdateUser = DatabaseConstants.URL_UPDATE_USER + "?userId=" + user.getUserId() + "&balance=" + newBalance;
+
+                                            StringRequest stringRequestUserBalance = new StringRequest(Request.Method.PUT, urlUpdateUser, new Response.Listener<String>() {
+                                                @Override
+                                                public void onResponse(String response) {
+                                                    try {
+                                                        JSONObject jsonObject = new JSONObject(response);
+                                                        Toast.makeText(getContext(), jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
+                                                    } catch (JSONException e) {
+                                                        throw new RuntimeException(e);
+                                                    }
+                                                }
+                                            }, new Response.ErrorListener() {
+                                                @Override
+                                                public void onErrorResponse(VolleyError error) {
+                                                    Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+                                                }
+                                            }) {
+                                                @Nullable
+                                                @Override
+                                                protected Map<String, String> getParams() throws AuthFailureError {
+                                                    Map<String, String> params = new HashMap<>();
+                                                    params.put("userId", ConverterUUID.UUIDtoString(user.getUserId()));
+                                                    params.put("balance",String.valueOf(newBalance));
+                                                    return params;
+                                                }
+                                            };
+                                            RequestHandler.getInstance(getContext()).addToRequestQueue(stringRequestUserBalance);
+                                            user.setBalance(newBalance);
                                         } catch (JSONException e) {
                                             throw new RuntimeException(e);
                                         }
@@ -240,5 +271,6 @@ public class TransfersFragment extends Fragment {
             }
         }
     }
+
 }
 
