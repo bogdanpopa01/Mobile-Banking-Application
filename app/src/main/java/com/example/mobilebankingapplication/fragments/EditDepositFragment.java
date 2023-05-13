@@ -305,6 +305,7 @@ public class EditDepositFragment extends DialogFragment {
         if(bundle!=null) {
             Deposit selectedDeposit = bundle.getParcelable(KEY_SEND_DEPOSIT_TO_EDIT);
             if(selectedDeposit!=null) {
+                double oldDepositAmount = selectedDeposit.getDepositAmount();
                 UUID depositId = selectedDeposit.getDepositId();
                 String depositName = etDepositName.getText().toString();
                 double depositAmount = Double.parseDouble(etDepositAmount.getText().toString());
@@ -325,11 +326,44 @@ public class EditDepositFragment extends DialogFragment {
                                     try {
                                         JSONObject jsonObject = new JSONObject(response);
                                         Toast.makeText(getContext(), jsonObject.getString("message"), Toast.LENGTH_LONG).show();
+
+                                        // to update the user
+                                        double depositAmountDifference = depositAmount - oldDepositAmount;
+                                        double newBalance = user.getBalance() - depositAmountDifference;
+                                        String urlUpdateUser = DatabaseConstants.URL_UPDATE_USER + "?userId=" + user.getUserId() + "&balance=" + newBalance;
+
+                                        StringRequest stringRequestEditDeposit = new StringRequest(Request.Method.PUT, urlUpdateUser, new Response.Listener<String>() {
+                                            @Override
+                                            public void onResponse(String response) {
+                                                try {
+                                                    JSONObject jsonObject = new JSONObject(response);
+                                                    Toast.makeText(contex, jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
+                                                } catch (JSONException e) {
+                                                    throw new RuntimeException(e);
+                                                }
+                                            }
+                                        }, new Response.ErrorListener() {
+                                            @Override
+                                            public void onErrorResponse(VolleyError error) {
+                                                Toast.makeText(contex, error.getMessage(), Toast.LENGTH_SHORT).show();
+                                            }
+                                        }){
+                                            @Nullable
+                                            @Override
+                                            protected Map<String, String> getParams() throws AuthFailureError {
+                                                Map<String, String> params = new HashMap<>();
+                                                params.put("userId", ConverterUUID.UUIDtoString(user.getUserId()));
+                                                params.put("balance",String.valueOf(newBalance));
+                                                return params;
+                                            }
+                                        };
+                                        RequestHandler.getInstance(contex).addToRequestQueue(stringRequestEditDeposit);
+                                        user.setBalance(newBalance);
+                                        sharedViewModel.setUser(user);
                                         closeEditDepositFragment();
                                     } catch (JSONException e) {
                                         throw new RuntimeException(e);
                                     }
-
                                 }
                             }, new Response.ErrorListener() {
                         @Override
