@@ -70,7 +70,7 @@ public class TransfersFragment extends Fragment {
             public void onClick(View v) {
                 if (validation()) {
                     double transferAmount = Double.parseDouble(etAmountTranfersFragment.getText().toString());
-                    
+
                     // balance validation
                     BigDecimal transferAmountSafe = BigDecimal.valueOf(transferAmount);
                     BigDecimal userBalance = BigDecimal.valueOf(user.getBalance());
@@ -121,6 +121,13 @@ public class TransfersFragment extends Fragment {
                                             };
                                             RequestHandler.getInstance(getContext()).addToRequestQueue(stringRequestUserBalance);
                                             user.setBalance(newBalance);
+
+                                            // clearing the fields
+                                            etAmountTranfersFragment.setText("");
+                                            etIBANTransfersFragment.setText("");
+                                            etPayeeTransfersFragment.setText("");
+                                            etDescriptionTransfersActivity.setText("");
+
                                         } catch (JSONException e) {
                                             throw new RuntimeException(e);
                                         }

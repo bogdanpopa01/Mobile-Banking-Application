@@ -68,10 +68,21 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 FragmentManager fragmentManager = getChildFragmentManager();
+
+                // Remove fabSeeDeposits if it exists in the FrameLayout
+                Fragment seeDepositsFragment = fragmentManager.findFragmentById(R.id.depositsFragment);
+                if (seeDepositsFragment != null) {
+                    FragmentTransaction removeTransaction = fragmentManager.beginTransaction();
+                    removeTransaction.remove(seeDepositsFragment);
+                    removeTransaction.commit();
+                }
+
+                // Show the AddDepositFragment
                 AddDepositFragment addDepositFragment = new AddDepositFragment();
                 addDepositFragment.show(fragmentManager, "AddDepositFragment");
             }
         });
+
 
         // to change the UI after a savings deposit has been opened
         sharedViewModel.getUser().observe(getViewLifecycleOwner(), new Observer<User>() {
