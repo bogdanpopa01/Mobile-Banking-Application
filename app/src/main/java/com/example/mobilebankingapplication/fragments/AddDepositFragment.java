@@ -41,6 +41,7 @@ import com.example.mobilebankingapplication.utils.SharedViewModel;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
@@ -132,6 +133,19 @@ public class AddDepositFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 if (validation()) {
+
+                    // balance validation
+
+                    double depositAmount = Double.parseDouble(etDepositAmount.getText().toString());
+                    BigDecimal depositAmountSafe = BigDecimal.valueOf(depositAmount);
+                    BigDecimal userBalance = BigDecimal.valueOf(user.getBalance());
+
+                    int comparisonResult = depositAmountSafe.compareTo(userBalance);
+
+                    if(comparisonResult > 0 ){
+                        Toast.makeText(contex, R.string.INSUFFICIENT_BALANCE, Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     Deposit deposit = createDeposit();
                     if (deposit != null) {
                         StringRequest stringRequest = new StringRequest(Request.Method.POST,

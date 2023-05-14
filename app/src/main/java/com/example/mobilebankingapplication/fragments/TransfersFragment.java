@@ -34,6 +34,7 @@ import com.example.mobilebankingapplication.utils.SharedViewModel;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
@@ -68,6 +69,17 @@ public class TransfersFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (validation()) {
+                    double transferAmount = Double.parseDouble(etAmountTranfersFragment.getText().toString());
+                    
+                    // balance validation
+                    BigDecimal transferAmountSafe = BigDecimal.valueOf(transferAmount);
+                    BigDecimal userBalance = BigDecimal.valueOf(user.getBalance());
+                    int comparisonResult = transferAmountSafe.compareTo(userBalance);
+
+                    if (comparisonResult > 0) {
+                        Toast.makeText(getContext(), R.string.INSUFFICIENT_BALANCE, Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     Transfer transfer = createTransfer();
                     if (transfer != null) {
                         StringRequest stringRequest = new StringRequest(Request.Method.POST,
@@ -103,7 +115,7 @@ public class TransfersFragment extends Fragment {
                                                 protected Map<String, String> getParams() throws AuthFailureError {
                                                     Map<String, String> params = new HashMap<>();
                                                     params.put("userId", ConverterUUID.UUIDtoString(user.getUserId()));
-                                                    params.put("balance",String.valueOf(newBalance));
+                                                    params.put("balance", String.valueOf(newBalance));
                                                     return params;
                                                 }
                                             };
@@ -136,7 +148,6 @@ public class TransfersFragment extends Fragment {
                         RequestHandler.getInstance(getContext()).addToRequestQueue(stringRequest);
                     }
                 }
-
             }
         });
         return view;
@@ -159,7 +170,7 @@ public class TransfersFragment extends Fragment {
         UUID userId = user.getUserId();
         Timestamp transferDate = new Timestamp(System.currentTimeMillis());
 
-        Transfer transfer = new Transfer(transferId, transferAmount, transferPayee, transferIBAN, transferDescription, userId,transferDate);
+        Transfer transfer = new Transfer(transferId, transferAmount, transferPayee, transferIBAN, transferDescription, userId, transferDate);
 
         if (transfer != null) {
             return transfer;

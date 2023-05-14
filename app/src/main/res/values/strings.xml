@@ -22,6 +22,7 @@
     <string name="etIBANTransfersFragment">IBAN</string>
     <string name="etDescriptionTransfersFragment">Description</string>
     <string name="btnSendTransfersFragment">Send</string>
+    <string name="INSUFFICIENT_BALANCE">Insufficient balance!</string>
 
     <!-- Home Fragment -->
     <string name="tvAppName">ZoroPay</string>
