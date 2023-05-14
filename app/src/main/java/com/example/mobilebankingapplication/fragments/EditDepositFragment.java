@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
@@ -135,43 +136,15 @@ public class EditDepositFragment extends DialogFragment {
         btnDeleteDeposit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                FragmentManager fragmentManager = getChildFragmentManager();
-//                PopUpFragmentDeletion popUpFragmentDeletion = new PopUpFragmentDeletion();
-//                popUpFragmentDeletion.show(fragmentManager,"PopUpFragmentDeletion");
-
                 Deposit deposit = bundle.getParcelable(KEY_SEND_DEPOSIT_TO_EDIT);
-                deleteDeposit(bundle);
-
-                double newBalance = user.getBalance() + deposit.getDepositAmount();
-                String urlUpdateUser = DatabaseConstants.URL_UPDATE_USER + "?userId=" + user.getUserId() + "&balance=" + newBalance;
-                StringRequest stringRequestDeleteDeposit = new StringRequest(Request.Method.PUT, urlUpdateUser, new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONObject jsonObject = new JSONObject(response);
-                            Toast.makeText(context, jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
-                        } catch (JSONException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                }) {
-                    @Nullable
-                    @Override
-                    protected Map<String, String> getParams() throws AuthFailureError {
-                        Map<String, String> params = new HashMap<>();
-                        params.put("userId", ConverterUUID.UUIDtoString(user.getUserId()));
-                        params.put("balance", String.valueOf(newBalance));
-                        return params;
-                    }
-                };
-                RequestHandler.getInstance(context).addToRequestQueue(stringRequestDeleteDeposit);
-                user.setBalance(newBalance);
-                sharedViewModel.setUser(user);
+                if (deposit != null) {
+                    FragmentManager fragmentManager = getChildFragmentManager();
+                    PopUpDeletionFragment popUpFragmentDeletion = new PopUpDeletionFragment();
+                    Bundle deletionBundle = new Bundle();
+                    deletionBundle.putParcelable(PopUpDeletionFragment.KEY_POP_UP_DELETION_FRAGMENT, deposit);
+                    popUpFragmentDeletion.setArguments(deletionBundle);
+                    popUpFragmentDeletion.show(fragmentManager, "PopUpDeletionFragment");
+                }
             }
         });
 
@@ -259,38 +232,6 @@ public class EditDepositFragment extends DialogFragment {
             } else {
                 Toast.makeText(getContext(), "The deposit wasn't sent!", Toast.LENGTH_SHORT).show();
             }
-        }
-    }
-
-    private void deleteDeposit(Bundle bundle) {
-        if (bundle != null) {
-            Deposit selectedDeposit = bundle.getParcelable(KEY_SEND_DEPOSIT_TO_EDIT);
-            if (selectedDeposit != null) {
-
-                UUID depositId = selectedDeposit.getDepositId();
-                String url = DatabaseConstants.URL_DELETE_DEPOSIT + "?depositId=" + depositId;
-                StringRequest stringRequest = new StringRequest(Request.Method.DELETE, url, new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONObject jsonObject = new JSONObject(response);
-                            String message = jsonObject.getString("message");
-                            Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
-                            closeEditDepositFragment();
-                        } catch (JSONException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-                RequestHandler.getInstance(getContext()).addToRequestQueue(stringRequest);
-            }
-        } else {
-            Toast.makeText(getContext(), "The bundle is null!", Toast.LENGTH_LONG).show();
         }
     }
 

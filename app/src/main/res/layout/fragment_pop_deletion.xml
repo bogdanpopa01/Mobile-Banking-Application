@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context=".fragments.PopUpFragmentDeletion">
+    tools:context=".fragments.PopUpDeletionFragment">
 
 
     <TextView
@@ -60,7 +60,7 @@
         app:layout_constraintTop_toBottomOf="@+id/tvPopUpDeletion3" />
 
     <Button
-        android:id="@+id/btnYes"
+        android:id="@+id/btnYesPopUpDeletion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="35dp"
@@ -71,7 +71,7 @@
         app:layout_constraintTop_toBottomOf="@+id/tvPopUpDeletion4" />
 
     <Button
-        android:id="@+id/btnNo"
+        android:id="@+id/btnNoPopUpDeletion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
