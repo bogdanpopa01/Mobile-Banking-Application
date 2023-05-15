@@ -144,6 +144,38 @@ public class EditDepositFragment extends DialogFragment {
                     deletionBundle.putParcelable(PopUpDeletionFragment.KEY_POP_UP_DELETION_FRAGMENT, deposit);
                     popUpFragmentDeletion.setArguments(deletionBundle);
                     popUpFragmentDeletion.show(fragmentManager, "PopUpDeletionFragment");
+                    // to update the user
+
+                    double newBalance = user.getBalance() + deposit.getDepositAmount();
+                    String urlUpdateUser = DatabaseConstants.URL_UPDATE_USER + "?userId=" + user.getUserId() + "&balance=" + newBalance;
+                    StringRequest stringRequestDeleteDeposit = new StringRequest(Request.Method.PUT, urlUpdateUser, new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            try {
+                                JSONObject jsonObject = new JSONObject(response);
+                                Toast.makeText(context, jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
+                            } catch (JSONException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }) {
+                        @Nullable
+                        @Override
+                        protected Map<String, String> getParams() throws AuthFailureError {
+                            Map<String, String> params = new HashMap<>();
+                            params.put("userId", ConverterUUID.UUIDtoString(user.getUserId()));
+                            params.put("balance", String.valueOf(newBalance));
+                            return params;
+                        }
+                    };
+                    RequestHandler.getInstance(context).addToRequestQueue(stringRequestDeleteDeposit);
+                    user.setBalance(newBalance);
+                    sharedViewModel.setUser(user);
                 }
             }
         });
