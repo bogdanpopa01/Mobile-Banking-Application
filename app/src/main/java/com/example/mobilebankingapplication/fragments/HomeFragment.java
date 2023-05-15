@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,21 +71,26 @@ public class HomeFragment extends Fragment implements DepositsUpdateCallback {
             public void onClick(View v) {
                 FragmentManager fragmentManager = getChildFragmentManager();
 
-                // Remove fabSeeDeposits if it exists in the FrameLayout
+                // Remove fabSeeDeposits if it exists in the FrameLayout with a delay of 1 second
                 Fragment seeDepositsFragment = fragmentManager.findFragmentById(R.id.depositsFragment);
                 if (seeDepositsFragment != null) {
-                    FragmentTransaction removeTransaction = fragmentManager.beginTransaction();
-                    removeTransaction.remove(seeDepositsFragment);
-                    removeTransaction.commit();
+                    // Delayed removal of the fragment
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            FragmentTransaction removeTransaction = fragmentManager.beginTransaction();
+                            removeTransaction.remove(seeDepositsFragment);
+                            removeTransaction.commit();
+                        }
+                    }, 1000); // 1-second delay
                 }
-
                 // Show the AddDepositFragment
                 AddDepositFragment addDepositFragment = new AddDepositFragment();
                 addDepositFragment.setDepositsUpdateCallback(HomeFragment.this);
                 addDepositFragment.show(fragmentManager, "AddDepositFragment");
             }
         });
-
 
 
         // to change the UI after a savings deposit has been opened
