@@ -1,7 +1,9 @@
 package com.example.mobilebankingapplication.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -24,6 +26,7 @@ import com.example.mobilebankingapplication.classes.Deposit;
 import com.example.mobilebankingapplication.classes.User;
 import com.example.mobilebankingapplication.database.DatabaseConstants;
 import com.example.mobilebankingapplication.database.RequestHandler;
+import com.example.mobilebankingapplication.interfaces.DeletionCallback;
 import com.example.mobilebankingapplication.utils.SharedViewModel;
 
 import org.json.JSONException;
@@ -40,9 +43,21 @@ public class PopUpDeletionFragment extends DialogFragment {
     private Button btnYes, btnNo;
     private SharedViewModel sharedViewModel;
     private User user;
+    private DeletionCallback deletionCallback;
+    private Context context;
+
+    public void setDeletionCallback(DeletionCallback deletionCallback) {
+        this.deletionCallback = deletionCallback;
+    }
 
     public PopUpDeletionFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        this.context = context;
     }
 
     @Override
@@ -70,6 +85,9 @@ public class PopUpDeletionFragment extends DialogFragment {
             @Override
             public void onClick(View view) {
                 deleteDeposit(bundle);
+                if (deletionCallback != null) {
+                    deletionCallback.onDeleteConfirmed();
+                }
             }
         });
 
@@ -115,8 +133,7 @@ public class PopUpDeletionFragment extends DialogFragment {
                         try {
                             JSONObject jsonObject = new JSONObject(response);
                             String message = jsonObject.getString("message");
-                            Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
-                            closePopUpDeletionFragment();
+                            Toast.makeText(context, message, Toast.LENGTH_LONG).show();
                         } catch (JSONException e) {
                             throw new RuntimeException(e);
                         }
@@ -124,21 +141,13 @@ public class PopUpDeletionFragment extends DialogFragment {
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
-                RequestHandler.getInstance(getContext()).addToRequestQueue(stringRequest);
+                RequestHandler.getInstance(context).addToRequestQueue(stringRequest);
             }
         } else {
-            Toast.makeText(getContext(), "The bundle is null!", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "The bundle is null!", Toast.LENGTH_LONG).show();
         }
     }
-
-    private void closePopUpDeletionFragment() {
-        FragmentManager fragmentManager = getParentFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.remove(PopUpDeletionFragment.this);
-        fragmentTransaction.commit();
-    }
-
 }

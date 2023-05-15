@@ -34,6 +34,7 @@ import com.example.mobilebankingapplication.classes.Deposit;
 import com.example.mobilebankingapplication.classes.User;
 import com.example.mobilebankingapplication.database.DatabaseConstants;
 import com.example.mobilebankingapplication.database.RequestHandler;
+import com.example.mobilebankingapplication.interfaces.DeletionCallback;
 import com.example.mobilebankingapplication.utils.ConverterUUID;
 import com.example.mobilebankingapplication.utils.DateConverter;
 import com.example.mobilebankingapplication.utils.SharedViewModel;
@@ -49,7 +50,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 
-public class EditDepositFragment extends DialogFragment {
+public class EditDepositFragment extends DialogFragment implements DeletionCallback {
     public static final String KEY_SEND_DEPOSIT_TO_EDIT = "sendDepositToEdit";
     private EditText etDepositName, etDepositAmount;
     private Button btnCancel, btnEditDeposit, btnDeleteDeposit;
@@ -139,11 +140,14 @@ public class EditDepositFragment extends DialogFragment {
                 Deposit deposit = bundle.getParcelable(KEY_SEND_DEPOSIT_TO_EDIT);
                 if (deposit != null) {
                     FragmentManager fragmentManager = getChildFragmentManager();
+
                     PopUpDeletionFragment popUpFragmentDeletion = new PopUpDeletionFragment();
                     Bundle deletionBundle = new Bundle();
                     deletionBundle.putParcelable(PopUpDeletionFragment.KEY_POP_UP_DELETION_FRAGMENT, deposit);
                     popUpFragmentDeletion.setArguments(deletionBundle);
+                    popUpFragmentDeletion.setDeletionCallback(EditDepositFragment.this); // Set the callback
                     popUpFragmentDeletion.show(fragmentManager, "PopUpDeletionFragment");
+
                     // to update the user
 
                     double newBalance = user.getBalance() + deposit.getDepositAmount();
@@ -314,7 +318,6 @@ public class EditDepositFragment extends DialogFragment {
                                         double depositAmountDifference = depositAmount - oldDepositAmount;
                                         double newBalance = user.getBalance() - depositAmountDifference;
                                         String urlUpdateUser = DatabaseConstants.URL_UPDATE_USER + "?userId=" + user.getUserId() + "&balance=" + newBalance;
-
                                         StringRequest stringRequestEditDeposit = new StringRequest(Request.Method.PUT, urlUpdateUser, new Response.Listener<String>() {
                                             @Override
                                             public void onResponse(String response) {
@@ -392,4 +395,8 @@ public class EditDepositFragment extends DialogFragment {
         }
     }
 
+    @Override
+    public void onDeleteConfirmed() {
+        closeEditDepositFragment();
+    }
 }
