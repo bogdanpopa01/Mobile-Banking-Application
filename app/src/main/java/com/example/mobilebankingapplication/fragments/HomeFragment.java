@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.example.mobilebankingapplication.R;
 import com.example.mobilebankingapplication.classes.User;
+import com.example.mobilebankingapplication.interfaces.DepositsUpdateCallback;
 import com.example.mobilebankingapplication.utils.SharedViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -24,7 +25,7 @@ import java.util.Date;
 import java.util.Locale;
 
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements DepositsUpdateCallback {
     FloatingActionButton fabSeeDeposits, fabAddDeposit;
     private SharedViewModel sharedViewModel;
     private User user;
@@ -79,9 +80,11 @@ public class HomeFragment extends Fragment {
 
                 // Show the AddDepositFragment
                 AddDepositFragment addDepositFragment = new AddDepositFragment();
+                addDepositFragment.setDepositsUpdateCallback(HomeFragment.this);
                 addDepositFragment.show(fragmentManager, "AddDepositFragment");
             }
         });
+
 
 
         // to change the UI after a savings deposit has been opened
@@ -157,5 +160,18 @@ public class HomeFragment extends Fragment {
         DecimalFormat decimalFormat = new DecimalFormat("#,###.0");
         String balanceString = decimalFormat.format(balance);
         tvBalanceHomeFragment.setText(balanceString);
+    }
+
+    @Override
+    public void onUpdateDeposits() {
+        FragmentManager fragmentManager = getChildFragmentManager();
+        Fragment fragment = fragmentManager.findFragmentById(R.id.depositsFragment);
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        if (fragment != null && fragment.isVisible()) {
+            fragmentTransaction.remove(fragment);
+        } else {
+            fragmentTransaction.add(R.id.depositsFragment, new DepositsFragment());
+        }
+        fragmentTransaction.commit();
     }
 }

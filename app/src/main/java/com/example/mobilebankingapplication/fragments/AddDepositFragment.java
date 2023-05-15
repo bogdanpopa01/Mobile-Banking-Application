@@ -33,6 +33,7 @@ import com.example.mobilebankingapplication.classes.Deposit;
 import com.example.mobilebankingapplication.classes.User;
 import com.example.mobilebankingapplication.database.DatabaseConstants;
 import com.example.mobilebankingapplication.database.RequestHandler;
+import com.example.mobilebankingapplication.interfaces.DepositsUpdateCallback;
 import com.example.mobilebankingapplication.utils.ConverterUUID;
 import com.example.mobilebankingapplication.utils.DateConverter;
 import com.example.mobilebankingapplication.utils.RandomUuidGenerator;
@@ -57,6 +58,11 @@ public class AddDepositFragment extends DialogFragment {
     private SharedViewModel sharedViewModel;
     private User user;
     private Context contex;
+    private DepositsUpdateCallback depositsUpdateCallback;
+
+    public void setDepositsUpdateCallback(DepositsUpdateCallback callback) {
+        this.depositsUpdateCallback = callback;
+    }
 
     public AddDepositFragment() {
         // Required empty public constructor
@@ -331,6 +337,9 @@ public class AddDepositFragment extends DialogFragment {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.remove(AddDepositFragment.this);
         fragmentTransaction.commit();
+        if (depositsUpdateCallback != null) {
+            depositsUpdateCallback.onUpdateDeposits();
+        }
     }
 
     private void getUser() {
