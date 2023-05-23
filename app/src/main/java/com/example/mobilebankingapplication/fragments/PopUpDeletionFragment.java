@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -17,6 +18,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -27,11 +29,14 @@ import com.example.mobilebankingapplication.classes.User;
 import com.example.mobilebankingapplication.database.DatabaseConstants;
 import com.example.mobilebankingapplication.database.RequestHandler;
 import com.example.mobilebankingapplication.interfaces.DeletionCallback;
+import com.example.mobilebankingapplication.utils.ConverterUUID;
 import com.example.mobilebankingapplication.utils.SharedViewModel;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -134,6 +139,38 @@ public class PopUpDeletionFragment extends DialogFragment {
                             JSONObject jsonObject = new JSONObject(response);
                             String message = jsonObject.getString("message");
                             Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+
+                            // to update the user
+                            double newBalance = user.getBalance() + selectedDeposit.getDepositAmount();
+                            String urlUpdateUser = DatabaseConstants.URL_UPDATE_USER + "?userId=" + user.getUserId() + "&balance=" + newBalance;
+                            StringRequest stringRequestDeleteDeposit = new StringRequest(Request.Method.PUT, urlUpdateUser, new Response.Listener<String>() {
+                                @Override
+                                public void onResponse(String response) {
+                                    try {
+                                        JSONObject jsonObject = new JSONObject(response);
+                                        Toast.makeText(context, jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
+                                    } catch (JSONException e) {
+                                        throw new RuntimeException(e);
+                                    }
+                                }
+                            }, new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            }) {
+                                @Nullable
+                                @Override
+                                protected Map<String, String> getParams() throws AuthFailureError {
+                                    Map<String, String> params = new HashMap<>();
+                                    params.put("userId", ConverterUUID.UUIDtoString(user.getUserId()));
+                                    params.put("balance", String.valueOf(newBalance));
+                                    return params;
+                                }
+                            };
+                            RequestHandler.getInstance(context).addToRequestQueue(stringRequestDeleteDeposit);
+                            user.setBalance(newBalance);
+                            sharedViewModel.setUser(user);
                         } catch (JSONException e) {
                             throw new RuntimeException(e);
                         }
