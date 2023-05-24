@@ -2,6 +2,8 @@ package com.example.mobilebankingapplication.fragments;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -13,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.mobilebankingapplication.R;
 import com.example.mobilebankingapplication.classes.User;
@@ -25,6 +28,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import io.reactivex.rxjava3.disposables.Disposable;
+
 
 public class HomeFragment extends Fragment implements DepositsUpdateCallback {
     FloatingActionButton fabSeeDeposits, fabAddDeposit;
@@ -32,6 +37,7 @@ public class HomeFragment extends Fragment implements DepositsUpdateCallback {
     private User user;
     private View view;
     private TextView tvCardNumberHomeFragment, tvUserFirstAndLastName, tvValidThruDateHomeFragment, tvBalanceHomeFragment;
+    private Disposable deleteEventDisposable;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -179,5 +185,35 @@ public class HomeFragment extends Fragment implements DepositsUpdateCallback {
             fragmentTransaction.add(R.id.depositsFragment, new DepositsFragment());
         }
         fragmentTransaction.commit();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        deleteEventDisposable = PopUpDeletionFragment.deleteEventSubject
+                .subscribe(event -> {
+                    if (event.isDeleted()) {
+                        // Perform UI updates or other operations
+                        FragmentManager fragmentManager = getChildFragmentManager();
+                        Fragment fragment = fragmentManager.findFragmentById(R.id.depositsFragment);
+                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        if (fragment != null && fragment.isVisible()) {
+                            fragmentTransaction.remove(fragment);
+                        } else {
+                            fragmentTransaction.add(R.id.depositsFragment, new DepositsFragment());
+                        }
+                        fragmentTransaction.commit();
+                    }
+                });
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        // Dispose the subscription to avoid memory leaks
+        if (deleteEventDisposable != null && !deleteEventDisposable.isDisposed()) {
+            deleteEventDisposable.dispose();
+        }
     }
 }

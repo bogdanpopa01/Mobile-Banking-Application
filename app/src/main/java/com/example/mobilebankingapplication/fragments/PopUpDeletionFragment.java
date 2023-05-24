@@ -25,6 +25,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.example.mobilebankingapplication.R;
 import com.example.mobilebankingapplication.classes.Deposit;
+import com.example.mobilebankingapplication.classes.DepositDeleteEvent;
 import com.example.mobilebankingapplication.classes.User;
 import com.example.mobilebankingapplication.database.DatabaseConstants;
 import com.example.mobilebankingapplication.database.RequestHandler;
@@ -40,6 +41,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
+import io.reactivex.rxjava3.subjects.PublishSubject;
+
 
 public class PopUpDeletionFragment extends DialogFragment {
     public static final String KEY_POP_UP_DELETION_FRAGMENT = "sentToPopUpDeletionFragment";
@@ -50,6 +53,7 @@ public class PopUpDeletionFragment extends DialogFragment {
     private User user;
     private DeletionCallback deletionCallback;
     private Context context;
+    public static PublishSubject<DepositDeleteEvent> deleteEventSubject = PublishSubject.create();
 
     public void setDeletionCallback(DeletionCallback deletionCallback) {
         this.deletionCallback = deletionCallback;
@@ -93,6 +97,7 @@ public class PopUpDeletionFragment extends DialogFragment {
                 if (deletionCallback != null) {
                     deletionCallback.onDeleteConfirmed();
                 }
+                deleteEventSubject.onNext(new DepositDeleteEvent(true));
             }
         });
 
