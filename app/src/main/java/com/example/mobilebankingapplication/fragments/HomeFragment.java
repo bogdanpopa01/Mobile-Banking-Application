@@ -37,7 +37,7 @@ public class HomeFragment extends Fragment implements DepositsUpdateCallback {
     private User user;
     private View view;
     private TextView tvCardNumberHomeFragment, tvUserFirstAndLastName, tvValidThruDateHomeFragment, tvBalanceHomeFragment;
-    private Disposable deleteEventDisposable;
+    private Disposable deleteEventDisposable, updateEventDisposable;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -176,6 +176,10 @@ public class HomeFragment extends Fragment implements DepositsUpdateCallback {
 
     @Override
     public void onUpdateDeposits() {
+        reloadUI();
+    }
+
+    private void reloadUI(){
         FragmentManager fragmentManager = getChildFragmentManager();
         Fragment fragment = fragmentManager.findFragmentById(R.id.depositsFragment);
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -194,15 +198,13 @@ public class HomeFragment extends Fragment implements DepositsUpdateCallback {
                 .subscribe(event -> {
                     if (event.isDeleted()) {
                         // Perform UI updates or other operations
-                        FragmentManager fragmentManager = getChildFragmentManager();
-                        Fragment fragment = fragmentManager.findFragmentById(R.id.depositsFragment);
-                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                        if (fragment != null && fragment.isVisible()) {
-                            fragmentTransaction.remove(fragment);
-                        } else {
-                            fragmentTransaction.add(R.id.depositsFragment, new DepositsFragment());
-                        }
-                        fragmentTransaction.commit();
+                        reloadUI();
+                    }
+                });
+        updateEventDisposable = EditDepositFragment.updateEventSubject
+                .subscribe(event -> {
+                    if(event.isUpdated()){
+                        reloadUI();
                     }
                 });
     }
@@ -214,6 +216,9 @@ public class HomeFragment extends Fragment implements DepositsUpdateCallback {
         // Dispose the subscription to avoid memory leaks
         if (deleteEventDisposable != null && !deleteEventDisposable.isDisposed()) {
             deleteEventDisposable.dispose();
+        }
+        if (updateEventDisposable != null && !updateEventDisposable.isDisposed()) {
+            updateEventDisposable.dispose();
         }
     }
 }

@@ -31,6 +31,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.example.mobilebankingapplication.R;
 import com.example.mobilebankingapplication.classes.Deposit;
+import com.example.mobilebankingapplication.classes.DepositDeleteEvent;
+import com.example.mobilebankingapplication.classes.DepositUpdatedEvent;
 import com.example.mobilebankingapplication.classes.User;
 import com.example.mobilebankingapplication.database.DatabaseConstants;
 import com.example.mobilebankingapplication.database.RequestHandler;
@@ -49,6 +51,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
+import io.reactivex.rxjava3.subjects.PublishSubject;
+
 
 public class EditDepositFragment extends DialogFragment implements DeletionCallback {
     public static final String KEY_SEND_DEPOSIT_TO_EDIT = "sendDepositToEdit";
@@ -60,6 +64,7 @@ public class EditDepositFragment extends DialogFragment implements DeletionCallb
     private User user;
     private View view;
     private Context context;
+    public static PublishSubject<DepositUpdatedEvent> updateEventSubject = PublishSubject.create();
 
     public EditDepositFragment() {
         // Required empty public constructor
@@ -155,6 +160,7 @@ public class EditDepositFragment extends DialogFragment implements DeletionCallb
             @Override
             public void onClick(View view) {
                 updateDeposit(bundle);
+                updateEventSubject.onNext(new DepositUpdatedEvent(true));
             }
         });
 
