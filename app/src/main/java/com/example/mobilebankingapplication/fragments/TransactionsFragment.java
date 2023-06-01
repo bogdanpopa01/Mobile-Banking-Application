@@ -13,8 +13,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -49,11 +51,13 @@ public class TransactionsFragment extends Fragment {
     private RecyclerView recyclerViewTransactions;
     private RecyclerViewAdapterTransactions recyclerViewAdapterTransactions;
     private ArrayList<Transaction> arrayListTransactions = new ArrayList<>();
+    private ArrayList<Transaction>  filteredTransactions = new ArrayList<>();
     private SharedViewModel sharedViewModel;
     private User user;
     private View view;
     private SearchView searchViewTransactions;
-    private Button btnAllTransactions, btnTransfers, btnDate, btnIncomes, btnExpenses;
+    private Button btnAllTransactions,btnDate;
+    private ToggleButton btnTransfers,btnIncomes,btnExpenses;
     private String selectedFilter = "all";
     private String currentSearchText = "";
     private Calendar selectedDate = Calendar.getInstance();
@@ -171,27 +175,51 @@ public class TransactionsFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 filterAllMethod();
+                btnExpenses.setChecked(false);
+                btnIncomes.setChecked(false);
+                btnTransfers.setChecked(false);
             }
         });
 
-        btnTransfers.setOnClickListener(new View.OnClickListener() {
+        btnTransfers.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View view) {
-                filterTransfersOnlyMethod();
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if(isChecked){
+                    btnIncomes.setChecked(false);
+                    btnExpenses.setChecked(false);
+                    btnTransfers.setChecked(true);
+                    filterTransfersOnlyMethod();
+                } else {
+                    filterAllMethod();
+                }
             }
         });
 
-        btnIncomes.setOnClickListener(new View.OnClickListener() {
+        btnIncomes.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View view) {
-                filterIncomes();
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if(isChecked){
+                    btnTransfers.setChecked(false);
+                    btnIncomes.setChecked(true);
+                    btnExpenses.setChecked(false);
+                    filterIncomes();
+                } else {
+                    filterAllMethod();
+                }
             }
         });
 
-        btnExpenses.setOnClickListener(new View.OnClickListener() {
+        btnExpenses.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View view) {
-                filterExpenses();
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if(isChecked){
+                    btnExpenses.setChecked(true);
+                    btnIncomes.setChecked(false);
+                    btnTransfers.setChecked(false);
+                    filterExpenses();
+                } else {
+                    filterAllMethod();
+                }
             }
         });
 
@@ -201,7 +229,7 @@ public class TransactionsFragment extends Fragment {
                 filterDate();
             }
         });
-        
+
 
 
         recyclerViewTransactions.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -216,7 +244,7 @@ public class TransactionsFragment extends Fragment {
 
     private void filterMethod(String status){
         selectedFilter = status;
-        ArrayList<Transaction>  filteredTransactions = new ArrayList<>();
+        filteredTransactions.clear();
 
         for(Transaction transaction : arrayListTransactions){
             if(transaction.getTransactionType().toString().toLowerCase().contains(status)){
@@ -250,7 +278,7 @@ public class TransactionsFragment extends Fragment {
 
     private void filterIncomes() {
         selectedFilter = "incomes";
-        ArrayList<Transaction> filteredTransactions = new ArrayList<>();
+        filteredTransactions.clear();
 
         for (Transaction transaction : arrayListTransactions) {
             if (!transaction.getTransactionType().equals(TransactionType.TRANSFER) && transaction.getTransactionAmount() >= 0) {
@@ -270,7 +298,7 @@ public class TransactionsFragment extends Fragment {
 
     private void filterExpenses() {
         selectedFilter = "expenses";
-        ArrayList<Transaction> filteredTransactions = new ArrayList<>();
+        filteredTransactions.clear();
 
         for (Transaction transaction : arrayListTransactions) {
             if (transaction.getTransactionType().equals(TransactionType.TRANSFER) || transaction.getTransactionAmount() < 0) {
@@ -305,27 +333,49 @@ public class TransactionsFragment extends Fragment {
         datePickerDialog.show();
     }
 
+    // de aici incep sa modific
+        private void applyDateFilter() {
+        if(btnTransfers.isChecked() || btnExpenses.isChecked() || btnIncomes.isChecked()) {
+            selectedFilter = "date";
+            ArrayList<Transaction> newFilteredTransactionsList = new ArrayList<>();
 
-    private void applyDateFilter() {
-        selectedFilter = "date";
-        ArrayList<Transaction> filteredTransactions = new ArrayList<>();
+            for (Transaction transaction : filteredTransactions) {
+                Timestamp transactionTimestamp = transaction.getTransactionDate();
+                long transactionTimeInMillis = transactionTimestamp.getTime();
 
-        for (Transaction transaction : arrayListTransactions) {
-            Timestamp transactionTimestamp = transaction.getTransactionDate();
-            long transactionTimeInMillis = transactionTimestamp.getTime();
+                Calendar transactionCalendar = Calendar.getInstance();
+                transactionCalendar.setTimeInMillis(transactionTimeInMillis);
 
-            Calendar transactionCalendar = Calendar.getInstance();
-            transactionCalendar.setTimeInMillis(transactionTimeInMillis);
-
-            if (transactionCalendar.get(Calendar.YEAR) == selectedDate.get(Calendar.YEAR) &&
-                    transactionCalendar.get(Calendar.MONTH) == selectedDate.get(Calendar.MONTH) &&
-                    transactionCalendar.get(Calendar.DAY_OF_MONTH) == selectedDate.get(Calendar.DAY_OF_MONTH)) {
-                filteredTransactions.add(transaction);
+                if (transactionCalendar.get(Calendar.YEAR) == selectedDate.get(Calendar.YEAR) &&
+                        transactionCalendar.get(Calendar.MONTH) == selectedDate.get(Calendar.MONTH) &&
+                        transactionCalendar.get(Calendar.DAY_OF_MONTH) == selectedDate.get(Calendar.DAY_OF_MONTH)) {
+                    newFilteredTransactionsList.add(transaction);
+                }
             }
-        }
 
-        RecyclerViewAdapterTransactions adapterTransactions = new RecyclerViewAdapterTransactions(filteredTransactions, getContext());
-        recyclerViewTransactions.setAdapter(adapterTransactions);
+            RecyclerViewAdapterTransactions adapterTransactions = new RecyclerViewAdapterTransactions(newFilteredTransactionsList, getContext());
+            recyclerViewTransactions.setAdapter(adapterTransactions);
+        } else {
+            selectedFilter = "date";
+            filteredTransactions.clear();
+
+            for (Transaction transaction : arrayListTransactions) {
+                Timestamp transactionTimestamp = transaction.getTransactionDate();
+                long transactionTimeInMillis = transactionTimestamp.getTime();
+
+                Calendar transactionCalendar = Calendar.getInstance();
+                transactionCalendar.setTimeInMillis(transactionTimeInMillis);
+
+                if (transactionCalendar.get(Calendar.YEAR) == selectedDate.get(Calendar.YEAR) &&
+                        transactionCalendar.get(Calendar.MONTH) == selectedDate.get(Calendar.MONTH) &&
+                        transactionCalendar.get(Calendar.DAY_OF_MONTH) == selectedDate.get(Calendar.DAY_OF_MONTH)) {
+                    filteredTransactions.add(transaction);
+                }
+            }
+
+            RecyclerViewAdapterTransactions adapterTransactions = new RecyclerViewAdapterTransactions(filteredTransactions, getContext());
+            recyclerViewTransactions.setAdapter(adapterTransactions);
+        }
     }
 
 
@@ -364,7 +414,7 @@ public class TransactionsFragment extends Fragment {
             @Override
             public boolean onQueryTextChange(String newText) {
                 currentSearchText = newText;
-                ArrayList<Transaction> filteredTransactions = new ArrayList<>();
+                filteredTransactions.clear();
                 for(Transaction transaction : arrayListTransactions){
                     if(transaction.getTransactionType().toString().toLowerCase().contains(newText.toLowerCase())){
                         if(selectedFilter.equals("all")) {

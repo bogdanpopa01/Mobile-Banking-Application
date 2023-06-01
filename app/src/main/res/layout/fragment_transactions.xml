@@ -34,12 +34,13 @@
             android:text="@string/btnAllTransactions"
             />
 
-        <Button
+        <ToggleButton
             android:id="@+id/btnTransfersOnly"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/btnTransfersOnly"
+            android:textOn="@string/btnTransfersOnly"
+            android:textOff="@string/btnTransfersOnly"
             />
 
         <Button
@@ -57,20 +58,22 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <Button
+        <ToggleButton
             android:id="@+id/btnExpenses"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/btnExpenses"
+            android:textOn="@string/btnExpenses"
+            android:textOff="@string/btnExpenses"
             />
 
-        <Button
+        <ToggleButton
             android:id="@+id/btnIncomes"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/btnIncomes"
+            android:textOn="@string/btnIncomes"
+            android:textOff="@string/btnIncomes"
             />
 
     </LinearLayout>

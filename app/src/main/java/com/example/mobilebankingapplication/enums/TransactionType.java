@@ -5,5 +5,6 @@ public enum TransactionType {
     GAS,
     TRANSFER,
     WITHDRAWL,
-    SALARY
+    SALARY,
+    DEPOSIT
 }
