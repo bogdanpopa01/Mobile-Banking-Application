@@ -7,10 +7,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mobilebankingapplication.R;
 import com.example.mobilebankingapplication.classes.Transaction;
+import com.example.mobilebankingapplication.enums.TransactionType;
 import com.example.mobilebankingapplication.utils.DateConverter;
 
 import java.util.ArrayList;
@@ -36,7 +38,22 @@ public class RecyclerViewAdapterTransactions extends RecyclerView.Adapter<Recycl
         holder.tvTransactionType.setText(arrayListTransactions.get(position).getTransactionType().toString());
         holder.tvTransactionDate.setText(DateConverter.dateToString(arrayListTransactions.get(position).getTransactionDate()));
         holder.tvTransactionCurrency.setText("RON");
-        holder.tvTransactionAmount.setText(String.valueOf(arrayListTransactions.get(position).getTransactionAmount()));
+        if(arrayListTransactions.get(position).getTransactionAmount()>0f && !arrayListTransactions.get(position).getTransactionType().equals(TransactionType.TRANSFER)){
+            int greenColor = ContextCompat.getColor(holder.itemView.getContext(), R.color.green);
+            holder.tvTransactionAmount.setTextColor(greenColor);
+        } else {
+            int redColor = ContextCompat.getColor(holder.itemView.getContext(), R.color.red);
+            holder.tvTransactionAmount.setTextColor(redColor);
+        }
+
+        if (arrayListTransactions.get(position).getTransactionType().equals(TransactionType.TRANSFER)) {
+            holder.tvTransactionAmount.setText("-" + arrayListTransactions.get(position).getTransactionAmount());
+            int redColor = ContextCompat.getColor(holder.itemView.getContext(), R.color.red);
+            holder.tvTransactionAmount.setTextColor(redColor);
+        } else {
+            holder.tvTransactionAmount.setText(String.valueOf(arrayListTransactions.get(position).getTransactionAmount()));
+        }
+
     }
 
     @Override

@@ -4,5 +4,6 @@ public enum TransactionType {
     GROCERIES,
     GAS,
     TRANSFER,
-    WITHDRAWL
+    WITHDRAWL,
+    SALARY
 }

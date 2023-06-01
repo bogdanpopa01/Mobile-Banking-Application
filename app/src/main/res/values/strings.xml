@@ -89,5 +89,10 @@
 
     <!-- Transactions Fragment -->
     <string name="searchViewTransactions">Transaction name</string>
+    <string name="btnAllTransactions">All</string>
+    <string name="btnTransfersOnly">Transfers</string>
+    <string name="btnExpenses">Expenses</string>
+    <string name="btnIncomes">Incomes</string>
+    <string name="btnDate">Date</string>
 
 </resources>

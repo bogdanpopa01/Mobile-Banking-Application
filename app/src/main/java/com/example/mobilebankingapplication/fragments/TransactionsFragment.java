@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -49,6 +50,7 @@ public class TransactionsFragment extends Fragment {
     private User user;
     private View view;
     private SearchView searchViewTransactions;
+    private Button btnAllTransactions;
     public TransactionsFragment() {
 
     }
@@ -157,6 +159,13 @@ public class TransactionsFragment extends Fragment {
 
         initializeComponents();
         searchingMethod();
+        
+        btnAllTransactions.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                allFiltersTapped();
+            }
+        });
 
         recyclerViewTransactions.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -168,9 +177,14 @@ public class TransactionsFragment extends Fragment {
         return view;
     }
 
+    private void allFiltersTapped() {
+
+    }
+
     private void initializeComponents(){
         recyclerViewTransactions = view.findViewById(R.id.recyclerViewTransactions);
         searchViewTransactions  = view.findViewById(R.id.searchViewTransactions);
+        btnAllTransactions = view.findViewById(R.id.btnAllTransactions);
     }
 
     private void getUser() {
