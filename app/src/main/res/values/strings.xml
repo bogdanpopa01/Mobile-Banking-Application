@@ -87,4 +87,7 @@
     <string name="btnYes">Yes</string>
     <string name="btnNo">No</string>
 
+    <!-- Transactions Fragment -->
+    <string name="searchViewTransactions">Transaction name</string>
+
 </resources>

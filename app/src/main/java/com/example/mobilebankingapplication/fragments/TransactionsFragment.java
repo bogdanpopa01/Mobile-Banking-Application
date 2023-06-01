@@ -2,6 +2,7 @@ package com.example.mobilebankingapplication.fragments;
 
 import android.os.Bundle;
 
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -46,6 +47,8 @@ public class TransactionsFragment extends Fragment {
     private ArrayList<Transaction> arrayListTransactions = new ArrayList<>();
     private SharedViewModel sharedViewModel;
     private User user;
+    private View view;
+    private SearchView searchViewTransactions;
     public TransactionsFragment() {
 
     }
@@ -144,58 +147,17 @@ public class TransactionsFragment extends Fragment {
         });
         RequestHandler.getInstance(getContext()).addToRequestQueue(jsonObjectRequest1);
         RequestHandler.getInstance(getContext()).addToRequestQueue(jsonObjectRequest2);
-
-//        sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
-//        Long transferId = sharedViewModel.getData();
-//        if (transferId != null) {
-//            RequestQueue requestQueue = Volley.newRequestQueue(getContext());
-//            String url = Constants.URL_GET_TRANSFER + "?transferId=" + transferId;
-//
-//            StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-//                    new Response.Listener<String>() {
-//                        @Override
-//                        public void onResponse(String response) {
-//                            if (transferId != null) {
-//                                try {
-//                                    JSONObject jsonObject = new JSONObject(response);
-//                                    if (jsonObject.has("transferId")) {
-//                                        Transfer transfer = new Transfer(
-//                                                jsonObject.getLong("transferId"),
-//                                                jsonObject.getDouble("transferAmount"),
-//                                                jsonObject.getString("transferPayee"),
-//                                                jsonObject.getString("transferIBAN"),
-//                                                jsonObject.getString("transferDescription"),
-//                                                jsonObject.getLong("userId"),
-//                                                DateConverter.stringToDate(jsonObject.getString("transferDate"))
-//                                        );
-//                                        Transaction transaction = new Transaction(transfer.getTransferId(), "Transfer", transfer.getTransferAmount(), new Date(), TransactionType.TRANSFER, transfer.getUserId());
-//                                        arrayListTransactions.add(transaction);
-//                                        recyclerViewAdapterTransactions.notifyDataSetChanged();
-//                                    }
-//                                } catch (JSONException e) {
-//                                    throw new RuntimeException(e);
-//                                }
-//                            }
-//                        }
-//                    },
-//                    new Response.ErrorListener() {
-//                        @Override
-//                        public void onErrorResponse(VolleyError error) {
-//                            // Handle error
-//                        }
-//                    });
-//
-//            requestQueue.add(stringRequest);
-//        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_transactions, container, false);
+        view = inflater.inflate(R.layout.fragment_transactions, container, false);
 
-        recyclerViewTransactions = view.findViewById(R.id.recyclerViewTransactions);
+        initializeComponents();
+        searchingMethod();
+
         recyclerViewTransactions.setLayoutManager(new LinearLayoutManager(getContext()));
 
         recyclerViewAdapterTransactions = new RecyclerViewAdapterTransactions(arrayListTransactions, getContext());
@@ -204,6 +166,11 @@ public class TransactionsFragment extends Fragment {
         recyclerViewAdapterTransactions.notifyDataSetChanged();
 
         return view;
+    }
+
+    private void initializeComponents(){
+        recyclerViewTransactions = view.findViewById(R.id.recyclerViewTransactions);
+        searchViewTransactions  = view.findViewById(R.id.searchViewTransactions);
     }
 
     private void getUser() {
@@ -216,5 +183,27 @@ public class TransactionsFragment extends Fragment {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    private void searchingMethod(){
+        searchViewTransactions.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                ArrayList<Transaction> filteredTransactions = new ArrayList<>();
+                for(Transaction transaction : arrayListTransactions){
+                    if(transaction.getTransactionType().toString().toLowerCase().contains(newText.toLowerCase())){
+                        filteredTransactions.add(transaction);
+                    }
+                }
+                RecyclerViewAdapterTransactions adapterTransactions = new RecyclerViewAdapterTransactions(filteredTransactions,getContext());
+                recyclerViewTransactions.setAdapter(adapterTransactions);
+                return false;
+            }
+        });
     }
 }
