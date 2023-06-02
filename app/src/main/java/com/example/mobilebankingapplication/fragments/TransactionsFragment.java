@@ -354,7 +354,7 @@ public class TransactionsFragment extends Fragment {
         }
     }
 
-    private void searchingMethod(){
+    private void searchingMethod() {
         searchViewTransactions.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -365,21 +365,35 @@ public class TransactionsFragment extends Fragment {
             public boolean onQueryTextChange(String newText) {
                 currentSearchText = newText;
                 ArrayList<Transaction> filteredTransactions = new ArrayList<>();
-                for(Transaction transaction : arrayListTransactions){
-                    if(transaction.getTransactionType().toString().toLowerCase().contains(newText.toLowerCase())){
-                        if(selectedFilter.equals("all")) {
-                            filteredTransactions.add(transaction);
-                        } else {
-                            if(transaction.getTransactionType().toString().toLowerCase().contains(selectedFilter)){
-                                filteredTransactions.add(transaction);
-                            }
-                        }
+
+                // Filter transactions based on search text, selected filter, and date
+                for (Transaction transaction : arrayListTransactions) {
+                    boolean matchesSearchText = transaction.getTransactionType().toString().toLowerCase().startsWith(newText.toLowerCase());
+                    boolean matchesFilter = selectedFilter.equals("all")
+                            || (selectedFilter.equals("incomes") && !transaction.getTransactionType().equals(TransactionType.TRANSFER) && transaction.getTransactionAmount() >= 0)
+                            || (selectedFilter.equals("expenses") && (transaction.getTransactionType().equals(TransactionType.TRANSFER) || transaction.getTransactionAmount() < 0))
+                            || (selectedFilter.equals("transfer") && transaction.getTransactionType().equals(TransactionType.TRANSFER));
+                    boolean matchesDate = selectedFilter.equals("date") && isTransactionOnSelectedDate(transaction);
+
+                    if (matchesSearchText && (matchesFilter || matchesDate)) {
+                        filteredTransactions.add(transaction);
                     }
                 }
-                RecyclerViewAdapterTransactions adapterTransactions = new RecyclerViewAdapterTransactions(filteredTransactions,getContext());
+
+                RecyclerViewAdapterTransactions adapterTransactions = new RecyclerViewAdapterTransactions(filteredTransactions, getContext());
                 recyclerViewTransactions.setAdapter(adapterTransactions);
                 return false;
             }
         });
     }
+
+    private boolean isTransactionOnSelectedDate(Transaction transaction) {
+        Calendar transactionCalendar = Calendar.getInstance();
+        transactionCalendar.setTimeInMillis(transaction.getTransactionDate().getTime());
+
+        return transactionCalendar.get(Calendar.YEAR) == selectedDate.get(Calendar.YEAR)
+                && transactionCalendar.get(Calendar.MONTH) == selectedDate.get(Calendar.MONTH)
+                && transactionCalendar.get(Calendar.DAY_OF_MONTH) == selectedDate.get(Calendar.DAY_OF_MONTH);
+    }
+
 }
