@@ -21,7 +21,39 @@
 
     </androidx.appcompat.widget.SearchView>
 
+    <androidx.appcompat.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/btnSort"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/btnSort"
+
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/btnAccountStatement"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/btnAccountStatement"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/btnFilter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:text="@string/btnFilter"
+            android:textSize="20sp" />
+
+    </androidx.appcompat.widget.Toolbar>
+
+
     <LinearLayout
+        android:id="@+id/filterLayout1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -31,28 +63,26 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/btnAllTransactions"
-            />
+            android:text="@string/btnAllTransactions" />
 
         <Button
             android:id="@+id/btnTransfersOnly"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/btnTransfersOnly"
-            />
+            android:text="@string/btnTransfersOnly" />
 
         <Button
             android:id="@+id/btnDate"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/btnDate"
-            />
+            android:text="@string/btnDate" />
 
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/filterLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -62,16 +92,36 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/btnExpenses"
-            />
+            android:text="@string/btnExpenses" />
 
         <Button
             android:id="@+id/btnIncomes"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/btnIncomes"
-            />
+            android:text="@string/btnIncomes" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/sortLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnSortAscending"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/btnSortAscending" />
+
+        <Button
+            android:id="@+id/btnSortDescending"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/btnSortDescending" />
 
     </LinearLayout>
 

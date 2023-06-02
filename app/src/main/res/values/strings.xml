@@ -94,5 +94,13 @@
     <string name="btnExpenses">Expenses</string>
     <string name="btnIncomes">Incomes</string>
     <string name="btnDate">Date</string>
+    <string name="btnSort">Sort</string>
+    <string name="btnFilter">Filter</string>
+    <string name="btnAccountStatement">Account Statement</string>
+    <string name="btnSortAscending">Ascending</string>
+    <string name="btnSortDescending">Descending</string>
+    <string name="btnFilterDynamic">Filter</string>
+    <string name="btnHide">Hide</string>
+    <string name="btnSortDynamic">Sort</string>
 
 </resources>

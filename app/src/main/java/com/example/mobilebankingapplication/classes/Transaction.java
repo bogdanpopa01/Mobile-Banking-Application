@@ -7,7 +7,9 @@ import com.example.mobilebankingapplication.enums.TransactionType;
 import com.example.mobilebankingapplication.utils.ConverterUUID;
 import com.example.mobilebankingapplication.utils.DateConverter;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.UUID;
 
@@ -27,7 +29,6 @@ public class Transaction implements Parcelable {
         this.transactionType = transactionType;
         this.userId = userId;
     }
-
     protected Transaction(Parcel in) {
         transactionId = ConverterUUID.stringToUUID(in.readString());
         transactionName = in.readString();
@@ -36,6 +37,17 @@ public class Transaction implements Parcelable {
         transactionType = TransactionType.valueOf(in.readString());
         userId = ConverterUUID.stringToUUID(in.readString());
     }
+
+    public static Comparator<Transaction> amountAscending = new Comparator<Transaction>() {
+        @Override
+        public int compare(Transaction t1, Transaction t2) {
+            BigDecimal a1 = BigDecimal.valueOf(t1.getTransactionAmount());
+            BigDecimal a2 = BigDecimal.valueOf(t2.getTransactionAmount());
+
+            return a1.compareTo(a2);
+        }
+    };
+
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {

@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -42,6 +43,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.UUID;
 
@@ -54,9 +56,15 @@ public class TransactionsFragment extends Fragment {
     private View view;
     private SearchView searchViewTransactions;
     private Button btnAllTransactions, btnTransfers, btnDate, btnIncomes, btnExpenses;
+    private Button btnSort, btnFilter;
+    private Button btnSortAscending, btnSortDescending;
+
+    private LinearLayout filterLayout1, filterLayout2, sortLayout;
     private String selectedFilter = "all";
     private String currentSearchText = "";
     private Calendar selectedDate = Calendar.getInstance();
+    private boolean isSortHidden = true;
+    private boolean isFilterHidden = true;
 
     public TransactionsFragment() {
 
@@ -167,6 +175,35 @@ public class TransactionsFragment extends Fragment {
         initializeComponents();
         searchingMethod();
 
+        hideFilterLayout();
+        hideSortLayout();
+
+        btnSort.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(isSortHidden){
+                    isSortHidden = false;
+                    showSortLayout();
+                } else {
+                    isSortHidden = true;
+                    hideSortLayout();
+                }
+            }
+        });
+
+        btnFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(isFilterHidden){
+                    isFilterHidden = false;
+                    showFilterLayout();
+                } else {
+                    isFilterHidden = true;
+                    hideFilterLayout();
+                }
+            }
+        });
+
         btnAllTransactions.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -201,8 +238,25 @@ public class TransactionsFragment extends Fragment {
                 filterDate();
             }
         });
-        
 
+        btnSortAscending.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                arrayListTransactions.sort(Transaction.amountAscending);
+                RecyclerViewAdapterTransactions adapterTransactions = new RecyclerViewAdapterTransactions(arrayListTransactions, getContext());
+                recyclerViewTransactions.setAdapter(adapterTransactions);
+            }
+        });
+
+        btnSortDescending.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                arrayListTransactions.sort(Transaction.amountAscending);
+                Collections.reverse(arrayListTransactions);
+                RecyclerViewAdapterTransactions adapterTransactions = new RecyclerViewAdapterTransactions(arrayListTransactions, getContext());
+                recyclerViewTransactions.setAdapter(adapterTransactions);
+            }
+        });
 
         recyclerViewTransactions.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -328,9 +382,6 @@ public class TransactionsFragment extends Fragment {
         recyclerViewTransactions.setAdapter(adapterTransactions);
     }
 
-
-
-
     private void initializeComponents(){
         recyclerViewTransactions = view.findViewById(R.id.recyclerViewTransactions);
         searchViewTransactions  = view.findViewById(R.id.searchViewTransactions);
@@ -340,6 +391,16 @@ public class TransactionsFragment extends Fragment {
         btnExpenses = view.findViewById(R.id.btnExpenses);
         btnTransfers = view.findViewById(R.id.btnTransfersOnly);
         btnIncomes = view.findViewById(R.id.btnIncomes);
+
+        btnSort = view.findViewById(R.id.btnSort);
+        btnFilter = view.findViewById(R.id.btnFilter);
+
+        filterLayout1 = view.findViewById(R.id.filterLayout1);
+        filterLayout2 = view.findViewById(R.id.filterLayout2);
+        sortLayout = view.findViewById(R.id.sortLayout);
+
+        btnSortAscending = view.findViewById(R.id.btnSortAscending);
+        btnSortDescending = view.findViewById(R.id.btnSortDescending);
     }
 
     private void getUser() {
@@ -394,6 +455,28 @@ public class TransactionsFragment extends Fragment {
         return transactionCalendar.get(Calendar.YEAR) == selectedDate.get(Calendar.YEAR)
                 && transactionCalendar.get(Calendar.MONTH) == selectedDate.get(Calendar.MONTH)
                 && transactionCalendar.get(Calendar.DAY_OF_MONTH) == selectedDate.get(Calendar.DAY_OF_MONTH);
+    }
+
+    private void hideFilterLayout(){
+        filterLayout1.setVisibility(View.GONE);
+        filterLayout2.setVisibility(View.GONE);
+        btnFilter.setText(R.string.btnFilterDynamic);
+    }
+
+    private void showFilterLayout(){
+        filterLayout1.setVisibility(View.VISIBLE);
+        filterLayout2.setVisibility(View.VISIBLE);
+        btnFilter.setText(R.string.btnHide);
+    }
+
+    private void hideSortLayout(){
+        sortLayout.setVisibility(View.GONE);
+        btnSort.setText(R.string.btnSortDynamic);
+    }
+
+    private void showSortLayout(){
+        sortLayout.setVisibility(View.VISIBLE);
+        btnSort.setText(R.string.btnHide);
     }
 
 }
