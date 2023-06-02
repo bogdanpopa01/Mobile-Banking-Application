@@ -47,7 +47,7 @@ public class RecyclerViewAdapterTransactions extends RecyclerView.Adapter<Recycl
         }
 
         if (arrayListTransactions.get(position).getTransactionType().equals(TransactionType.TRANSFER)) {
-            holder.tvTransactionAmount.setText("-" + arrayListTransactions.get(position).getTransactionAmount());
+            holder.tvTransactionAmount.setText(String.valueOf(arrayListTransactions.get(position).getTransactionAmount()));
             int redColor = ContextCompat.getColor(holder.itemView.getContext(), R.color.red);
             holder.tvTransactionAmount.setTextColor(redColor);
         } else {

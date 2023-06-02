@@ -143,7 +143,7 @@ public class TransfersFragment extends Fragment {
                             protected Map<String, String> getParams() throws AuthFailureError {
                                 Map<String, String> params = new HashMap<>();
                                 params.put("transferId", ConverterUUID.UUIDtoString(transfer.getTransferId()));
-                                params.put("transferAmount", String.valueOf(transfer.getTransferAmount()));
+                                params.put("transferAmount", String.valueOf((-1)*transfer.getTransferAmount()));
                                 params.put("transferPayee", transfer.getTransferPayee());
                                 params.put("transferIBAN", transfer.getTransferIBAN());
                                 params.put("transferDescription", transfer.getTransferDescription());
