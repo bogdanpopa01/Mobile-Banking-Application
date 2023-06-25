@@ -27,27 +27,26 @@
 
         <Button
             android:id="@+id/btnSort"
+            style="@style/PrimaryButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/btnSort"
-
-            android:textSize="20sp" />
+            android:text="@string/btnSort" />
 
         <Button
             android:id="@+id/btnAccountStatement"
+            style="@style/SecondaryButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="@string/btnAccountStatement"
-            android:textSize="12sp" />
+            android:text="@string/btnAccountStatement" />
 
         <Button
             android:id="@+id/btnFilter"
+            style="@style/PrimaryButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:text="@string/btnFilter"
-            android:textSize="20sp" />
+            android:text="@string/btnFilter" />
 
     </androidx.appcompat.widget.Toolbar>
 
@@ -60,6 +59,7 @@
 
         <Button
             android:id="@+id/btnAllTransactions"
+            style="@style/FilterButtonStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -67,6 +67,7 @@
 
         <Button
             android:id="@+id/btnTransfersOnly"
+            style="@style/FilterButtonStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -74,6 +75,7 @@
 
         <Button
             android:id="@+id/btnDate"
+            style="@style/FilterButtonStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -89,6 +91,7 @@
 
         <Button
             android:id="@+id/btnExpenses"
+            style="@style/FilterButtonStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -96,6 +99,7 @@
 
         <Button
             android:id="@+id/btnIncomes"
+            style="@style/FilterButtonStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -111,6 +115,7 @@
 
         <Button
             android:id="@+id/btnSortAscending"
+            style="@style/FilterButtonStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -118,6 +123,7 @@
 
         <Button
             android:id="@+id/btnSortDescending"
+            style="@style/FilterButtonStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
