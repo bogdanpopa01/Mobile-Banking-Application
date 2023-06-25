@@ -39,6 +39,8 @@ dependencies {
     implementation 'io.reactivex.rxjava3:rxjava:3.1.6'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 
+    implementation "androidx.cardview:cardview:1.0.0"
+
     implementation 'com.android.volley:volley:1.2.1'
 
     implementation 'androidx.room:room-runtime:2.5.1'
