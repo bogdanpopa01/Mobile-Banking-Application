@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ContraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragments.HomeFragment">
@@ -38,8 +38,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
         android:layout_marginTop="15dp"
-        android:textColor="@color/black"
         android:text="@string/tvfiller2"
+        android:textColor="@color/black"
         app:layout_constraintStart_toEndOf="@+id/tvFiller1"
         app:layout_constraintTop_toBottomOf="@+id/tvAppName" />
 
@@ -137,25 +137,13 @@
         app:layout_constraintTop_toBottomOf="@+id/tvValidThruHomeFragment" />
 
     <ImageView
-        android:id="@+id/imageViewCopyHomeFragment"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="62dp"
-        android:src="@drawable/baseline_copy_24"
+        android:id="@+id/imageViewSeePinHomeFragment"
+        android:layout_width="35dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/baseline_fiber_pin_24"
         app:layout_constraintStart_toEndOf="@+id/tvCardNumberHomeFragment"
-        app:layout_constraintTop_toBottomOf="@+id/tvFiller2" />
-
-    <TextView
-        android:id="@+id/tvCopyHomeFragment"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="64dp"
-        android:text="@string/tvCopyHomeFragment"
-        android:textColor="@color/white"
-        android:textSize="12sp"
-        app:layout_constraintStart_toEndOf="@+id/imageViewCopyHomeFragment"
         app:layout_constraintTop_toBottomOf="@+id/tvFiller2" />
 
     <TextView
@@ -164,9 +152,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"
         android:layout_marginTop="45dp"
+        android:text="@string/tvBalanceHomeFragment"
         android:textColor="@color/black"
         android:textSize="20sp"
-        android:text="@string/tvBalanceHomeFragment"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/viewCardHomeFragment" />
 
@@ -182,15 +170,6 @@
         app:layout_constraintStart_toEndOf="@+id/tvBalanceHomeFragment"
         app:layout_constraintTop_toBottomOf="@+id/viewCardHomeFragment" />
 
-    <Spinner
-        android:id="@+id/spinnerCurrency"
-        android:layout_width="100dp"
-        android:layout_height="24dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="46dp"
-        app:layout_constraintStart_toEndOf="@+id/tvBalanceValueHomeFragment"
-        app:layout_constraintTop_toBottomOf="@+id/viewCardHomeFragment" />
-
     <TextView
         android:id="@+id/tvDepositsHomeFragment"
         android:layout_width="wrap_content"
@@ -198,8 +177,8 @@
         android:layout_marginStart="40dp"
         android:layout_marginTop="15dp"
         android:text="@string/tvDepositsHomeFragment"
-        android:textSize="20sp"
         android:textColor="@color/black"
+        android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvBalanceHomeFragment" />
 
@@ -208,30 +187,29 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
+        android:backgroundTint="@color/android:transparent"
         android:clickable="true"
         android:src="@drawable/baseline_add_24"
-        android:backgroundTint="@color/android:transparent"
-        app:elevation="0dp"
         app:borderWidth="0dp"
-        app:strokeColor="@android:color/transparent"
+        app:elevation="0dp"
         app:layout_constraintStart_toEndOf="@+id/tvDepositsHomeFragment"
         app:layout_constraintTop_toBottomOf="@+id/tvBalanceHomeFragment"
-         />
+        app:strokeColor="@android:color/transparent" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabSeeDeposits"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
+        android:backgroundTint="@color/android:transparent"
         android:clickable="true"
         android:src="@drawable/baseline_arrow_down_24"
-        android:backgroundTint="@color/android:transparent"
-        app:elevation="0dp"
-        app:strokeWidth="0dp"
         app:borderWidth="0dp"
-        app:strokeColor="@android:color/transparent"
+        app:elevation="0dp"
         app:layout_constraintStart_toEndOf="@+id/fabAddDeposit"
-        app:layout_constraintTop_toBottomOf="@+id/tvBalanceValueHomeFragment" />
+        app:layout_constraintTop_toBottomOf="@+id/tvBalanceValueHomeFragment"
+        app:strokeColor="@android:color/transparent"
+        app:strokeWidth="0dp" />
 
     <FrameLayout
         android:id="@+id/depositsFragment"
@@ -242,5 +220,27 @@
         app:layout_constraintTop_toBottomOf="@+id/fabSeeDeposits">
 
     </FrameLayout>
+
+    <TextView
+        android:id="@+id/tvRON"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="54dp"
+        android:layout_marginTop="45dp"
+        android:text="@string/tvRON"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        app:layout_constraintStart_toEndOf="@+id/tvBalanceValueHomeFragment"
+        app:layout_constraintTop_toBottomOf="@+id/viewCardHomeFragment" />
+
+    <ImageView
+        android:id="@+id/imageViewCopyHomeFragment"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="48dp"
+        android:layout_marginEnd="52dp"
+        android:src="@drawable/baseline_copy_24"
+        app:layout_constraintEnd_toEndOf="@+id/viewCardHomeFragment"
+        app:layout_constraintTop_toTopOf="@+id/viewCardHomeFragment" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

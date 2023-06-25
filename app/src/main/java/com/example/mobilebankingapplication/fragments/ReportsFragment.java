@@ -64,7 +64,7 @@ public class ReportsFragment extends Fragment {
         loadTransactions();
 
     }
-    
+
     private void displayPieChart() {
         // Create a list to store the pie chart entries
         ArrayList<PieEntry> pieEntries = new ArrayList<>();

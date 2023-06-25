@@ -38,6 +38,7 @@
     <string name="tvBalanceHomeFragment">Your Balance:</string>
     <string name="tvBalanceValueHomeFragment">45,754.3</string>
     <string name="tvDepositsHomeFragment">Deposits</string>
+    <string name="tvRON">RON</string>
 
     <!-- AddDeposit Fragment -->
     <string name="tvOpenNewDepositAddDepositFragment">Open new deposit</string>
