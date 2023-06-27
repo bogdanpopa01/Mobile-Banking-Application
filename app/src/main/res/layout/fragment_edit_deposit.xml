@@ -59,7 +59,8 @@
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:hint="@string/etDepositAmountAddDepositFragment"
-            android:inputType="numberDecimal" />
+            android:inputType="numberDecimal"
+            android:enabled="false" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <Spinner
@@ -71,7 +72,10 @@
         android:layout_marginEnd="25dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvPeriodEditDepositFragment" />
+        app:layout_constraintTop_toBottomOf="@+id/tvPeriodEditDepositFragment"
+        android:enabled="false"
+        android:clickable="false"
+        android:focusable="false" />
 
     <TextView
         android:id="@+id/tvInterestRateEditDepositFragment"

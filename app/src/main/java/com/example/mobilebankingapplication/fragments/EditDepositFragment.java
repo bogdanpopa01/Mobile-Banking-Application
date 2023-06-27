@@ -128,6 +128,7 @@ public class EditDepositFragment extends DialogFragment implements DeletionCallb
 
             }
         });
+        spinnerPeriodEditDepositFragment.setEnabled(false);
 
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
