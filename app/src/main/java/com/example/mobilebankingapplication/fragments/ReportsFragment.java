@@ -1,5 +1,8 @@
 package com.example.mobilebankingapplication.fragments;
 
+import android.app.AlertDialog;
+import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 
@@ -10,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -40,8 +44,10 @@ import org.json.JSONObject;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -54,6 +60,8 @@ public class ReportsFragment extends Fragment {
     private SharedViewModel sharedViewModel;
     private User user;
     private Button btnGeneralPrediction, btnMonthlyPrediction;
+    private int selectedMonth;
+
 
 
     public ReportsFragment() {
@@ -145,6 +153,20 @@ public class ReportsFragment extends Fragment {
 
         view = inflater.inflate(R.layout.fragment_reports, container, false);
         initializeComponents();
+
+        btnGeneralPrediction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        btnMonthlyPrediction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showMonthPickerDialog();
+            }
+        });
 
         return view;
     }
@@ -268,5 +290,107 @@ public class ReportsFragment extends Fragment {
         // Call the method to display the pie chart or perform any other actions
         displayPieChart();
     }
+
+    private void showMonthPickerDialog() {
+        // Define an array of month names to display in the picker
+        final String[] months = {
+                "January", "February", "March", "April",
+                "May", "June", "July", "August",
+                "September", "October", "November", "December"
+        };
+
+        // Create a dialog builder
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        builder.setTitle("Select Month");
+
+        // Set the month items and handle the item click event
+        builder.setItems(months, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Store the selected month
+                selectedMonth = which;
+
+                // Filter the transactions for the selected month
+                ArrayList<Transaction> filteredTransactions = filterTransactionsByMonth(arrayListTransactions, selectedMonth);
+
+                // Update the pie chart with the filtered transactions
+                updatePieChart(filteredTransactions);
+
+            }
+        });
+
+        // Create and show the dialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private ArrayList<Transaction> filterTransactionsByMonth(ArrayList<Transaction> transactions, int month) {
+        ArrayList<Transaction> filteredTransactions = new ArrayList<>();
+
+        Calendar calendar = Calendar.getInstance();
+        for (Transaction transaction : transactions) {
+            calendar.setTime(transaction.getTransactionDate());
+            int transactionMonth = calendar.get(Calendar.MONTH);
+            if (transactionMonth == month) {
+                if(transaction.getTransactionAmount() < 0) {
+                    filteredTransactions.add(transaction);
+                }
+            }
+        }
+
+        return filteredTransactions;
+    }
+
+    private void updatePieChart(ArrayList<Transaction> transactions) {
+        // Create a list to store the pie chart entries
+        ArrayList<PieEntry> pieEntries = new ArrayList<>();
+
+        // Calculate the total amount for each transaction type
+        Map<TransactionType, Double> typeAmountMap = new HashMap<>();
+        for (Transaction transaction : transactions) {
+            if(transaction.getTransactionAmount() < 0) {
+                TransactionType transactionType = transaction.getTransactionType();
+                double transactionAmount = transaction.getTransactionAmount();
+                if (typeAmountMap.containsKey(transactionType)) {
+                    double currentAmount = typeAmountMap.get(transactionType);
+                    typeAmountMap.put(transactionType, currentAmount + Math.abs(transactionAmount)); // Make the amount positive
+                } else {
+                    typeAmountMap.put(transactionType, Math.abs(transactionAmount)); // Make the amount positive
+                }
+            }
+        }
+
+        // Convert the transaction type and amount map to pie chart entries
+        for (Map.Entry<TransactionType, Double> entry : typeAmountMap.entrySet()) {
+            TransactionType transactionType = entry.getKey();
+            double transactionAmount = entry.getValue();
+            PieEntry pieEntry = new PieEntry((float) transactionAmount, transactionType.toString());
+            pieEntries.add(pieEntry);
+        }
+
+        // Create the data set for the pie chart
+        PieDataSet pieDataSet = new PieDataSet(pieEntries, "");
+        pieDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
+        pieDataSet.setValueTextColor(Color.WHITE);
+        pieDataSet.setValueTextSize(12f);
+        pieDataSet.setValueFormatter(new ValueFormatter() {
+            @Override
+            public String getFormattedValue(float value) {
+                return String.format(Locale.getDefault(), "%.1f%%", value);
+            }
+        });
+
+        // Create the data for the pie chart
+        PieData pieData = new PieData(pieDataSet);
+        pieData.setValueTextColor(Color.WHITE);
+        pieData.setValueTextSize(12f);
+
+        // Set the data for the pie chart
+        pieChart.setData(pieData);
+        pieChart.getDescription().setEnabled(false);
+        pieChart.setEntryLabelColor(Color.WHITE);
+        pieChart.invalidate(); // Refresh the chart
+    }
+
 
 }
