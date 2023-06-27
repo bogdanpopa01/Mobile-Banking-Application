@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -61,7 +62,6 @@ public class ReportsFragment extends Fragment {
     private User user;
     private Button btnGeneralPrediction, btnMonthlyPrediction;
     private int selectedMonth;
-
 
 
     public ReportsFragment() {
@@ -128,6 +128,11 @@ public class ReportsFragment extends Fragment {
         pieChart.setTransparentCircleRadius(55f);
         pieChart.setDrawEntryLabels(false); // Disable entry labels
 
+
+        pieChart.setCenterText("Expenses filter by type");
+        pieChart.setCenterTextSize(16f);
+
+
         // Customize the legend
         Legend legend = pieChart.getLegend();
         legend.setEnabled(true);
@@ -144,6 +149,8 @@ public class ReportsFragment extends Fragment {
 
         // Refresh the chart to update its display
         pieChart.invalidate();
+
+
     }
 
 
@@ -157,7 +164,7 @@ public class ReportsFragment extends Fragment {
         btnGeneralPrediction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                displayPieChart();
             }
         });
 
@@ -332,7 +339,7 @@ public class ReportsFragment extends Fragment {
             calendar.setTime(transaction.getTransactionDate());
             int transactionMonth = calendar.get(Calendar.MONTH);
             if (transactionMonth == month) {
-                if(transaction.getTransactionAmount() < 0) {
+                if (transaction.getTransactionAmount() < 0) {
                     filteredTransactions.add(transaction);
                 }
             }
@@ -348,7 +355,7 @@ public class ReportsFragment extends Fragment {
         // Calculate the total amount for each transaction type
         Map<TransactionType, Double> typeAmountMap = new HashMap<>();
         for (Transaction transaction : transactions) {
-            if(transaction.getTransactionAmount() < 0) {
+            if (transaction.getTransactionAmount() < 0) {
                 TransactionType transactionType = transaction.getTransactionType();
                 double transactionAmount = transaction.getTransactionAmount();
                 if (typeAmountMap.containsKey(transactionType)) {
@@ -384,7 +391,7 @@ public class ReportsFragment extends Fragment {
         PieData pieData = new PieData(pieDataSet);
         pieData.setValueTextColor(Color.WHITE);
         pieData.setValueTextSize(12f);
-
+        
         // Set the data for the pie chart
         pieChart.setData(pieData);
         pieChart.getDescription().setEnabled(false);
