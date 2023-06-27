@@ -104,4 +104,8 @@
     <string name="btnHide">Hide</string>
     <string name="btnSortDynamic">Sort</string>
 
+    <!-- Reports Fragment -->
+    <string name="btnGeneralPrediction">General</string>
+    <string name="btnMonthlyPrediction">Monthly</string>
+
 </resources>

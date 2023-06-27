@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -25,6 +26,7 @@ import com.example.mobilebankingapplication.utils.ConverterUUID;
 import com.example.mobilebankingapplication.utils.DateConverter;
 import com.example.mobilebankingapplication.utils.SharedViewModel;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
@@ -51,6 +53,7 @@ public class ReportsFragment extends Fragment {
     private ArrayList<Transaction> arrayListTransactions = new ArrayList<>();
     private SharedViewModel sharedViewModel;
     private User user;
+    private Button btnGeneralPrediction, btnMonthlyPrediction;
 
 
     public ReportsFragment() {
@@ -115,7 +118,18 @@ public class ReportsFragment extends Fragment {
         pieChart.setHoleColor(Color.TRANSPARENT);
         pieChart.setHoleRadius(50f);
         pieChart.setTransparentCircleRadius(55f);
-        pieChart.getLegend().setEnabled(true);
+        pieChart.setDrawEntryLabels(false); // Disable entry labels
+
+        // Customize the legend
+        Legend legend = pieChart.getLegend();
+        legend.setEnabled(true);
+        legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
+        legend.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
+        legend.setOrientation(Legend.LegendOrientation.VERTICAL);
+        legend.setDrawInside(false);
+        legend.setXEntrySpace(10f);
+        legend.setYEntrySpace(0f);
+        legend.setYOffset(10f);
 
         // Set the data for the pie chart
         pieChart.setData(pieData);
@@ -129,14 +143,16 @@ public class ReportsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        view =  inflater.inflate(R.layout.fragment_reports, container, false);
+        view = inflater.inflate(R.layout.fragment_reports, container, false);
         initializeComponents();
 
         return view;
     }
 
-    private void initializeComponents(){
+    private void initializeComponents() {
         pieChart = view.findViewById(R.id.pieChart);
+        btnGeneralPrediction = view.findViewById(R.id.btnGeneralPrediction);
+        btnMonthlyPrediction = view.findViewById(R.id.btnMonthlyPrediction);
     }
 
     private void getUser() {
@@ -172,7 +188,9 @@ public class ReportsFragment extends Fragment {
                                 UUID userId = ConverterUUID.stringToUUID(jsonObject.getString("userId").trim());
 
                                 Transaction transaction = new Transaction(transactionId, transactionName, transactionAmount, transactionDate, transactionType, userId);
-                                arrayListTransactions.add(transaction);
+                                if (transactionAmount < 0) {
+                                    arrayListTransactions.add(transaction);
+                                }
                             }
 
                             // Increment the counter for completed requests
