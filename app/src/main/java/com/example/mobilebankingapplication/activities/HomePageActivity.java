@@ -22,7 +22,7 @@ import com.example.mobilebankingapplication.utils.SharedViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
-public class HomePageActivity extends AppCompatActivity {
+public class HomePageActivity extends AppCompatActivity{
     private User user;
     private SharedViewModel sharedViewModel;
     ActivityHomePageBinding activityHomePageBinding;

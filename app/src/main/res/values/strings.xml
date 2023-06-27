@@ -15,7 +15,7 @@
     <string name="baseline_transfers_24">Transfers</string>
 
     <!-- Transfers Fragment -->
-    <string name="tvMakeATransfer">Make a transfer</string>
+    <string name="tvMakeATransfer">MAKE A TRANSFER</string>
     <string name="etAmountTransfersFragment">Amount</string>
     <string name="tvIsInvoice">Is it an invoice?</string>
     <string name="etPayeeTransfersFragment">Payee</string>
@@ -41,7 +41,7 @@
     <string name="tvRON">RON</string>
 
     <!-- AddDeposit Fragment -->
-    <string name="tvOpenNewDepositAddDepositFragment">Open new deposit</string>
+    <string name="tvOpenNewDepositAddDepositFragment">OPEN NEW DEPOSIT</string>
     <string name="etDepositNameAddDepositFragment">Deposit name</string>
     <string name="etDepositAmountAddDepositFragment">Deposit amount</string>
     <string name="tvInterestRateAddDepositFragment">Interest rate:</string>
@@ -78,8 +78,8 @@
     <!-- EditDepositFragment -->
     <string name="tvEditDepositEditDepositFragment">Edit your deposit</string>
     <string name="btnCancelEditDepositFragment">Cancel</string>
-    <string name="btnEditEditDepositFragment">Edit deposit</string>
-    <string name="btnDeleteDepositEditDepositFragment">Delete deposit</string>
+    <string name="btnEditEditDepositFragment">Edit</string>
+    <string name="btnDeleteDepositEditDepositFragment">Delete</string>
 
     <!-- PopUpDeletionFragment -->
     <string name="tvPopUpDeletionFragment1">Are you sure you want</string>
