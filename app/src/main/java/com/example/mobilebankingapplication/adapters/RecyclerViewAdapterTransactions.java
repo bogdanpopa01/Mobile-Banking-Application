@@ -35,7 +35,7 @@ public class RecyclerViewAdapterTransactions extends RecyclerView.Adapter<Recycl
 
     @Override
     public void onBindViewHolder(@NonNull TransactionViewHolder holder, int position) {
-        holder.tvTransactionType.setText(arrayListTransactions.get(position).getTransactionType().toString());
+        holder.tvTransactionName.setText(arrayListTransactions.get(position).getTransactionName());
         holder.tvTransactionDate.setText(DateConverter.dateToString(arrayListTransactions.get(position).getTransactionDate()));
         holder.tvTransactionCurrency.setText("RON");
         if(arrayListTransactions.get(position).getTransactionAmount()>0f && !arrayListTransactions.get(position).getTransactionType().equals(TransactionType.TRANSFER)){
@@ -62,11 +62,11 @@ public class RecyclerViewAdapterTransactions extends RecyclerView.Adapter<Recycl
     }
 
     public class TransactionViewHolder extends RecyclerView.ViewHolder{
-        private TextView tvTransactionType, tvTransactionDate, tvTransactionCurrency, tvTransactionAmount;
+        private TextView tvTransactionName, tvTransactionDate, tvTransactionCurrency, tvTransactionAmount;
 
         public TransactionViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvTransactionType = itemView.findViewById(R.id.tvTransactionType);
+            tvTransactionName = itemView.findViewById(R.id.tvTransactionName);
             tvTransactionDate = itemView.findViewById(R.id.tvTransactionDate);
             tvTransactionCurrency = itemView.findViewById(R.id.tvTransactionCurrency);
             tvTransactionAmount = itemView.findViewById(R.id.tvTransactionAmount);

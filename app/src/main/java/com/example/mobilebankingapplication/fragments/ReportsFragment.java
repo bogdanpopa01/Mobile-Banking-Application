@@ -129,7 +129,7 @@ public class ReportsFragment extends Fragment {
         pieChart.setDrawEntryLabels(false); // Disable entry labels
 
 
-        pieChart.setCenterText("Expenses filter by type");
+        pieChart.setCenterText("Expenses filtered by type");
         pieChart.setCenterTextSize(16f);
 
 
@@ -391,7 +391,7 @@ public class ReportsFragment extends Fragment {
         PieData pieData = new PieData(pieDataSet);
         pieData.setValueTextColor(Color.WHITE);
         pieData.setValueTextSize(12f);
-        
+
         // Set the data for the pie chart
         pieChart.setData(pieData);
         pieChart.getDescription().setEnabled(false);

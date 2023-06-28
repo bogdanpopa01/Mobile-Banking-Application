@@ -130,11 +130,12 @@ public class TransactionsFragment extends Fragment {
                             for(int i = 0; i < jsonArray.length(); i++) {
                                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                                 UUID transferId = ConverterUUID.stringToUUID(jsonObject.getString("transferId"));
+                                String transferPayee = jsonObject.getString("transferPayee");
                                 double transferAmount = jsonObject.getDouble("transferAmount");
                                 UUID userId = ConverterUUID.stringToUUID(jsonObject.getString("userId"));
                                 Timestamp transferDate = DateConverter.stringToTimestamp(jsonObject.getString("transferDate"));
 
-                                Transaction transaction = new Transaction(transferId,"Transfer",transferAmount,transferDate,TransactionType.TRANSFER,userId);
+                                Transaction transaction = new Transaction(transferId,"Transfer " + transferPayee,transferAmount,transferDate,TransactionType.TRANSFER,userId);
                                 arrayListTransactions.add(transaction);
                             }
 

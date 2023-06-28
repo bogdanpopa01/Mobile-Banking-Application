@@ -107,6 +107,8 @@
     <!-- Reports Fragment -->
     <string name="btnGeneralPrediction">General</string>
     <string name="btnMonthlyPrediction">Monthly</string>
-    <string name="tvPieChart">Expenses filter by type</string>
+    <string name="tvPieChart">Expenses filtered by type</string>
+    <string name="btnPredictExpenses">PREDICT</string>
+    <string name="tvPredictExplanation">Predict the future expenses</string>
 
 </resources>

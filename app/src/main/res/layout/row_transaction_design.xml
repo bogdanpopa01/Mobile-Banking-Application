@@ -25,7 +25,7 @@
             app:srcCompat="@drawable/transaction_history" />
 
         <TextView
-            android:id="@+id/tvTransactionType"
+            android:id="@+id/tvTransactionName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
