@@ -10,12 +10,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.chaquo.python.PyObject;
+import com.chaquo.python.Python;
+import com.chaquo.python.android.AndroidPlatform;
 import com.example.mobilebankingapplication.R;
 import com.example.mobilebankingapplication.classes.Transaction;
 import com.example.mobilebankingapplication.classes.User;
@@ -59,7 +63,8 @@ public class ReportsFragment extends Fragment {
     private ArrayList<Transaction> arrayListTransactions = new ArrayList<>();
     private SharedViewModel sharedViewModel;
     private User user;
-    private Button btnGeneralPrediction, btnMonthlyPrediction;
+    private Button btnGeneralPrediction, btnMonthlyPrediction, btnPredict;
+    private TextView tvPrediction;
 
 
     public ReportsFragment() {
@@ -173,6 +178,20 @@ public class ReportsFragment extends Fragment {
             }
         });
 
+        btnPredict.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (! Python.isStarted()) {
+                    Python.start(new AndroidPlatform(getContext()));
+                }
+                Python python = Python.getInstance();
+                PyObject pyObject = python.getModule("script");
+
+                PyObject prediction = pyObject.callAttr("test");
+                tvPrediction.setText(prediction.toString());
+            }
+        });
+
         return view;
     }
 
@@ -180,6 +199,8 @@ public class ReportsFragment extends Fragment {
         pieChart = view.findViewById(R.id.pieChart);
         btnGeneralPrediction = view.findViewById(R.id.btnGeneralPrediction);
         btnMonthlyPrediction = view.findViewById(R.id.btnMonthlyPrediction);
+        btnPredict = view.findViewById(R.id.btnPredictExpenses);
+        tvPrediction = view.findViewById(R.id.tvPredictedValue);
     }
 
     private void getUser() {
@@ -322,7 +343,6 @@ public class ReportsFragment extends Fragment {
                     }
                 })
                 .show();
-
     }
 
     private ArrayList<Transaction> filterTransactionsByMonth(ArrayList<Transaction> transactions, int month, int year) {
