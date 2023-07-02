@@ -72,7 +72,6 @@ public class ReportsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         getUser();
         loadTransactions();
-
     }
 
     private void displayPieChart() {
@@ -389,6 +388,20 @@ public class ReportsFragment extends Fragment {
         pieChart.setHoleRadius(50f);
         pieChart.setTransparentCircleRadius(55f);
         pieChart.setDrawEntryLabels(false); // Disable entry labels
+
+        pieChart.setCenterText("Expenses filtered by type");
+        pieChart.setCenterTextSize(16f);
+
+        // Customize the legend
+        Legend legend = pieChart.getLegend();
+        legend.setEnabled(true);
+        legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
+        legend.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
+        legend.setOrientation(Legend.LegendOrientation.VERTICAL);
+        legend.setDrawInside(false);
+        legend.setXEntrySpace(10f);
+        legend.setYEntrySpace(0f);
+        legend.setYOffset(10f);
 
         // Set the data for the pie chart
         pieChart.setData(pieData);
