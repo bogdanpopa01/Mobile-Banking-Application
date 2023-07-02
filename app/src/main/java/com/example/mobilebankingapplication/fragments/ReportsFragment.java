@@ -1,8 +1,5 @@
 package com.example.mobilebankingapplication.fragments;
 
-import android.app.AlertDialog;
-import android.app.DatePickerDialog;
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 
@@ -13,8 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.DatePicker;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -37,6 +32,10 @@ import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.kal.rackmonthpicker.RackMonthPicker;
+import com.kal.rackmonthpicker.listener.DateMonthDialogListener;
+import com.kal.rackmonthpicker.listener.OnCancelMonthDialogListener;
+
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -149,8 +148,6 @@ public class ReportsFragment extends Fragment {
 
         // Refresh the chart to update its display
         pieChart.invalidate();
-
-
     }
 
 
@@ -299,46 +296,39 @@ public class ReportsFragment extends Fragment {
     }
 
     private void showMonthPickerDialog() {
-        // Define an array of month names to display in the picker
-        final String[] months = {
-                "January", "February", "March", "April",
-                "May", "June", "July", "August",
-                "September", "October", "November", "December"
-        };
+        new RackMonthPicker(getContext())
+                .setLocale(Locale.ENGLISH)
+                .setPositiveButton(new DateMonthDialogListener() {
+                    @Override
+                    public void onDateMonth(int month, int startDate, int endDate, int year, String monthLabel) {
+                        // Subtract 1 from the selected month value
+                        int selectedMonth = month - 1;
 
-        // Create a dialog builder
-        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-        builder.setTitle("Select Month");
+                        // Filter the transactions for the selected month
+                        ArrayList<Transaction> filteredTransactions = filterTransactionsByMonth(arrayListTransactions, selectedMonth, year);
 
-        // Set the month items and handle the item click event
-        builder.setItems(months, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // Store the selected month
-                selectedMonth = which;
-
-                // Filter the transactions for the selected month
-                ArrayList<Transaction> filteredTransactions = filterTransactionsByMonth(arrayListTransactions, selectedMonth);
-
-                // Update the pie chart with the filtered transactions
-                updatePieChart(filteredTransactions);
-
-            }
-        });
-
-        // Create and show the dialog
-        AlertDialog dialog = builder.create();
-        dialog.show();
+                        // Update the pie chart with the filtered transactions
+                        updatePieChart(filteredTransactions);
+                    }
+                })
+                .setNegativeButton(new OnCancelMonthDialogListener() {
+                    @Override
+                    public void onCancel(androidx.appcompat.app.AlertDialog dialog) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
     }
 
-    private ArrayList<Transaction> filterTransactionsByMonth(ArrayList<Transaction> transactions, int month) {
+    private ArrayList<Transaction> filterTransactionsByMonth(ArrayList<Transaction> transactions, int month, int year) {
         ArrayList<Transaction> filteredTransactions = new ArrayList<>();
 
         Calendar calendar = Calendar.getInstance();
         for (Transaction transaction : transactions) {
             calendar.setTime(transaction.getTransactionDate());
             int transactionMonth = calendar.get(Calendar.MONTH);
-            if (transactionMonth == month) {
+            int transactionYear = calendar.get(Calendar.YEAR);
+            if (transactionMonth == month && transactionYear == year) {
                 if (transaction.getTransactionAmount() < 0) {
                     filteredTransactions.add(transaction);
                 }
@@ -383,7 +373,7 @@ public class ReportsFragment extends Fragment {
         pieDataSet.setValueFormatter(new ValueFormatter() {
             @Override
             public String getFormattedValue(float value) {
-                return String.format(Locale.getDefault(), "%.1f%%", value);
+                return String.format("%.2f", value); // Format the value to display with 2 decimal places
             }
         });
 
@@ -392,10 +382,16 @@ public class ReportsFragment extends Fragment {
         pieData.setValueTextColor(Color.WHITE);
         pieData.setValueTextSize(12f);
 
+        pieChart.setUsePercentValues(false); // Disable percentage values
+        pieChart.getDescription().setEnabled(false);
+        pieChart.setDrawHoleEnabled(true);
+        pieChart.setHoleColor(Color.TRANSPARENT);
+        pieChart.setHoleRadius(50f);
+        pieChart.setTransparentCircleRadius(55f);
+        pieChart.setDrawEntryLabels(false); // Disable entry labels
+
         // Set the data for the pie chart
         pieChart.setData(pieData);
-        pieChart.getDescription().setEnabled(false);
-        pieChart.setEntryLabelColor(Color.WHITE);
         pieChart.invalidate(); // Refresh the chart
     }
 
