@@ -60,7 +60,6 @@ public class ReportsFragment extends Fragment {
     private SharedViewModel sharedViewModel;
     private User user;
     private Button btnGeneralPrediction, btnMonthlyPrediction;
-    private int selectedMonth;
 
 
     public ReportsFragment() {
@@ -157,10 +156,13 @@ public class ReportsFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_reports, container, false);
         initializeComponents();
 
+        displayPieChart();
+
         btnGeneralPrediction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 displayPieChart();
+                btnMonthlyPrediction.setText(R.string.btnMonthlyPrediction);
             }
         });
 
@@ -193,7 +195,7 @@ public class ReportsFragment extends Fragment {
     }
 
     private void loadTransactions() {
-        final int NUM_REQUESTS = 2;  // Number of requests to complete
+        final int NUM_REQUESTS = 1;  // Number of requests to complete
         final AtomicInteger completedRequests = new AtomicInteger(0);  // Counter for completed requests
 
         String urlTransactions = DatabaseConstants.URL_GET_TRANSACTIONS_BY_USER + "?userId=" + user.getUserId();
@@ -220,7 +222,7 @@ public class ReportsFragment extends Fragment {
 
                             // Increment the counter for completed requests
                             int completed = completedRequests.incrementAndGet();
-                            if (completed == NUM_REQUESTS) {
+                            if (completed >= NUM_REQUESTS) {
                                 // All requests completed, process the data
                                 processTransactions();
                             }
@@ -256,7 +258,7 @@ public class ReportsFragment extends Fragment {
 
                             // Increment the counter for completed requests
                             int completed = completedRequests.incrementAndGet();
-                            if (completed == NUM_REQUESTS) {
+                            if (completed >= NUM_REQUESTS) {
                                 // All requests completed, process the data
                                 processTransactions();
                             }
@@ -308,6 +310,9 @@ public class ReportsFragment extends Fragment {
 
                         // Update the pie chart with the filtered transactions
                         updatePieChart(filteredTransactions);
+                        String monthText = String.valueOf(selectedMonth + 1);
+                        String yearText = String.valueOf(year);
+                        btnMonthlyPrediction.setText(monthText+" / "+yearText);
                     }
                 })
                 .setNegativeButton(new OnCancelMonthDialogListener() {
@@ -317,6 +322,7 @@ public class ReportsFragment extends Fragment {
                     }
                 })
                 .show();
+
     }
 
     private ArrayList<Transaction> filterTransactionsByMonth(ArrayList<Transaction> transactions, int month, int year) {
@@ -389,8 +395,15 @@ public class ReportsFragment extends Fragment {
         pieChart.setTransparentCircleRadius(55f);
         pieChart.setDrawEntryLabels(false); // Disable entry labels
 
-        pieChart.setCenterText("Expenses filtered by type");
-        pieChart.setCenterTextSize(16f);
+        if (pieEntries.isEmpty()) {
+            pieChart.clear();
+            pieChart.setNoDataText("There are no expenses in this month");
+            pieChart.invalidate(); // Refresh the chart
+            return;
+        } else {
+            pieChart.setCenterText("Expenses filtered by type");
+            pieChart.setCenterTextSize(16f);
+        }
 
         // Customize the legend
         Legend legend = pieChart.getLegend();
