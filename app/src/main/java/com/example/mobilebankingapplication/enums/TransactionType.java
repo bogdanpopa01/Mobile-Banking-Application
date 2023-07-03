@@ -8,5 +8,6 @@ public enum TransactionType {
     SALARY,
     DEPOSIT,
     TRANSPORT,
-    UTILITIES
+    UTILITIES,
+    RENT
 }

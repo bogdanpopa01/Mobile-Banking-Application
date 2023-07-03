@@ -51,10 +51,12 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 
 public class ReportsFragment extends Fragment {
@@ -181,14 +183,27 @@ public class ReportsFragment extends Fragment {
         btnPredict.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (! Python.isStarted()) {
+                if (!Python.isStarted()) {
                     Python.start(new AndroidPlatform(getContext()));
                 }
                 Python python = Python.getInstance();
                 PyObject pyObject = python.getModule("script");
 
-                PyObject prediction = pyObject.callAttr("test");
-                tvPrediction.setText(prediction.toString());
+                double[] transactionAmounts = new double[arrayListTransactions.size()];
+                String[] transactionTypes = new String[arrayListTransactions.size()];
+
+                int index = 0;
+                for (Transaction t : arrayListTransactions) {
+                    if (t.getTransactionAmount() < 0) {
+                        transactionAmounts[index] = Math.abs(t.getTransactionAmount());
+                        transactionTypes[index] = t.getTransactionType().toString();
+                        index++;
+                    }
+                }
+
+                PyObject result = pyObject.callAttr("prediction", transactionAmounts, transactionTypes);
+                double meanPrediction = result.toDouble();
+                tvPrediction.setText(String.valueOf(meanPrediction));
             }
         });
 
