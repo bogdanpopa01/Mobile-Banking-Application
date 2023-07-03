@@ -45,6 +45,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -192,12 +193,19 @@ public class ReportsFragment extends Fragment {
                 double[] transactionAmounts = new double[arrayListTransactions.size()];
                 String[] transactionTypes = new String[arrayListTransactions.size()];
 
+                long currentTimeMillis = System.currentTimeMillis();
+                long thirtyDaysInMillis = 30 * 24 * 60 * 60 * 1000L;
+                long cutoffTimeMillis = currentTimeMillis - thirtyDaysInMillis;
+                Date cutoffDate = new Date(cutoffTimeMillis);
+
                 int index = 0;
                 for (Transaction t : arrayListTransactions) {
-                    if (t.getTransactionAmount() < 0) {
-                        transactionAmounts[index] = Math.abs(t.getTransactionAmount());
-                        transactionTypes[index] = t.getTransactionType().toString();
-                        index++;
+                    if (t.getTransactionDate().getTime() >= cutoffDate.getTime()) {
+                        if (t.getTransactionAmount() < 0) {
+                            transactionAmounts[index] = Math.abs(t.getTransactionAmount());
+                            transactionTypes[index] = t.getTransactionType().toString();
+                            index++;
+                        }
                     }
                 }
 
@@ -348,7 +356,7 @@ public class ReportsFragment extends Fragment {
                         updatePieChart(filteredTransactions);
                         String monthText = String.valueOf(selectedMonth + 1);
                         String yearText = String.valueOf(year);
-                        btnMonthlyPrediction.setText(monthText+" / "+yearText);
+                        btnMonthlyPrediction.setText(monthText + " / " + yearText);
                     }
                 })
                 .setNegativeButton(new OnCancelMonthDialogListener() {
