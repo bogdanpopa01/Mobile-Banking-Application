@@ -35,7 +35,6 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.ValueFormatter;
-import com.github.mikephil.charting.utils.ColorTemplate;
 import com.kal.rackmonthpicker.RackMonthPicker;
 import com.kal.rackmonthpicker.listener.DateMonthDialogListener;
 import com.kal.rackmonthpicker.listener.OnCancelMonthDialogListener;
@@ -47,17 +46,23 @@ import org.json.JSONObject;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 
 public class ReportsFragment extends Fragment {
@@ -106,9 +111,19 @@ public class ReportsFragment extends Fragment {
             pieEntries.add(pieEntry);
         }
 
+        int[] colors = new int[]{
+                Color.parseColor("#1f77b4"), // Blue
+                Color.parseColor("#ff7f0e"), // Orange
+                Color.parseColor("#2ca02c"), // Green
+                Color.parseColor("#d62728"), // Red
+                Color.parseColor("#9467bd"), // Purple
+                Color.parseColor("#8c564b"), // Brown
+                Color.parseColor("#e377c2")  // Pink
+        };
+
         // Create the data set for the pie chart
         PieDataSet pieDataSet = new PieDataSet(pieEntries, "");
-        pieDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
+        pieDataSet.setColors(colors);
         pieDataSet.setValueTextColor(Color.WHITE);
         pieDataSet.setValueTextSize(12f);
         pieDataSet.setValueFormatter(new ValueFormatter() {
@@ -190,27 +205,30 @@ public class ReportsFragment extends Fragment {
                 Python python = Python.getInstance();
                 PyObject pyObject = python.getModule("script");
 
-                double[] transactionAmounts = new double[arrayListTransactions.size()];
-                String[] transactionTypes = new String[arrayListTransactions.size()];
-
-                long currentTimeMillis = System.currentTimeMillis();
-                long thirtyDaysInMillis = 30 * 24 * 60 * 60 * 1000L;
-                long cutoffTimeMillis = currentTimeMillis - thirtyDaysInMillis;
-                Date cutoffDate = new Date(cutoffTimeMillis);
-
-                int index = 0;
-                for (Transaction t : arrayListTransactions) {
-                    if (t.getTransactionDate().getTime() >= cutoffDate.getTime()) {
-                        if (t.getTransactionAmount() < 0) {
-                            transactionAmounts[index] = Math.abs(t.getTransactionAmount());
-                            transactionTypes[index] = t.getTransactionType().toString();
-                            index++;
-                        }
+                int arrSize = 0;
+                for(int i=0;i<arrayListTransactions.size();i++){
+                    if(arrayListTransactions.get(i).getTransactionAmount()<0){
+                        arrSize++;
                     }
                 }
 
-                PyObject result = pyObject.callAttr("prediction", transactionAmounts, transactionTypes);
-                double meanPrediction = result.toDouble();
+                double[] amounts = new double[arrSize];
+                String[] dates = new String[arrSize];
+
+                int index=0;
+                for(int i=arrayListTransactions.size() - 1 ;i>=0;i--){
+                    if(arrayListTransactions.get(i).getTransactionAmount()<0){
+                        amounts[index] = Math.abs(arrayListTransactions.get(i).getTransactionAmount());
+                        Timestamp timestamp = arrayListTransactions.get(i).getTransactionDate();
+                        long timestampMiliseconds = timestamp.getTime();
+                        Date date = new Date(timestampMiliseconds);
+                        dates[index] = DateConverter.dateToString(date);
+                        index++;
+                    }
+                }
+
+                PyObject result = pyObject.callAttr("prediction",amounts,dates);
+                String meanPrediction = result.toString();
                 tvPrediction.setText(String.valueOf(meanPrediction));
             }
         });
@@ -414,8 +432,18 @@ public class ReportsFragment extends Fragment {
         }
 
         // Create the data set for the pie chart
+        int[] colors = new int[]{
+                Color.parseColor("#1f77b4"), // Blue
+                Color.parseColor("#ff7f0e"), // Orange
+                Color.parseColor("#2ca02c"), // Green
+                Color.parseColor("#d62728"), // Red
+                Color.parseColor("#9467bd"), // Purple
+                Color.parseColor("#8c564b"), // Brown
+                Color.parseColor("#e377c2")  // Pink
+        };
+
         PieDataSet pieDataSet = new PieDataSet(pieEntries, "");
-        pieDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
+        pieDataSet.setColors(colors);
         pieDataSet.setValueTextColor(Color.WHITE);
         pieDataSet.setValueTextSize(12f);
         pieDataSet.setValueFormatter(new ValueFormatter() {
