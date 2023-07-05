@@ -54,6 +54,19 @@
     <string name="btnOpenDepositAddDepositFragment">Open deposit</string>
     <string name="tvPeriodAddDepositFragment">Period</string>
 
+    <string name="oneMonth">1 month</string>
+    <string name="oneMonthValue">0.04</string>
+    <string name="twoMonth">2 months</string>
+    <string name="twoMonthValue">0.045</string>
+    <string name="threeMonth">3 months</string>
+    <string name="threeMonthValue">0.05</string>
+    <string name="sixMonth">6 months</string>
+    <string name="sixMonthValue">0.055</string>
+    <string name="oneYear">12 months</string>
+    <string name="oneYearValue">0.08</string>
+    <string name="twoYear">24 months</string>
+    <string name="twoYearValue">0.09</string>
+
     <!-- row_deposit_design -->
     <string name="tvInterestRate">Interest rate:</string>
     <string name="tvTimeLeft">Time left:</string>
