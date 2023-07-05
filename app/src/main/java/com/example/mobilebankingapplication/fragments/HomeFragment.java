@@ -1,5 +1,6 @@
 package com.example.mobilebankingapplication.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -14,6 +15,7 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +40,7 @@ public class HomeFragment extends Fragment implements DepositsUpdateCallback {
     private View view;
     private TextView tvCardNumberHomeFragment, tvUserFirstAndLastName, tvValidThruDateHomeFragment, tvBalanceHomeFragment;
     private Disposable deleteEventDisposable, updateEventDisposable;
+    ImageView imageViewPin;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -55,6 +58,15 @@ public class HomeFragment extends Fragment implements DepositsUpdateCallback {
         initializeComponents();
         getUser();
         populateFields();
+
+        imageViewPin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentManager fragmentManager = getChildFragmentManager();
+                PinFragment pinFragment = new PinFragment();
+                pinFragment.show(fragmentManager,"PinFragment");
+            }
+        });
 
         fabSeeDeposits = view.findViewById(R.id.fabSeeDeposits);
         fabSeeDeposits.setOnClickListener(new View.OnClickListener() {
@@ -117,6 +129,7 @@ public class HomeFragment extends Fragment implements DepositsUpdateCallback {
         tvUserFirstAndLastName = view.findViewById(R.id.tvUserNameHomeFragment);
         tvValidThruDateHomeFragment = view.findViewById(R.id.tvValidThruDateHomeFragment);
         tvBalanceHomeFragment = view.findViewById(R.id.tvBalanceValueHomeFragment);
+        imageViewPin = view.findViewById(R.id.imageViewSeePinHomeFragment);
     }
 
     private void getUser() {

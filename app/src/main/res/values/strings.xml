@@ -111,4 +111,12 @@
     <string name="btnPredictExpenses">PREDICT</string>
     <string name="tvPredictExplanation">Predict the future expenses</string>
 
+
+    <!--  Pin Fragment -->
+    <string name="tvPinInfo">Please enter your password</string>
+    <string name="btnConfirmPasswordForPin">Confirm</string>
+    <string name="tvPinValue">***</string>
+    <string name="tvPinInfo2">Your Pin:</string>
+
+
 </resources>
