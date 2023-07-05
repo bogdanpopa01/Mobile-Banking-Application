@@ -228,7 +228,7 @@ public class ReportsFragment extends Fragment {
                 }
 
                 PyObject result = pyObject.callAttr("prediction",amounts,dates);
-                String meanPrediction = result.toString();
+                double meanPrediction = result.toDouble();
                 tvPrediction.setText(String.valueOf(meanPrediction));
             }
         });

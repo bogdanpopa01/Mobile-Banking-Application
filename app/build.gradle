@@ -24,7 +24,6 @@ android {
             pip {
                 install "numpy"
                 install "scikit-learn"
-                install "pandas"
             }
         }
     }
