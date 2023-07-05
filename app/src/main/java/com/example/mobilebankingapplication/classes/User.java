@@ -21,8 +21,9 @@ public class User implements Parcelable {
     private String cardCvv;
     private Date cardExpirationDate;
     private double balance;
+    private String IBAN;
 
-    public User(UUID userId, String userName, String email, String password, String telephone, String firstName, String lastName, String cardNumber, String cardCvv, Date cardExpirationDate, double balance) {
+    public User(UUID userId, String userName, String email, String password, String telephone, String firstName, String lastName, String cardNumber, String cardCvv, Date cardExpirationDate, double balance, String IBAN) {
         this.userId = userId;
         this.userName = userName;
         this.email = email;
@@ -34,6 +35,7 @@ public class User implements Parcelable {
         this.cardCvv = cardCvv;
         this.cardExpirationDate = cardExpirationDate;
         this.balance = balance;
+        this.IBAN = IBAN;
     }
 
     protected User(Parcel in) {
@@ -48,6 +50,7 @@ public class User implements Parcelable {
         cardCvv = in.readString();
         cardExpirationDate = DateConverter.stringToDate(in.readString());
         balance = in.readDouble();
+        IBAN = in.readString();
     }
 
     @Override
@@ -63,6 +66,7 @@ public class User implements Parcelable {
         dest.writeString(cardCvv);
         dest.writeString(DateConverter.dateToString(cardExpirationDate));
         dest.writeDouble(balance);
+        dest.writeString(IBAN);
     }
 
     @Override
@@ -170,6 +174,14 @@ public class User implements Parcelable {
         this.balance = balance;
     }
 
+    public String getIBAN() {
+        return IBAN;
+    }
+
+    public void setIBAN(String IBAN) {
+        this.IBAN = IBAN;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -181,9 +193,10 @@ public class User implements Parcelable {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", cardNumber='" + cardNumber + '\'' +
-                ", cardCvv=" + cardCvv +
+                ", cardCvv='" + cardCvv + '\'' +
                 ", cardExpirationDate=" + cardExpirationDate +
                 ", balance=" + balance +
+                ", IBAN='" + IBAN + '\'' +
                 '}';
     }
 }

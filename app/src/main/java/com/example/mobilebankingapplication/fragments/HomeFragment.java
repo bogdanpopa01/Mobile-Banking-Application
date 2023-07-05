@@ -1,5 +1,8 @@
 package com.example.mobilebankingapplication.fragments;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -40,7 +43,7 @@ public class HomeFragment extends Fragment implements DepositsUpdateCallback {
     private View view;
     private TextView tvCardNumberHomeFragment, tvUserFirstAndLastName, tvValidThruDateHomeFragment, tvBalanceHomeFragment;
     private Disposable deleteEventDisposable, updateEventDisposable;
-    ImageView imageViewPin;
+    ImageView imageViewPin, imageViewCopy;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -64,7 +67,20 @@ public class HomeFragment extends Fragment implements DepositsUpdateCallback {
             public void onClick(View view) {
                 FragmentManager fragmentManager = getChildFragmentManager();
                 PinFragment pinFragment = new PinFragment();
-                pinFragment.show(fragmentManager,"PinFragment");
+                pinFragment.show(fragmentManager, "PinFragment");
+            }
+        });
+
+        imageViewCopy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String clipboardText = getString(R.string.imageViewName) + " " + user.getLastName() + " " + user.getFirstName() + '\n' + getString(R.string.imageViewIBAN) + " " + user.getIBAN();
+
+                ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText("label", clipboardText);
+                clipboard.setPrimaryClip(clip);
+
+                Toast.makeText(getContext(), clipboardText, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -115,7 +131,7 @@ public class HomeFragment extends Fragment implements DepositsUpdateCallback {
         sharedViewModel.getUser().observe(getViewLifecycleOwner(), new Observer<User>() {
             @Override
             public void onChanged(User updatedUser) {
-                if(updatedUser!=null){
+                if (updatedUser != null) {
                     user = updatedUser;
                     populateBalance();
                 }
@@ -130,6 +146,7 @@ public class HomeFragment extends Fragment implements DepositsUpdateCallback {
         tvValidThruDateHomeFragment = view.findViewById(R.id.tvValidThruDateHomeFragment);
         tvBalanceHomeFragment = view.findViewById(R.id.tvBalanceValueHomeFragment);
         imageViewPin = view.findViewById(R.id.imageViewSeePinHomeFragment);
+        imageViewCopy = view.findViewById(R.id.imageViewCopyHomeFragment);
     }
 
     private void getUser() {
@@ -151,7 +168,7 @@ public class HomeFragment extends Fragment implements DepositsUpdateCallback {
         populateBalance();
     }
 
-    private void populateCardNumber(){
+    private void populateCardNumber() {
         String cardNumber = user.getCardNumber();
         StringBuilder formattedCardNumber = new StringBuilder();
         for (int i = 0; i < cardNumber.length(); i++) {
@@ -163,7 +180,7 @@ public class HomeFragment extends Fragment implements DepositsUpdateCallback {
         tvCardNumberHomeFragment.setText(formattedCardNumber);
     }
 
-    private void populateFirstAndLastName(){
+    private void populateFirstAndLastName() {
         String lastName = user.getLastName();
         String firstName = user.getFirstName();
         StringBuilder firstAndLastName = new StringBuilder();
@@ -180,7 +197,7 @@ public class HomeFragment extends Fragment implements DepositsUpdateCallback {
         tvValidThruDateHomeFragment.setText(cardExpirationDateString);
     }
 
-    private void populateBalance(){
+    private void populateBalance() {
         double balance = user.getBalance();
         DecimalFormat decimalFormat = new DecimalFormat("#,###.0");
         String balanceString = decimalFormat.format(balance);
@@ -192,7 +209,7 @@ public class HomeFragment extends Fragment implements DepositsUpdateCallback {
         reloadUI();
     }
 
-    private void reloadUI(){
+    private void reloadUI() {
         FragmentManager fragmentManager = getChildFragmentManager();
         Fragment fragment = fragmentManager.findFragmentById(R.id.depositsFragment);
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -216,7 +233,7 @@ public class HomeFragment extends Fragment implements DepositsUpdateCallback {
                 });
         updateEventDisposable = EditDepositFragment.updateEventSubject
                 .subscribe(event -> {
-                    if(event.isUpdated()){
+                    if (event.isUpdated()) {
                         reloadUI();
                     }
                 });

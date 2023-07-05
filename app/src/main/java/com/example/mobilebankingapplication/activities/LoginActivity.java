@@ -72,8 +72,9 @@ public class LoginActivity extends AppCompatActivity {
                                     String cardCvv = jsonObject.getString("cardCvv");
                                     Timestamp cardExpirationDate = DateConverter.stringToTimestamp(jsonObject.getString("cardExpirationDate"));
                                     double balance = jsonObject.getDouble("balance");
+                                    String IBAN = jsonObject.getString("IBAN");
 
-                                    User user = new User(userId, userName, email, password, telephone, firstName, lastName, cardNumber, cardCvv, cardExpirationDate, balance);
+                                    User user = new User(userId, userName, email, password, telephone, firstName, lastName, cardNumber, cardCvv, cardExpirationDate, balance,IBAN);
                                     intent.putExtra(USER_ACCOUNT_KEY,user);
 
                                     startActivity(intent);

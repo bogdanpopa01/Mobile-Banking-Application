@@ -297,7 +297,7 @@ public class EditDepositFragment extends DialogFragment implements DeletionCallb
                                             public void onResponse(String response) {
                                                 try {
                                                     JSONObject jsonObject = new JSONObject(response);
-                                                    Toast.makeText(context, jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
+//                                                    Toast.makeText(context, jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
                                                 } catch (JSONException e) {
                                                     throw new RuntimeException(e);
                                                 }
@@ -347,7 +347,7 @@ public class EditDepositFragment extends DialogFragment implements DeletionCallb
                     };
                     RequestHandler.getInstance(getContext()).addToRequestQueue(stringRequest);
                 } else {
-                    Toast.makeText(getContext(), "The values are the same!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "The name field is the same!", Toast.LENGTH_LONG).show();
                 }
             } else {
                 Toast.makeText(getContext(), "The selectedDeposit is null!", Toast.LENGTH_LONG).show();

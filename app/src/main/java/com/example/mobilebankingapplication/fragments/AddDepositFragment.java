@@ -44,6 +44,7 @@ import org.json.JSONObject;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -148,7 +149,7 @@ public class AddDepositFragment extends DialogFragment {
 
                     int comparisonResult = depositAmountSafe.compareTo(userBalance);
 
-                    if(comparisonResult > 0 ){
+                    if (comparisonResult > 0) {
                         Toast.makeText(contex, R.string.INSUFFICIENT_BALANCE, Toast.LENGTH_SHORT).show();
                         return;
                     }
@@ -171,8 +172,8 @@ public class AddDepositFragment extends DialogFragment {
                                                 @Override
                                                 public void onResponse(String response) {
                                                     try {
-                                                        JSONObject  jsonObject = new JSONObject(response);
-                                                        Toast.makeText(contex, jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
+                                                        JSONObject jsonObject = new JSONObject(response);
+//                                                        Toast.makeText(contex, jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
                                                     } catch (JSONException e) {
                                                         throw new RuntimeException(e);
                                                     }
@@ -188,7 +189,7 @@ public class AddDepositFragment extends DialogFragment {
                                                 protected Map<String, String> getParams() throws AuthFailureError {
                                                     Map<String, String> params = new HashMap<>();
                                                     params.put("userId", ConverterUUID.UUIDtoString(user.getUserId()));
-                                                    params.put("balance",String.valueOf(newBalance));
+                                                    params.put("balance", String.valueOf(newBalance));
                                                     return params;
                                                 }
                                             };
@@ -271,9 +272,16 @@ public class AddDepositFragment extends DialogFragment {
         }
         double depositInterestRate = Double.parseDouble(tvInterestRateValue.getText().toString());
         Timestamp depositDate = new Timestamp(System.currentTimeMillis());
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(depositDate);
+        calendar.add(Calendar.MONTH, depositPeriod);
+
+        Timestamp depositEndDate = new Timestamp(calendar.getTimeInMillis());
+
         UUID userId = user.getUserId();
 
-        Deposit deposit = new Deposit(depositId, depositName, depositAmount, depositPeriod, depositInterestRate, depositDate, userId);
+        Deposit deposit = new Deposit(depositId, depositName, depositAmount, depositPeriod, depositInterestRate, depositEndDate, userId);
 
         if (deposit != null) {
             return deposit;
@@ -296,6 +304,28 @@ public class AddDepositFragment extends DialogFragment {
         if (etDepositAmount.getText() == null || etDepositAmount.getText().toString().trim().isEmpty()) {
             etDepositAmount.setError("The amount field cannot be empty!");
             isValid = false;
+        }
+
+        if (etDepositAmount.getText().toString().length() == 1 && etDepositAmount.getText().toString().charAt(0) == '.') {
+            etDepositAmount.setError("The amount field cannot contain just a dot!");
+            isValid = false;
+        }
+
+        String amountString = etDepositAmount.getText().toString();
+        if (amountString.matches(".+\\.0$") && Double.parseDouble(amountString)==0) {
+            etDepositAmount.setError("The amount field cannot have trailing '.0'!");
+            isValid = false;
+        }
+
+        if (!amountString.isEmpty() && !amountString.equals(".")) {
+            double amountValue = Double.parseDouble(amountString);
+            boolean isDecimalZero = amountString.matches(".*\\.0$");
+            boolean isIntegerZero = amountString.matches("0+");
+
+            if (amountValue == 0.0 && (isDecimalZero || isIntegerZero)) {
+                etDepositAmount.setError("The amount field cannot be zero!");
+                isValid = false;
+            }
         }
 
         return isValid;

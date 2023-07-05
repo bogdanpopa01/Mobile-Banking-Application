@@ -7,6 +7,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.text.Editable;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -64,6 +66,7 @@ public class TransfersFragment extends Fragment {
         getUser();
         transferAmountValidation();
         transferIBANValidation();
+        enforceLettersOnly(etPayeeTransfersFragment);
 
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,7 +102,7 @@ public class TransfersFragment extends Fragment {
                                                 public void onResponse(String response) {
                                                     try {
                                                         JSONObject jsonObject = new JSONObject(response);
-                                                        Toast.makeText(getContext(), jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
+//                                                        Toast.makeText(getContext(), jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
                                                     } catch (JSONException e) {
                                                         throw new RuntimeException(e);
                                                     }
@@ -143,7 +146,7 @@ public class TransfersFragment extends Fragment {
                             protected Map<String, String> getParams() throws AuthFailureError {
                                 Map<String, String> params = new HashMap<>();
                                 params.put("transferId", ConverterUUID.UUIDtoString(transfer.getTransferId()));
-                                params.put("transferAmount", String.valueOf((-1)*transfer.getTransferAmount()));
+                                params.put("transferAmount", String.valueOf((-1) * transfer.getTransferAmount()));
                                 params.put("transferPayee", transfer.getTransferPayee());
                                 params.put("transferIBAN", transfer.getTransferIBAN());
                                 params.put("transferDescription", transfer.getTransferDescription());
@@ -201,6 +204,11 @@ public class TransfersFragment extends Fragment {
         if (etPayeeTransfersFragment.getText() == null || etPayeeTransfersFragment.getText().toString().trim().isEmpty()) {
             etPayeeTransfersFragment.setError("The payee field cannot be empty!");
             isValid = false;
+
+            if (etPayeeTransfersFragment.getText().length() < 2) {
+                etPayeeTransfersFragment.setError("At least 2 letters are required!");
+                isValid = false;
+            }
         }
 
         if (etIBANTransfersFragment.getText() == null || etIBANTransfersFragment.getText().toString().trim().isEmpty()) {
@@ -208,7 +216,47 @@ public class TransfersFragment extends Fragment {
             isValid = false;
         }
 
+        if (etAmountTranfersFragment.getText().toString().length() == 1 && etAmountTranfersFragment.getText().toString().charAt(0) == '.') {
+            etAmountTranfersFragment.setError("The amount field cannot contain just a dot!");
+            isValid = false;
+        }
+
+        String amountString = etAmountTranfersFragment.getText().toString();
+        if (amountString.matches(".+\\.0$") && Double.parseDouble(amountString) == 0) {
+            etAmountTranfersFragment.setError("The amount field cannot have trailing '.0'!");
+            isValid = false;
+        }
+
+        if (!amountString.isEmpty() && !amountString.equals(".")) {
+            double amountValue = Double.parseDouble(amountString);
+            boolean isDecimalZero = amountString.matches(".*\\.0$");
+            boolean isIntegerZero = amountString.matches("0+");
+
+            if (amountValue == 0.0 && (isDecimalZero || isIntegerZero)) {
+                etAmountTranfersFragment.setError("The amount field cannot be zero!");
+                isValid = false;
+            }
+        }
+
         return isValid;
+    }
+
+    private void enforceLettersOnly(EditText editText) {
+        InputFilter filter = new InputFilter() {
+            @Override
+            public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+                StringBuilder filteredStringBuilder = new StringBuilder();
+                for (int i = start; i < end; i++) {
+                    char currentChar = source.charAt(i);
+                    if (Character.isLetter(currentChar)) {
+                        filteredStringBuilder.append(currentChar);
+                    }
+                }
+                return filteredStringBuilder.toString();
+            }
+        };
+
+        editText.setFilters(new InputFilter[]{filter});
     }
 
     private void transferAmountValidation() {

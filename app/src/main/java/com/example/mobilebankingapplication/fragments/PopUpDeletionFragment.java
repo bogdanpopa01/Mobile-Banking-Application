@@ -153,7 +153,7 @@ public class PopUpDeletionFragment extends DialogFragment {
                                 public void onResponse(String response) {
                                     try {
                                         JSONObject jsonObject = new JSONObject(response);
-                                        Toast.makeText(context, jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
+//                                        Toast.makeText(context, jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
                                     } catch (JSONException e) {
                                         throw new RuntimeException(e);
                                     }
