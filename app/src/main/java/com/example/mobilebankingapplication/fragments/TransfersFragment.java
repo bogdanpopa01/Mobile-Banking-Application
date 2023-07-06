@@ -72,11 +72,10 @@ public class TransfersFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (validation()) {
-                    double transferAmount = Double.parseDouble(etAmountTranfersFragment.getText().toString());
 
                     // balance validation
-                    BigDecimal transferAmountSafe = BigDecimal.valueOf(transferAmount);
-                    BigDecimal userBalance = BigDecimal.valueOf(user.getBalance());
+                    BigDecimal transferAmountSafe = new BigDecimal(etAmountTranfersFragment.getText().toString());
+                    BigDecimal userBalance = new BigDecimal(user.getBalance());
                     int comparisonResult = transferAmountSafe.compareTo(userBalance);
 
                     if (comparisonResult > 0) {

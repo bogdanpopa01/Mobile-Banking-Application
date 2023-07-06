@@ -146,9 +146,8 @@ public class AddDepositFragment extends DialogFragment {
 
                     // balance validation
 
-                    double depositAmount = Double.parseDouble(etDepositAmount.getText().toString());
-                    BigDecimal depositAmountSafe = BigDecimal.valueOf(depositAmount);
-                    BigDecimal userBalance = BigDecimal.valueOf(user.getBalance());
+                    BigDecimal depositAmountSafe = new BigDecimal(etDepositAmount.getText().toString());
+                    BigDecimal userBalance = new BigDecimal(user.getBalance());
 
                     int comparisonResult = depositAmountSafe.compareTo(userBalance);
 
