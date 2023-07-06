@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -55,7 +56,7 @@ public class TransactionsFragment extends Fragment {
     private User user;
     private View view;
     private SearchView searchViewTransactions;
-    private Button btnAllTransactions, btnTransfers, btnDate, btnIncomes, btnExpenses;
+    private Button btnAllTransactions, btnTransfers, btnDate, btnIncomes, btnExpenses, btnAccountStatement;
     private Button btnSort, btnFilter;
     private Button btnSortAscending, btnSortDescending;
 
@@ -178,6 +179,16 @@ public class TransactionsFragment extends Fragment {
 
         hideFilterLayout();
         hideSortLayout();
+
+        btnAccountStatement.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentManager fragmentManager = getChildFragmentManager();
+                AccountStatementFragment accountStatementFragment = new AccountStatementFragment();
+                accountStatementFragment.show(fragmentManager, "AccountStatementFragment");
+            }
+        });
+
 
         btnSort.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -392,6 +403,7 @@ public class TransactionsFragment extends Fragment {
         btnExpenses = view.findViewById(R.id.btnExpenses);
         btnTransfers = view.findViewById(R.id.btnTransfersOnly);
         btnIncomes = view.findViewById(R.id.btnIncomes);
+        btnAccountStatement = view.findViewById(R.id.btnAccountStatement);
 
         btnSort = view.findViewById(R.id.btnSort);
         btnFilter = view.findViewById(R.id.btnFilter);

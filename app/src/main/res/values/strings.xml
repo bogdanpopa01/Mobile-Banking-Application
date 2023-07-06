@@ -80,16 +80,6 @@
         <item>24 months</item>
     </string-array>
 
-    <string-array name="array_companies">
-        <item>Telekom</item>
-        <item>Orange</item>
-        <item>Vodafone</item>
-        <item>RCS&amp;RDS</item>
-        <item>Digi</item>
-        <item>Enel</item>
-        <item>Apa Nova</item>
-    </string-array>
-
     <!-- EditDepositFragment -->
     <string name="tvEditDepositEditDepositFragment">Edit your deposit</string>
     <string name="btnCancelEditDepositFragment">Cancel</string>
@@ -127,11 +117,21 @@
     <string name="tvPredictExplanation">Predict the future expenses</string>
 
 
-    <!--  Pin Fragment -->
+    <!-- Pin Fragment -->
     <string name="tvPinInfo">Please enter your password</string>
     <string name="btnConfirmPasswordForPin">Confirm</string>
     <string name="tvPinValue">***</string>
     <string name="tvPinInfo2">Your Pin:</string>
+
+    <!-- AccountStatement Fragment -->
+    <string name="btnFrom">From</string>
+    <string name="btnTo">To</string>
+    <string name="btnCancelAccountStatement">Cancel</string>
+    <string name="btnConfirmAccountStatement">Confirm</string>
+    <string name="tvAccStmtTtitle">Account Statement</string>
+    <string name="tvAccStmtInfo">Select the Start Date and End Date</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
 </resources>
