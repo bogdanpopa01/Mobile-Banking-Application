@@ -195,6 +195,13 @@ public class TransfersFragment extends Fragment {
     private boolean validation() {
         boolean isValid = true;
 
+        String ibanRegex = "RO\\d{2}[A-Z]{4}\\d{16}";
+        String string = etIBANTransfersFragment.getText().toString();
+        if (!(string.replace(" ", "")).matches(ibanRegex)) {
+            etIBANTransfersFragment.setError("The format of the IBAN is invalid!");
+            isValid = false;
+        }
+
         if (etAmountTranfersFragment.getText() == null || etAmountTranfersFragment.getText().toString().trim().isEmpty()) {
             etAmountTranfersFragment.setError("The amount field cannot be empty!");
             isValid = false;
@@ -302,11 +309,6 @@ public class TransfersFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                String ibanRegex = "RO\\d{2}[A-Z]{4}\\d{16}";
-                String string = s.toString();
-                if (!(string.replace(" ", "")).matches(ibanRegex)) {
-                    etIBANTransfersFragment.setError("The format of the IBAN is invalid!");
-                }
 
                 if (s.length() > 0 && (s.length() % 5) == 0) {
                     final char c = s.charAt(s.length() - 1);
