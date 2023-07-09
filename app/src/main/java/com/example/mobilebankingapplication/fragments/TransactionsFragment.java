@@ -270,23 +270,15 @@ public class TransactionsFragment extends Fragment {
         btnDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        selectedDate.set(Calendar.YEAR, year);
-                        selectedDate.set(Calendar.MONTH, monthOfYear);
-                        selectedDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                        filterTransactions(searchViewTransactions.getQuery().toString());
-                    }
-                };
-
-                // Show the date picker dialog
-                DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), dateSetListener,
-                        selectedDate.get(Calendar.YEAR), selectedDate.get(Calendar.MONTH),
-                        selectedDate.get(Calendar.DAY_OF_MONTH));
-                datePickerDialog.show();
+                filterDate();
+                selectedFilter = "date";
+                isSortDateDesc = true;
+                isSortAscending = false;
+                isSortDescending = false;
+                filterTransactions(searchViewTransactions.getQuery().toString());
             }
         });
+
 
         btnSortAscending.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -329,7 +321,21 @@ public class TransactionsFragment extends Fragment {
 
         for (Transaction t : arrayListTransactions) {
             if (isTransactionTypeMatch(t) && isTransactionNameMatch(t, searchTerm)) {
-                filteredTransactions.add(t);
+                if (selectedFilter.equals("date")) {
+                    Timestamp transactionTimestamp = t.getTransactionDate();
+                    long transactionTimeInMillis = transactionTimestamp.getTime();
+
+                    Calendar transactionCalendar = Calendar.getInstance();
+                    transactionCalendar.setTimeInMillis(transactionTimeInMillis);
+
+                    if (transactionCalendar.get(Calendar.YEAR) == selectedDate.get(Calendar.YEAR) &&
+                            transactionCalendar.get(Calendar.MONTH) == selectedDate.get(Calendar.MONTH) &&
+                            transactionCalendar.get(Calendar.DAY_OF_MONTH) == selectedDate.get(Calendar.DAY_OF_MONTH)) {
+                        filteredTransactions.add(t);
+                    }
+                } else {
+                    filteredTransactions.add(t);
+                }
             }
         }
 
@@ -357,6 +363,8 @@ public class TransactionsFragment extends Fragment {
             return transaction.getTransactionAmount() > 0;
         } else if (selectedFilter.equals("expenses")) {
             return transaction.getTransactionAmount() < 0;
+        } else if(selectedFilter.equals("date")){
+            return true;
         }
         return false;
     }
@@ -372,6 +380,48 @@ public class TransactionsFragment extends Fragment {
                 return transaction2.getTransactionDate().compareTo(transaction1.getTransactionDate());
             }
         });
+    }
+
+    private void filterDate() {
+        DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                selectedDate.set(Calendar.YEAR, year);
+                selectedDate.set(Calendar.MONTH, monthOfYear);
+                selectedDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                applyDateFilter();
+            }
+        };
+
+        // Show the date picker dialog
+        DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), dateSetListener,
+                selectedDate.get(Calendar.YEAR), selectedDate.get(Calendar.MONTH),
+                selectedDate.get(Calendar.DAY_OF_MONTH));
+        datePickerDialog.show();
+    }
+
+
+    private void applyDateFilter() {
+        selectedFilter = "date";
+        filteredTransactions.clear();
+
+        for (Transaction transaction : arrayListTransactions) {
+            Timestamp transactionTimestamp = transaction.getTransactionDate();
+            long transactionTimeInMillis = transactionTimestamp.getTime();
+
+            Calendar transactionCalendar = Calendar.getInstance();
+            transactionCalendar.setTimeInMillis(transactionTimeInMillis);
+
+            if (transactionCalendar.get(Calendar.YEAR) == selectedDate.get(Calendar.YEAR) &&
+                    transactionCalendar.get(Calendar.MONTH) == selectedDate.get(Calendar.MONTH) &&
+                    transactionCalendar.get(Calendar.DAY_OF_MONTH) == selectedDate.get(Calendar.DAY_OF_MONTH)) {
+                filteredTransactions.add(transaction);
+            }
+        }
+
+        sortFilteredTransactions();
+        recyclerViewAdapterTransactions.setTransactions(filteredTransactions);
+        recyclerViewAdapterTransactions.notifyDataSetChanged();
     }
 
     private void sortTransactionsByAmountAsc() {
