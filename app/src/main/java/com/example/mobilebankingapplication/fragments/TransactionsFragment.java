@@ -66,12 +66,13 @@ public class TransactionsFragment extends Fragment {
 
     private LinearLayout filterLayout1, filterLayout2, sortLayout;
     private Calendar selectedDate = Calendar.getInstance();
-    private String selectedFilter;
+    private String selectedFilter = "all";
     private boolean isSortHidden = true;
     private boolean isFilterHidden = true;
     private boolean isSortAscending = false;
     private boolean isSortDescending = false;
     private boolean isSortDateDesc = true;
+    private int sortFilterIndex = 0;
 
     public TransactionsFragment() {
 
@@ -226,6 +227,7 @@ public class TransactionsFragment extends Fragment {
         btnAllTransactions.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                sortFilterIndex++;
                 selectedFilter = "all";
                 isSortDateDesc = true;
                 isSortAscending = false;
@@ -237,6 +239,7 @@ public class TransactionsFragment extends Fragment {
         btnTransfers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                sortFilterIndex++;
                 selectedFilter = "transfers";
                 isSortDateDesc = true;
                 isSortAscending = false;
@@ -248,6 +251,7 @@ public class TransactionsFragment extends Fragment {
         btnIncomes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                sortFilterIndex++;
                 selectedFilter = "incomes";
                 isSortDateDesc = true;
                 isSortAscending = false;
@@ -259,6 +263,7 @@ public class TransactionsFragment extends Fragment {
         btnExpenses.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                sortFilterIndex++;
                 selectedFilter = "expenses";
                 isSortDateDesc = true;
                 isSortAscending = false;
@@ -270,6 +275,7 @@ public class TransactionsFragment extends Fragment {
         btnDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                sortFilterIndex++;
                 filterDate();
                 selectedFilter = "date";
                 isSortDateDesc = true;
@@ -283,7 +289,7 @@ public class TransactionsFragment extends Fragment {
         btnSortAscending.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(selectedFilter == null){
+                if(sortFilterIndex==0){
                     Toast.makeText(getContext(), "Select All button to sort all the transactions", Toast.LENGTH_SHORT).show();
                 }
                 isSortAscending = true;
@@ -297,7 +303,7 @@ public class TransactionsFragment extends Fragment {
         btnSortDescending.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(selectedFilter == null){
+                if(sortFilterIndex==0){
                     Toast.makeText(getContext(), "Select All button to sort all the transactions", Toast.LENGTH_SHORT).show();
                 }
                 isSortAscending = false;
