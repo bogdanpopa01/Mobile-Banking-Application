@@ -36,6 +36,7 @@ import com.example.mobilebankingapplication.utils.ConverterUUID;
 import com.example.mobilebankingapplication.utils.DateConverter;
 import com.example.mobilebankingapplication.utils.SharedViewModel;
 
+import org.apache.poi.ss.formula.functions.T;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -46,12 +47,15 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 public class TransactionsFragment extends Fragment {
     private RecyclerView recyclerViewTransactions;
     private RecyclerViewAdapterTransactions recyclerViewAdapterTransactions;
-    private ArrayList<Transaction> arrayListTransactions = new ArrayList<>();
+    private List<Transaction> arrayListTransactions = new ArrayList<>();
+    private ArrayList<Transaction> filteredTransactions = new ArrayList<>();
     private SharedViewModel sharedViewModel;
     private User user;
     private View view;
@@ -61,11 +65,13 @@ public class TransactionsFragment extends Fragment {
     private Button btnSortAscending, btnSortDescending;
 
     private LinearLayout filterLayout1, filterLayout2, sortLayout;
-    private String selectedFilter = "all";
-    private String currentSearchText = "";
     private Calendar selectedDate = Calendar.getInstance();
+    private String selectedFilter;
     private boolean isSortHidden = true;
     private boolean isFilterHidden = true;
+    private boolean isSortAscending = false;
+    private boolean isSortDescending = false;
+    private boolean isSortDateDesc = true;
 
     public TransactionsFragment() {
 
@@ -175,10 +181,11 @@ public class TransactionsFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_transactions, container, false);
 
         initializeComponents();
-        searchingMethod();
 
         hideFilterLayout();
         hideSortLayout();
+
+        searchMethod();
 
         btnAccountStatement.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -193,7 +200,7 @@ public class TransactionsFragment extends Fragment {
         btnSort.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(isSortHidden){
+                if (isSortHidden) {
                     isSortHidden = false;
                     showSortLayout();
                 } else {
@@ -206,7 +213,7 @@ public class TransactionsFragment extends Fragment {
         btnFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(isFilterHidden){
+                if (isFilterHidden) {
                     isFilterHidden = false;
                     showFilterLayout();
                 } else {
@@ -219,54 +226,93 @@ public class TransactionsFragment extends Fragment {
         btnAllTransactions.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                filterAllMethod();
+                selectedFilter = "all";
+                isSortDateDesc = true;
+                isSortAscending = false;
+                isSortDescending = false;
+                filterTransactions(searchViewTransactions.getQuery().toString());
             }
         });
 
         btnTransfers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                filterTransfersOnlyMethod();
+                selectedFilter = "transfers";
+                isSortDateDesc = true;
+                isSortAscending = false;
+                isSortDescending = false;
+                filterTransactions(searchViewTransactions.getQuery().toString());
             }
         });
 
         btnIncomes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                filterIncomes();
+                selectedFilter = "incomes";
+                isSortDateDesc = true;
+                isSortAscending = false;
+                isSortDescending = false;
+                filterTransactions(searchViewTransactions.getQuery().toString());
             }
         });
 
         btnExpenses.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                filterExpenses();
+                selectedFilter = "expenses";
+                isSortDateDesc = true;
+                isSortAscending = false;
+                isSortDescending = false;
+                filterTransactions(searchViewTransactions.getQuery().toString());
             }
         });
 
         btnDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                filterDate();
+                DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                        selectedDate.set(Calendar.YEAR, year);
+                        selectedDate.set(Calendar.MONTH, monthOfYear);
+                        selectedDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                        filterTransactions(searchViewTransactions.getQuery().toString());
+                    }
+                };
+
+                // Show the date picker dialog
+                DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), dateSetListener,
+                        selectedDate.get(Calendar.YEAR), selectedDate.get(Calendar.MONTH),
+                        selectedDate.get(Calendar.DAY_OF_MONTH));
+                datePickerDialog.show();
             }
         });
 
         btnSortAscending.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                arrayListTransactions.sort(Transaction.amountAscending);
-                RecyclerViewAdapterTransactions adapterTransactions = new RecyclerViewAdapterTransactions(arrayListTransactions, getContext());
-                recyclerViewTransactions.setAdapter(adapterTransactions);
+                if(selectedFilter == null){
+                    Toast.makeText(getContext(), "Select All button to sort all the transactions", Toast.LENGTH_SHORT).show();
+                }
+                isSortAscending = true;
+                isSortDescending = false;
+                isSortDateDesc = false;
+                sortFilteredTransactions();
+                recyclerViewAdapterTransactions.notifyDataSetChanged();
             }
         });
 
         btnSortDescending.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                arrayListTransactions.sort(Transaction.amountAscending);
-                Collections.reverse(arrayListTransactions);
-                RecyclerViewAdapterTransactions adapterTransactions = new RecyclerViewAdapterTransactions(arrayListTransactions, getContext());
-                recyclerViewTransactions.setAdapter(adapterTransactions);
+                if(selectedFilter == null){
+                    Toast.makeText(getContext(), "Select All button to sort all the transactions", Toast.LENGTH_SHORT).show();
+                }
+                isSortAscending = false;
+                isSortDescending = true;
+                isSortDateDesc = false;
+                sortFilteredTransactions();
+                recyclerViewAdapterTransactions.notifyDataSetChanged();
             }
         });
 
@@ -275,128 +321,96 @@ public class TransactionsFragment extends Fragment {
         recyclerViewAdapterTransactions = new RecyclerViewAdapterTransactions(arrayListTransactions, getContext());
         recyclerViewTransactions.setAdapter(recyclerViewAdapterTransactions);
 
-        recyclerViewAdapterTransactions.notifyDataSetChanged();
-
         return view;
     }
 
-    private void filterMethod(String status){
-        selectedFilter = status;
-        ArrayList<Transaction>  filteredTransactions = new ArrayList<>();
+    private void filterTransactions(String searchTerm) {
+        filteredTransactions.clear();
 
-        for(Transaction transaction : arrayListTransactions){
-            if(transaction.getTransactionType().toString().toLowerCase().contains(status)){
-                // to make sure the search option shows items that are specific to the type that is toggled, and not items that just match the words in the search option, regardless of their type
-                if(currentSearchText.equals("")) {
-                    filteredTransactions.add(transaction);
-                } else {
-                    if(transaction.getTransactionType().toString().toLowerCase().contains(currentSearchText.toLowerCase())){
-                        filteredTransactions.add(transaction);
-                    }
-                }
-            }
-        }
-        RecyclerViewAdapterTransactions adapterTransactions = new RecyclerViewAdapterTransactions(filteredTransactions,getContext());
-        recyclerViewTransactions.setAdapter(adapterTransactions);
-    }
-
-    private void filterAllMethod(){
-        selectedFilter = "all";
-        // it clears any existing query text that might be present
-        searchViewTransactions.setQuery("",false);
-        // removes the keyboard or any active focus
-        searchViewTransactions.clearFocus();
-        RecyclerViewAdapterTransactions adapterTransactions = new RecyclerViewAdapterTransactions(arrayListTransactions,getContext());
-        recyclerViewTransactions.setAdapter(adapterTransactions);
-    }
-
-    private void filterTransfersOnlyMethod(){
-        filterMethod("transfer");
-    }
-
-    private void filterIncomes() {
-        selectedFilter = "incomes";
-        ArrayList<Transaction> filteredTransactions = new ArrayList<>();
-
-        for (Transaction transaction : arrayListTransactions) {
-            if (!transaction.getTransactionType().equals(TransactionType.TRANSFER) && transaction.getTransactionAmount() >= 0) {
-                if (currentSearchText.equals("")) {
-                    filteredTransactions.add(transaction);
-                } else {
-                    if (transaction.getTransactionType().toString().toLowerCase().contains(currentSearchText.toLowerCase())) {
-                        filteredTransactions.add(transaction);
-                    }
-                }
+        for (Transaction t : arrayListTransactions) {
+            if (isTransactionTypeMatch(t) && isTransactionNameMatch(t, searchTerm)) {
+                filteredTransactions.add(t);
             }
         }
 
-        RecyclerViewAdapterTransactions adapterTransactions = new RecyclerViewAdapterTransactions(filteredTransactions, getContext());
-        recyclerViewTransactions.setAdapter(adapterTransactions);
+        sortFilteredTransactions();
+        recyclerViewAdapterTransactions.setTransactions(filteredTransactions);
+        recyclerViewAdapterTransactions.notifyDataSetChanged();
     }
 
-    private void filterExpenses() {
-        selectedFilter = "expenses";
-        ArrayList<Transaction> filteredTransactions = new ArrayList<>();
-
-        for (Transaction transaction : arrayListTransactions) {
-            if (transaction.getTransactionType().equals(TransactionType.TRANSFER) || transaction.getTransactionAmount() < 0) {
-                if (currentSearchText.equals("")) {
-                    filteredTransactions.add(transaction);
-                } else {
-                    if (transaction.getTransactionType().toString().toLowerCase().contains(currentSearchText.toLowerCase())) {
-                        filteredTransactions.add(transaction);
-                    }
-                }
-            }
+    private void sortFilteredTransactions() {
+        if (isSortAscending) {
+            sortTransactionsByAmountAsc();
+        } else if (isSortDescending){
+            sortTransactionsByAmountDesc();
+        } else if(isSortDateDesc) {
+            sortTransactionsByDateDesc();
         }
-        RecyclerViewAdapterTransactions adapterTransactions = new RecyclerViewAdapterTransactions(filteredTransactions, getContext());
-        recyclerViewTransactions.setAdapter(adapterTransactions);
     }
 
-    private void filterDate() {
-        DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
+    private boolean isTransactionTypeMatch(Transaction transaction) {
+        if (selectedFilter.equals("all")) {
+            return true;
+        } else if (selectedFilter.equals("transfers")) {
+            return transaction.getTransactionType() == TransactionType.TRANSFER;
+        } else if (selectedFilter.equals("incomes")) {
+            return transaction.getTransactionAmount() > 0;
+        } else if (selectedFilter.equals("expenses")) {
+            return transaction.getTransactionAmount() < 0;
+        }
+        return false;
+    }
+
+    private boolean isTransactionNameMatch(Transaction transaction, String searchTerm) {
+        return searchTerm.isEmpty() || transaction.getTransactionName().toLowerCase().startsWith(searchTerm.toLowerCase());
+    }
+
+    private void sortTransactionsByDateDesc() {
+        Collections.sort(filteredTransactions, new Comparator<Transaction>() {
             @Override
-            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                selectedDate.set(Calendar.YEAR, year);
-                selectedDate.set(Calendar.MONTH, monthOfYear);
-                selectedDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                applyDateFilter();
+            public int compare(Transaction transaction1, Transaction transaction2) {
+                return transaction2.getTransactionDate().compareTo(transaction1.getTransactionDate());
             }
-        };
+        });
+    }
 
-        // Show the date picker dialog
-        DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), dateSetListener,
-                selectedDate.get(Calendar.YEAR), selectedDate.get(Calendar.MONTH),
-                selectedDate.get(Calendar.DAY_OF_MONTH));
-        datePickerDialog.show();
+    private void sortTransactionsByAmountAsc() {
+        Collections.sort(filteredTransactions, new Comparator<Transaction>() {
+            @Override
+            public int compare(Transaction transaction1, Transaction transaction2) {
+                return Double.compare(transaction1.getTransactionAmount(), transaction2.getTransactionAmount());
+            }
+        });
+    }
+
+    private void sortTransactionsByAmountDesc() {
+        Collections.sort(filteredTransactions, new Comparator<Transaction>() {
+            @Override
+            public int compare(Transaction transaction1, Transaction transaction2) {
+                return Double.compare(transaction2.getTransactionAmount(), transaction1.getTransactionAmount());
+            }
+        });
     }
 
 
-    private void applyDateFilter() {
-        selectedFilter = "date";
-        ArrayList<Transaction> filteredTransactions = new ArrayList<>();
-
-        for (Transaction transaction : arrayListTransactions) {
-            Timestamp transactionTimestamp = transaction.getTransactionDate();
-            long transactionTimeInMillis = transactionTimestamp.getTime();
-
-            Calendar transactionCalendar = Calendar.getInstance();
-            transactionCalendar.setTimeInMillis(transactionTimeInMillis);
-
-            if (transactionCalendar.get(Calendar.YEAR) == selectedDate.get(Calendar.YEAR) &&
-                    transactionCalendar.get(Calendar.MONTH) == selectedDate.get(Calendar.MONTH) &&
-                    transactionCalendar.get(Calendar.DAY_OF_MONTH) == selectedDate.get(Calendar.DAY_OF_MONTH)) {
-                filteredTransactions.add(transaction);
+    private void searchMethod() {
+        searchViewTransactions.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
             }
-        }
 
-        RecyclerViewAdapterTransactions adapterTransactions = new RecyclerViewAdapterTransactions(filteredTransactions, getContext());
-        recyclerViewTransactions.setAdapter(adapterTransactions);
+            @Override
+            public boolean onQueryTextChange(String s) {
+                filterTransactions(s);
+                return false;
+            }
+        });
     }
 
-    private void initializeComponents(){
+    private void initializeComponents() {
         recyclerViewTransactions = view.findViewById(R.id.recyclerViewTransactions);
-        searchViewTransactions  = view.findViewById(R.id.searchViewTransactions);
+        searchViewTransactions = view.findViewById(R.id.searchViewTransactions);
 
         btnAllTransactions = view.findViewById(R.id.btnAllTransactions);
         btnDate = view.findViewById(R.id.btnDate);
@@ -428,68 +442,25 @@ public class TransactionsFragment extends Fragment {
         }
     }
 
-    private void searchingMethod() {
-        searchViewTransactions.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                currentSearchText = newText;
-                ArrayList<Transaction> filteredTransactions = new ArrayList<>();
-
-                // Filter transactions based on search text, selected filter, and date
-                for (Transaction transaction : arrayListTransactions) {
-                    boolean matchesSearchText = transaction.getTransactionType().toString().toLowerCase().startsWith(newText.toLowerCase());
-                    boolean matchesFilter = selectedFilter.equals("all")
-                            || (selectedFilter.equals("incomes") && !transaction.getTransactionType().equals(TransactionType.TRANSFER) && transaction.getTransactionAmount() >= 0)
-                            || (selectedFilter.equals("expenses") && (transaction.getTransactionType().equals(TransactionType.TRANSFER) || transaction.getTransactionAmount() < 0))
-                            || (selectedFilter.equals("transfer") && transaction.getTransactionType().equals(TransactionType.TRANSFER));
-                    boolean matchesDate = selectedFilter.equals("date") && isTransactionOnSelectedDate(transaction);
-
-                    if (matchesSearchText && (matchesFilter || matchesDate)) {
-                        filteredTransactions.add(transaction);
-                    }
-                }
-
-                RecyclerViewAdapterTransactions adapterTransactions = new RecyclerViewAdapterTransactions(filteredTransactions, getContext());
-                recyclerViewTransactions.setAdapter(adapterTransactions);
-                return false;
-            }
-        });
-    }
-
-    private boolean isTransactionOnSelectedDate(Transaction transaction) {
-        Calendar transactionCalendar = Calendar.getInstance();
-        transactionCalendar.setTimeInMillis(transaction.getTransactionDate().getTime());
-
-        return transactionCalendar.get(Calendar.YEAR) == selectedDate.get(Calendar.YEAR)
-                && transactionCalendar.get(Calendar.MONTH) == selectedDate.get(Calendar.MONTH)
-                && transactionCalendar.get(Calendar.DAY_OF_MONTH) == selectedDate.get(Calendar.DAY_OF_MONTH);
-    }
-
-    private void hideFilterLayout(){
+    private void hideFilterLayout() {
         filterLayout1.setVisibility(View.GONE);
         filterLayout2.setVisibility(View.GONE);
         btnFilter.setText(R.string.btnFilterDynamic);
     }
 
-    private void showFilterLayout(){
+    private void showFilterLayout() {
         filterLayout1.setVisibility(View.VISIBLE);
         filterLayout2.setVisibility(View.VISIBLE);
         btnFilter.setText(R.string.btnHide);
     }
 
-    private void hideSortLayout(){
+    private void hideSortLayout() {
         sortLayout.setVisibility(View.GONE);
         btnSort.setText(R.string.btnSortDynamic);
     }
 
-    private void showSortLayout(){
+    private void showSortLayout() {
         sortLayout.setVisibility(View.VISIBLE);
         btnSort.setText(R.string.btnHide);
     }
-
 }

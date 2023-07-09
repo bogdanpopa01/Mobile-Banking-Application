@@ -16,29 +16,36 @@ import com.example.mobilebankingapplication.enums.TransactionType;
 import com.example.mobilebankingapplication.utils.DateConverter;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class RecyclerViewAdapterTransactions extends RecyclerView.Adapter<RecyclerViewAdapterTransactions.TransactionViewHolder>{
-    private ArrayList<Transaction> arrayListTransactions;
+public class RecyclerViewAdapterTransactions extends RecyclerView.Adapter<RecyclerViewAdapterTransactions.TransactionViewHolder> {
+    private List<Transaction> transactions;
     private Context context;
 
-    public RecyclerViewAdapterTransactions(ArrayList<Transaction> arrayListDeposits, Context context) {
-        this.arrayListTransactions = arrayListDeposits;
+    public RecyclerViewAdapterTransactions(List<Transaction> transactions, Context context) {
+        this.transactions = transactions;
         this.context = context;
+    }
+
+    public void setTransactions(List<Transaction> transactions) {
+        this.transactions = transactions;
     }
 
     @NonNull
     @Override
     public TransactionViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_transaction_design, parent, false);
-        return new RecyclerViewAdapterTransactions.TransactionViewHolder(view);
+        return new TransactionViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull TransactionViewHolder holder, int position) {
-        holder.tvTransactionName.setText(arrayListTransactions.get(position).getTransactionName());
-        holder.tvTransactionDate.setText(DateConverter.dateToString(arrayListTransactions.get(position).getTransactionDate()));
+        Transaction transaction = transactions.get(position);
+        holder.tvTransactionName.setText(transaction.getTransactionName());
+        holder.tvTransactionDate.setText(DateConverter.dateToString(transaction.getTransactionDate()));
         holder.tvTransactionCurrency.setText("RON");
-        if(arrayListTransactions.get(position).getTransactionAmount()>0f && !arrayListTransactions.get(position).getTransactionType().equals(TransactionType.TRANSFER)){
+
+        if (transaction.getTransactionAmount() > 0f && !transaction.getTransactionType().equals(TransactionType.TRANSFER)) {
             int greenColor = ContextCompat.getColor(holder.itemView.getContext(), R.color.green);
             holder.tvTransactionAmount.setTextColor(greenColor);
         } else {
@@ -46,22 +53,21 @@ public class RecyclerViewAdapterTransactions extends RecyclerView.Adapter<Recycl
             holder.tvTransactionAmount.setTextColor(redColor);
         }
 
-        if (arrayListTransactions.get(position).getTransactionType().equals(TransactionType.TRANSFER)) {
-            holder.tvTransactionAmount.setText(String.valueOf(arrayListTransactions.get(position).getTransactionAmount()));
+        if (transaction.getTransactionType().equals(TransactionType.TRANSFER)) {
+            holder.tvTransactionAmount.setText(String.valueOf(transaction.getTransactionAmount()));
             int redColor = ContextCompat.getColor(holder.itemView.getContext(), R.color.red);
             holder.tvTransactionAmount.setTextColor(redColor);
         } else {
-            holder.tvTransactionAmount.setText(String.valueOf(arrayListTransactions.get(position).getTransactionAmount()));
+            holder.tvTransactionAmount.setText(String.valueOf(transaction.getTransactionAmount()));
         }
-
     }
 
     @Override
     public int getItemCount() {
-        return arrayListTransactions.size();
+        return transactions.size();
     }
 
-    public class TransactionViewHolder extends RecyclerView.ViewHolder{
+    public static class TransactionViewHolder extends RecyclerView.ViewHolder {
         private TextView tvTransactionName, tvTransactionDate, tvTransactionCurrency, tvTransactionAmount;
 
         public TransactionViewHolder(@NonNull View itemView) {
