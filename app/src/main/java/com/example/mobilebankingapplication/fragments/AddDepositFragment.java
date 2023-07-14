@@ -106,11 +106,11 @@ public class AddDepositFragment extends DialogFragment {
                         break;
                     case 2:
                         tvInterestRateValue.setText(getText(R.string.threeMonthValue));
-                        tvTimeLeftValue.setText(getText(R.string.twoMonth));
+                        tvTimeLeftValue.setText(getText(R.string.threeMonth));
                         break;
                     case 3:
                         tvInterestRateValue.setText(getText(R.string.sixMonthValue));
-                        tvTimeLeftValue.setText(getText(R.string.twoMonth));
+                        tvTimeLeftValue.setText(getText(R.string.sixMonth));
                         break;
                     case 4:
                         tvInterestRateValue.setText(getText(R.string.oneYearValue));

@@ -254,7 +254,7 @@ public class TransfersFragment extends Fragment {
                 StringBuilder filteredStringBuilder = new StringBuilder();
                 for (int i = start; i < end; i++) {
                     char currentChar = source.charAt(i);
-                    if (Character.isLetter(currentChar)) {
+                    if (Character.isLetter(currentChar) || Character.isWhitespace(currentChar)) {
                         filteredStringBuilder.append(currentChar);
                     }
                 }
@@ -264,6 +264,7 @@ public class TransfersFragment extends Fragment {
 
         editText.setFilters(new InputFilter[]{filter});
     }
+
 
     private void transferAmountValidation() {
 

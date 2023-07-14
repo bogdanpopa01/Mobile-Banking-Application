@@ -162,6 +162,8 @@ public class User implements Parcelable {
         return cardExpirationDate;
     }
 
+
+
     public void setCardExpirationDate(Date cardExpirationDate) {
         this.cardExpirationDate = cardExpirationDate;
     }

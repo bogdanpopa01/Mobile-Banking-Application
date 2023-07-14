@@ -18,6 +18,8 @@ import com.example.mobilebankingapplication.R;
 import com.example.mobilebankingapplication.classes.User;
 import com.example.mobilebankingapplication.utils.SharedViewModel;
 
+import org.apache.poi.ss.formula.functions.T;
+
 
 public class PinFragment extends DialogFragment {
     private SharedViewModel sharedViewModel;
@@ -27,6 +29,7 @@ public class PinFragment extends DialogFragment {
     private EditText etPassword;
     private View view;
     private int wrongPasswordCount = 0;
+
     public PinFragment() {
         // Required empty public constructor
     }
@@ -41,31 +44,32 @@ public class PinFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view =  inflater.inflate(R.layout.fragment_pin, container, false);
+        view = inflater.inflate(R.layout.fragment_pin, container, false);
         initilizeComponents();
-
 
 
         btnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                if (etPassword.getText().toString().equals(user.getPassword())) {
-                    tvPin.setText(user.getCardCvv());
-                } else {
-                    wrongPasswordCount++;
-                    if (wrongPasswordCount == 3) {
-                        getActivity().finish();
+                if (etPassword.getText() != null && !etPassword.getText().toString().trim().isEmpty()) {
+                    if (etPassword.getText().toString().equals(user.getPassword())) {
+                        tvPin.setText(user.getCardCvv());
                     } else {
-                        Toast.makeText(getContext(), "Wrong password! Remaining attempts: " + String.valueOf(3-wrongPasswordCount), Toast.LENGTH_SHORT).show();
+                        wrongPasswordCount++;
+                        if (wrongPasswordCount == 3) {
+                            getActivity().finish();
+                        } else {
+                            Toast.makeText(getContext(), "Wrong password! Remaining attempts: " + String.valueOf(3 - wrongPasswordCount), Toast.LENGTH_SHORT).show();
+                        }
                     }
+                } else {
+                    Toast.makeText(getContext(), "The password field is empty!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
 
-
-        return  view;
+        return view;
     }
 
     private void getUser() {
@@ -80,7 +84,7 @@ public class PinFragment extends DialogFragment {
         }
     }
 
-    private void initilizeComponents(){
+    private void initilizeComponents() {
         tvPin = view.findViewById(R.id.tvPinValue);
         etPassword = view.findViewById(R.id.etPinPassword);
         btnConfirm = view.findViewById(R.id.btnConfirmPasswordForPin);
