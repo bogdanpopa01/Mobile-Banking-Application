@@ -8,17 +8,17 @@ The Home-Screen
 
 Adding a deposit
 
-![adddeposit](https://github.com/bogdanpopa01/Mobile-Banking-Application/assets/90871325/e71d093b-5d00-4af6-8cd7-14082dc8a4f3)
+![adddeposit](https://user-images.githubusercontent.com/90871325/257077502-e77c14c7-c28a-46c0-ae67-48fdad163e29.png)
 
 Modifying a deposit
 
-![editdeposit](https://github.com/bogdanpopa01/Mobile-Banking-Application/assets/90871325/6044ff24-bd84-40f8-8f7b-a61db4c491ce)
+![editdeposit](https://user-images.githubusercontent.com/90871325/257077503-c00f1a65-3cdb-40d3-84eb-255ca588d41d.png)
 
 The Transactions-Screen
 
-![transactions](https://github.com/bogdanpopa01/Mobile-Banking-Application/assets/90871325/789c01b3-a9ed-4d7f-bda3-b019d316fd6a)
+![transactions](https://user-images.githubusercontent.com/90871325/257077505-064bea9c-2ac6-401e-ae6c-275e697db980.png)
 
 The Reports-Screen
 
-![graphs](https://github.com/bogdanpopa01/Mobile-Banking-Application/assets/90871325/d0ab849a-7718-471c-b89b-590725c01ff7)
+![graphs](https://user-images.githubusercontent.com/90871325/257077506-d801c7bc-264c-4827-9e83-d9813fa56b2d.png)
 
