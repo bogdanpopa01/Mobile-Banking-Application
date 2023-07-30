@@ -4,7 +4,7 @@ A mobile banking application where the user can see his financial and personal i
 
 The Home-Screen
 
-![homescreen](https://github.com/bogdanpopa01/Mobile-Banking-Application/assets/90871325/9f9b9fd0-30dc-45c5-aabb-56501ef705e6)
+![homescreen](https://user-images.githubusercontent.com/90871325/257077501-4987f650-b091-4023-9cd0-6c7f3c06657d.png)
 
 Adding a deposit
 
